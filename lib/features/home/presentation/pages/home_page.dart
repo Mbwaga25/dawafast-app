@@ -9,6 +9,8 @@ import 'package:app/features/offers/data/models/brand_model.dart';
 import 'package:app/features/offers/data/repositories/marketplace_repository.dart';
 import 'package:app/features/profile/data/repositories/settings_repository.dart';
 import 'package:app/features/offers/presentation/pages/category_page.dart';
+import 'package:app/features/offers/presentation/pages/offers_page.dart';
+import 'package:app/features/auth/data/repositories/auth_repository.dart';
 import 'package:app/features/home/presentation/pages/product_detail_page.dart';
 import 'package:app/features/home/presentation/widgets/dashboards/patient_dashboard.dart';
 import 'package:app/features/home/presentation/widgets/dashboards/doctor_dashboard.dart';
@@ -24,6 +26,7 @@ import 'package:app/features/home/presentation/pages/search_page.dart';
 import 'package:app/features/healthcare/presentation/pages/telemedicine_page.dart';
 import 'package:app/features/offers/presentation/pages/brands_page.dart';
 import 'package:app/features/profile/presentation/pages/settings_page.dart';
+import 'package:app/features/profile/presentation/pages/profile_page.dart';
 import 'package:app/features/auth/presentation/pages/login_page.dart';
 import 'package:app/core/widgets/product_image.dart';
 
@@ -40,53 +43,73 @@ class HomePage extends ConsumerWidget {
 
     return userAsync.when(
       data: (user) {
-        if (user != null) return _buildRoleDashboard(context, ref, user);
-        return _buildMainScaffold(context, ref, tabIndex);
+        // If not logged in or is a patient, show the 5-tab e-commerce shell
+        if (user == null || user.role == null || user.role!.toUpperCase() == 'PATIENT') {
+          return _buildMainShell(context, ref, tabIndex);
+        }
+        // Otherwise show the specialized dashboard for their role
+        return _buildRoleDashboard(context, ref, user);
       },
       loading: () => const Scaffold(body: Center(child: CircularProgressIndicator())),
-      error: (err, stack) => _buildMainScaffold(context, ref, tabIndex),
+      error: (err, stack) => _buildMainShell(context, ref, tabIndex),
     );
   }
 
   // ─── Role-based dashboards (pharmacist, doctor etc.) ─────────────────────
   Widget _buildRoleDashboard(BuildContext context, WidgetRef ref, User user) {
     Widget dashboard;
-    final location = user.patientProfile?.location ?? 'Select Location';
+    String title = 'Dashboard';
 
     switch (user.role?.toUpperCase()) {
       case 'DOCTOR':
         dashboard = DoctorDashboard(user: user);
+        title = 'Doctor Panel';
         break;
       case 'LAB_TECHNICIAN':
       case 'LAB':
         dashboard = LabDashboard(user: user);
+        title = 'Lab Panel';
         break;
       case 'PHARMACIST':
+      case 'PHARMACY':
         dashboard = PharmacyDashboard(user: user);
+        title = 'Pharmacy Panel';
         break;
       case 'HOSPITAL_ADMIN':
       case 'HOSPITAL':
         dashboard = HospitalDashboard(user: user);
+        title = 'Hospital Panel';
         break;
       case 'ADMIN':
       case 'STAFF':
       case 'SUPERUSER':
         dashboard = AdminDashboard(user: user);
+        title = 'Admin Panel';
         break;
-      case 'PATIENT':
       default:
-        dashboard = PatientDashboard(user: user);
-        break;
+        // Fallback for unknown roles
+        return _buildMainShell(context, ref, ref.read(_tabIndexProvider));
     }
 
     return Scaffold(
-      appBar: _buildAppBar(context, ref, location),
+      appBar: AppBar(
+        title: Text(title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () async {
+              await ref.read(authRepositoryProvider).logout();
+              ref.invalidate(currentUserProvider);
+            },
+          ),
+        ],
+      ),
       body: dashboard,
     );
   }
 
-  // ─── Main scaffold with 5-tab bottom nav ─────────────────────────────────
-  Widget _buildMainScaffold(BuildContext context, WidgetRef ref, int tabIndex) {
+  // ─── Main shell with 5-tab bottom nav ────────────────────────────────────
+  Widget _buildMainShell(BuildContext context, WidgetRef ref, int tabIndex) {
     final tabs = [
       _buildGuestHome(context, ref),
       const OffersPage(),
@@ -101,6 +124,7 @@ class HomePage extends ConsumerWidget {
       bottomNavigationBar: _buildBottomNav(context, ref, tabIndex),
     );
   }
+
 
   PreferredSizeWidget _buildAppBar(BuildContext context, WidgetRef ref, String location) {
     return AppBar(
@@ -178,25 +202,7 @@ class HomePage extends ConsumerWidget {
   }
 
   Widget _buildProfileTab(BuildContext context, WidgetRef ref) {
-    final userAsync = ref.watch(currentUserProvider);
-    return userAsync.when(
-      data: (user) => user != null
-          ? const SettingsPage()
-          : Center(
-              child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-                const Icon(Icons.person_outline, size: 64, color: AppTheme.textSecondary),
-                const SizedBox(height: 16),
-                const Text('Sign in to access your profile', style: TextStyle(fontSize: 16)),
-                const SizedBox(height: 24),
-                ElevatedButton(
-                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginPage())),
-                  child: const Text('Sign In'),
-                ),
-              ]),
-            ),
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (_, __) => const SizedBox(),
-    );
+    return const ProfilePage();
   }
 
   // ─── Guest Home Body ──────────────────────────────────────────────────────
@@ -290,7 +296,17 @@ class HomePage extends ConsumerWidget {
             loading: () => const SizedBox(height: 100, child: Center(child: CircularProgressIndicator())),
             error: (_, __) => const SizedBox(),
           ),
-          const SizedBox(height: 32),
+          const SizedBox(height: 24),
+
+          // ── Health Store (Product Grid) ───────────────────────────────────
+          _sectionHeader('Health Store', onViewAll: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SearchPage()))),
+          const SizedBox(height: 12),
+          productsAsync.when(
+            data: (products) => _buildProductGrid(context, ref, products),
+            loading: () => const Center(child: Padding(padding: EdgeInsets.all(20), child: CircularProgressIndicator())),
+            error: (_, __) => const SizedBox(),
+          ),
+          const SizedBox(height: 48),
         ],
       ),
     );
@@ -441,9 +457,6 @@ class HomePage extends ConsumerWidget {
   }
 
   Widget _buildProductStrip(BuildContext context, WidgetRef ref, List<Product> products, {bool showDiscount = false}) {
-    final currencyConf = ref.read(currencySettingsProvider).value;
-    final symbol = currencyConf?.symbol ?? 'Tsh';
-
     return SizedBox(
       height: 232,
       child: ListView.builder(
@@ -452,91 +465,120 @@ class HomePage extends ConsumerWidget {
         itemCount: products.length > 12 ? 12 : products.length,
         itemBuilder: (context, index) {
           final product = products[index];
-          return GestureDetector(
-            onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ProductDetailPage(idOrSlug: product.slug))),
-            child: Container(
-              width: 144,
-              margin: const EdgeInsets.only(right: 12),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: AppTheme.borderColor),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 6, offset: const Offset(0, 2))],
+          return _buildProductCard(context, ref, product, showDiscount: showDiscount);
+        },
+      ),
+    );
+  }
+
+  Widget _buildProductGrid(BuildContext context, WidgetRef ref, List<Product> products) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      child: GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          mainAxisSpacing: 12,
+          crossAxisSpacing: 12,
+          childAspectRatio: 0.68,
+        ),
+        itemCount: products.length > 20 ? 20 : products.length,
+        itemBuilder: (context, index) {
+          final product = products[index];
+          return _buildProductCard(context, ref, product, showDiscount: true, width: double.infinity);
+        },
+      ),
+    );
+  }
+
+  Widget _buildProductCard(BuildContext context, WidgetRef ref, Product product, {bool showDiscount = false, double? width}) {
+    final currencyConf = ref.read(currencySettingsProvider).value;
+    final symbol = currencyConf?.symbol ?? 'Tsh';
+    
+    return GestureDetector(
+      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ProductDetailPage(idOrSlug: product.slug))),
+      child: Container(
+        width: width ?? 144,
+        margin: width == null ? const EdgeInsets.only(right: 12) : EdgeInsets.zero,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppTheme.borderColor),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 6, offset: const Offset(0, 2))],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Image
+            ClipRRect(
+              borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
+              child: Stack(
+                children: [
+                  SizedBox(
+                    height: 110,
+                    width: double.infinity,
+                    child: ProductImage(
+                      url: product.images.isNotEmpty ? product.images.first : null,
+                      height: 110,
+                      width: double.infinity,
+                    ),
+                  ),
+                  if (showDiscount && product.discountPercentage > 0)
+                    Positioned(
+                      top: 8, left: 8,
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(color: Colors.red.shade600, borderRadius: BorderRadius.circular(6)),
+                        child: Text('${product.discountPercentage.toInt()}% OFF', style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
+                      ),
+                    ),
+                ],
               ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Image
-                  ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(14)),
-                    child: Stack(
-                      children: [
-                        SizedBox(
-                          height: 110,
-                          width: double.infinity,
-                          child: ProductImage(
-                            url: product.images.isNotEmpty ? product.images.first : null,
-                            height: 110,
-                            width: double.infinity,
-                          ),
-                        ),
-                        if (showDiscount && product.discountPercentage > 0)
-                          Positioned(
-                            top: 8, left: 8,
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                              decoration: BoxDecoration(color: Colors.red.shade600, borderRadius: BorderRadius.circular(6)),
-                              child: Text('${product.discountPercentage.toInt()}% OFF', style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(product.name, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, height: 1.3)),
-                        const SizedBox(height: 4),
-                        Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppTheme.primaryBlue)),
-                        if (product.originalPrice != null && product.originalPrice! > product.price)
-                          Text('$symbol ${product.originalPrice!.toStringAsFixed(0)}',
-                              style: const TextStyle(fontSize: 11, decoration: TextDecoration.lineThrough, color: AppTheme.textSecondary)),
-                        const SizedBox(height: 6),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              ref.read(cartProvider.notifier).addItem(CartItem(
-                                productId: product.id,
-                                name: product.name,
-                                price: product.price,
-                                image: product.images.isNotEmpty ? product.images.first : null,
-                              ));
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(content: Text('${product.name} added!'), duration: const Duration(seconds: 1)),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              padding: const EdgeInsets.symmetric(vertical: 6),
-                              minimumSize: const Size(0, 28),
-                              textStyle: const TextStyle(fontSize: 11),
-                            ),
-                            child: const Text('Add to Cart'),
-                          ),
-                        ),
-                      ],
+                  Text(product.name, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, height: 1.3)),
+                  const SizedBox(height: 4),
+                  Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppTheme.primaryBlue)),
+                  if (product.originalPrice != null && product.originalPrice! > product.price)
+                    Text('$symbol ${product.originalPrice!.toStringAsFixed(0)}',
+                        style: const TextStyle(fontSize: 11, decoration: TextDecoration.lineThrough, color: AppTheme.textSecondary)),
+                  const SizedBox(height: 6),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        ref.read(cartProvider.notifier).addItem(CartItem(
+                          productId: product.id,
+                          name: product.name,
+                          price: product.price,
+                          image: product.images.isNotEmpty ? product.images.first : null,
+                        ));
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('${product.name} added!'), duration: const Duration(seconds: 1)),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 6),
+                        minimumSize: const Size(0, 28),
+                        textStyle: const TextStyle(fontSize: 11),
+                      ),
+                      child: const Text('Add to Cart'),
                     ),
                   ),
                 ],
               ),
             ),
-          );
-        },
+          ],
+        ),
       ),
     );
   }
+
 
   // ─── Featured Brands strip ────────────────────────────────────────────────
   Widget _buildBrandStrip(BuildContext context, WidgetRef ref, List<Brand> brands) {
@@ -578,90 +620,6 @@ class HomePage extends ConsumerWidget {
   }
 }
 
-// ─── Offers Page (tab 2) ──────────────────────────────────────────────────────
-class OffersPage extends ConsumerWidget {
-  const OffersPage({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final productsAsync = ref.watch(productsProvider);
-    final categoriesAsync = ref.watch(categoriesProvider(null));
-
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('All Medicines', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 12),
-          categoriesAsync.when(
-            data: (cats) => Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: cats.take(8).map((c) => ActionChip(
-                label: Text(c.name, style: const TextStyle(fontSize: 12)),
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => CategoryPage(category: c))),
-              )).toList(),
-            ),
-            loading: () => const CircularProgressIndicator(),
-            error: (_, __) => const SizedBox(),
-          ),
-          const SizedBox(height: 16),
-          productsAsync.when(
-            data: (products) => GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                childAspectRatio: 0.72,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 12,
-              ),
-              itemCount: products.length,
-              itemBuilder: (context, i) {
-                final p = products[i];
-                return GestureDetector(
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ProductDetailPage(idOrSlug: p.slug))),
-                  child: Card(
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        ClipRRect(
-                          borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                          child: SizedBox(
-                            height: 120,
-                            width: double.infinity,
-                            child: p.images.isNotEmpty
-                                ? Image.network(p.images.first, fit: BoxFit.cover, errorBuilder: (_, __, ___) => Image.asset('lib/assets/images/product_placeholder.png', fit: BoxFit.cover))
-                                : Image.asset('lib/assets/images/product_placeholder.png', fit: BoxFit.cover),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(p.name, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
-                              const SizedBox(height: 4),
-                              Text('Tsh ${p.price.toStringAsFixed(0)}', style: const TextStyle(color: AppTheme.primaryBlue, fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
-              },
-            ),
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (_, __) => const SizedBox(),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 // ─── Auto-sliding Promo Banner Carousel ───────────────────────────────────────
 class _PromoBannerCarousel extends StatefulWidget {
@@ -794,3 +752,4 @@ class _BannerData {
   final IconData icon;
   const _BannerData({required this.gradient, required this.title, required this.subtitle, required this.icon});
 }
+

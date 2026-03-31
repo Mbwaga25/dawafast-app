@@ -3,14 +3,14 @@ class Brand {
   final String name;
   final String slug;
   final String? description;
-  final String? logoUrl;
+  final String? logo;
 
   Brand({
     required this.id,
     required this.name,
     required this.slug,
     this.description,
-    this.logoUrl,
+    this.logo,
   });
 
   factory Brand.fromJson(Map<String, dynamic> json) {
@@ -19,7 +19,7 @@ class Brand {
       name: json['name'],
       slug: json['slug'],
       description: json['description'],
-      logoUrl: json['logo'],
+      logo: json['logo'],
     );
   }
 }

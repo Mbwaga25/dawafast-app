@@ -10,16 +10,24 @@ class MarketplaceRepository {
   static const String _categoriesQuery = r'''
     query GetCategories($module: String) {
       allCategories(module: $module) {
-        id
-        name
-        slug
-        description
-        image
-        children {
-          id
-          name
-          slug
-          image
+        edges {
+          node {
+            id
+            name
+            slug
+            description
+            image
+            children {
+              edges {
+                node {
+                  id
+                  name
+                  slug
+                  image
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -28,21 +36,29 @@ class MarketplaceRepository {
   static const String _allSegmentsQuery = r'''
     query GetAllSegments {
       allSegments {
-        id
-        title
-        slug
-        products {
-          id
-          name
-          slug
-          price
-          originalPrice
-          rating
-          image {
-            imageUrl
-          }
-          images {
-            imageUrl
+        edges {
+          node {
+            id
+            title
+            slug
+            products {
+              edges {
+                node {
+                  id
+                  name
+                  slug
+                  price
+                  originalPrice
+                  rating
+                  image {
+                    imageUrl
+                  }
+                  images {
+                    imageUrl
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -61,32 +77,43 @@ class MarketplaceRepository {
       throw result.exception!;
     }
 
-    final List segments = result.data?['allSegments'] ?? [];
-    return segments.map((json) => ProductSegment.fromJson(json)).toList();
+    final dynamic segmentsData = result.data?['allSegments'];
+    List segmentsJson = [];
+    if (segmentsData is Map && segmentsData.containsKey('edges')) {
+      segmentsJson = (segmentsData['edges'] as List).map((e) => e['node']).toList();
+    } else if (segmentsData is List) {
+      segmentsJson = segmentsData;
+    }
+    
+    return segmentsJson.map((json) => ProductSegment.fromJson(json)).toList();
   }
 
   static const String _allProductsQuery = r'''
     query GetAllProducts($limit: Int, $offset: Int, $categorySlugs: [String], $brandSlugs: [String]) {
       allProducts(limit: $limit, offset: $offset, categorySlugs: $categorySlugs, brandSlugs: $brandSlugs) {
-        id
-        name
-        slug
-        price
-        originalPrice
-        rating
-        description
-        category {
-          name
-          slug
-        }
-        brand {
-          name
-          slug
-        }
-        images {
-          imageUrl
-          altText
-          isPrimary
+        edges {
+          node {
+            id
+            name
+            slug
+            price
+            originalPrice
+            rating
+            description
+            category {
+              name
+              slug
+            }
+            brand {
+              name
+              slug
+            }
+            images {
+              imageUrl
+              altText
+              isPrimary
+            }
+          }
         }
       }
     }
@@ -105,8 +132,15 @@ class MarketplaceRepository {
       throw result.exception!;
     }
 
-    final List categories = result.data?['allCategories'] ?? [];
-    return categories.map((json) => Category.fromJson(json)).toList();
+    final dynamic categoriesData = result.data?['allCategories'];
+    List categoriesJson = [];
+    if (categoriesData is Map && categoriesData.containsKey('edges')) {
+      categoriesJson = (categoriesData['edges'] as List).map((e) => e['node']).toList();
+    } else if (categoriesData is List) {
+      categoriesJson = categoriesData;
+    }
+
+    return categoriesJson.map((json) => Category.fromJson(json)).toList();
   }
 
   Future<List<Product>> fetchProducts({int? limit, int? offset, List<String>? categorySlugs, List<String>? brandSlugs}) async {
@@ -127,8 +161,15 @@ class MarketplaceRepository {
       throw result.exception!;
     }
 
-    final List products = result.data?['allProducts'] ?? [];
-    return products.map((json) => Product.fromJson(json)).toList();
+    final dynamic productsData = result.data?['allProducts'];
+    List productsJson = [];
+    if (productsData is Map && productsData.containsKey('edges')) {
+      productsJson = (productsData['edges'] as List).map((e) => e['node']).toList();
+    } else if (productsData is List) {
+      productsJson = productsData;
+    }
+
+    return productsJson.map((json) => Product.fromJson(json)).toList();
   }
 
   Future<Product?> getProductDetail(String idOrSlug) async {
@@ -149,13 +190,17 @@ class MarketplaceRepository {
             slug
           }
           allStoreListings {
-            id
-            store {
-              id
-              name
+            edges {
+              node {
+                id
+                store {
+                  id
+                  name
+                }
+                isAvailable
+                price
+              }
             }
-            isAvailable
-            price
           }
         }
       }
@@ -180,11 +225,15 @@ class MarketplaceRepository {
   static const String _allBrandsQuery = r'''
     query GetAllBrands($limit: Int, $offset: Int) {
       allBrands(limit: $limit, offset: $offset) {
-        id
-        name
-        slug
-        description
-        logo
+        edges {
+          node {
+            id
+            name
+            slug
+            description
+            logo
+          }
+        }
       }
     }
   ''';
@@ -202,8 +251,15 @@ class MarketplaceRepository {
       throw result.exception!;
     }
 
-    final List brands = result.data?['allBrands'] ?? [];
-    return brands.map((json) => Brand.fromJson(json)).toList();
+    final dynamic brandsData = result.data?['allBrands'];
+    List brandsJson = [];
+    if (brandsData is Map && brandsData.containsKey('edges')) {
+      brandsJson = (brandsData['edges'] as List).map((e) => e['node']).toList();
+    } else if (brandsData is List) {
+      brandsJson = brandsData;
+    }
+
+    return brandsJson.map((json) => Brand.fromJson(json)).toList();
   }
 }
 

@@ -14,53 +14,40 @@ class ProfilePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userAsync = ref.watch(currentUserProvider);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Profile'),
-        actions: [
-          IconButton(
-            onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsPage()));
-            }, 
-            icon: const Icon(Icons.settings_outlined),
-          ),
-        ],
-      ),
-      body: userAsync.when(
-        data: (user) {
-          if (user == null) {
-            return Center(
-              child: Padding(
-                padding: const EdgeInsets.all(24.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(Icons.account_circle_outlined, size: 80, color: AppTheme.textSecondary),
-                    const SizedBox(height: 16),
-                    const Text('Please login to view your profile', 
-                      style: TextStyle(color: AppTheme.textSecondary, fontSize: 16),
-                      textAlign: TextAlign.center,
+    return userAsync.when(
+      data: (user) {
+        if (user == null) {
+          return Center(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.account_circle_outlined, size: 80, color: AppTheme.textSecondary),
+                  const SizedBox(height: 16),
+                  const Text('Please login to view your profile', 
+                    style: TextStyle(color: AppTheme.textSecondary, fontSize: 16),
+                    textAlign: TextAlign.center,
+                  ),
+                  const SizedBox(height: 24),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginPage()));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(200, 50),
                     ),
-                    const SizedBox(height: 24),
-                    ElevatedButton(
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginPage()));
-                      },
-                      style: ElevatedButton.styleFrom(
-                        minimumSize: const Size(200, 50),
-                      ),
-                      child: const Text('Login / Signup'),
-                    ),
-                  ],
-                ),
+                    child: const Text('Login / Signup'),
+                  ),
+                ],
               ),
-            );
-          }
-          return _buildProfileContent(context, ref, user);
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err')),
-      ),
+            ),
+          );
+        }
+        return _buildProfileContent(context, ref, user);
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (err, stack) => Center(child: Text('Error: $err')),
     );
   }
 

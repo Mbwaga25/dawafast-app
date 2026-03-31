@@ -80,13 +80,22 @@ class ProductSegment {
   });
 
   factory ProductSegment.fromJson(Map<String, dynamic> json) {
-    var productsList = json['products'] as List? ?? [];
+    List<dynamic> _extractNodes(dynamic data) {
+      if (data is Map && data.containsKey('edges')) {
+        return (data['edges'] as List).map((edge) => edge['node']).toList();
+      } else if (data is List) {
+        return data;
+      }
+      return [];
+    }
+
+    var productsList = _extractNodes(json['products']);
     List<Product> products = productsList.map((p) => Product.fromJson(p)).toList();
 
     return ProductSegment(
       id: json['id'],
-      title: json['title'] ?? json['slug'],
-      slug: json['slug'],
+      title: json['title'] ?? json['slug'] ?? 'Segment',
+      slug: json['slug'] ?? '',
       products: products,
     );
   }
@@ -108,13 +117,22 @@ class Category {
   });
 
   factory Category.fromJson(Map<String, dynamic> json) {
+    List<dynamic> _extractNodes(dynamic data) {
+      if (data is Map && data.containsKey('edges')) {
+        return (data['edges'] as List).map((edge) => edge['node']).toList();
+      } else if (data is List) {
+        return data;
+      }
+      return [];
+    }
+
     return Category(
       id: json['id'],
       name: json['name'],
       slug: json['slug'],
       image: json['image'],
       children: json['children'] != null
-          ? (json['children'] as List).map((i) => Category.fromJson(i)).toList()
+          ? _extractNodes(json['children']).map((i) => Category.fromJson(i)).toList()
           : null,
     );
   }

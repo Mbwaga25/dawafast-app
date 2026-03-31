@@ -202,8 +202,8 @@ class PatientDashboard extends ConsumerWidget {
                                 border: Border.all(color: AppTheme.borderColor),
                               ),
                               child: ClipOval(
-                                child: (brand.logoUrl != null && brand.logoUrl!.isNotEmpty)
-                                  ? Image.network(brand.logoUrl!, fit: BoxFit.cover)
+                                child: (brand.logo != null && brand.logo!.isNotEmpty)
+                                  ? Image.network(brand.logo!, fit: BoxFit.cover)
                                   : const Icon(Icons.branding_watermark, color: AppTheme.textSecondary),
                               ),
                             ),

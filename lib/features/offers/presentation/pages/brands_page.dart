@@ -51,9 +51,9 @@ class BrandsPage extends ConsumerWidget {
                         flex: 3,
                         child: ClipRRect(
                           borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
-                          child: (brand.logoUrl != null && brand.logoUrl!.isNotEmpty)
+                          child: (brand.logo != null && brand.logo!.isNotEmpty)
                               ? CachedNetworkImage(
-                                  imageUrl: brand.logoUrl!,
+                                  imageUrl: brand.logo!,
                                   fit: BoxFit.cover,
                                   errorWidget: (_, __, ___) => const Icon(Icons.broken_image, color: AppTheme.textSecondary),
                                 )

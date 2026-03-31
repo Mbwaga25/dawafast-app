@@ -75,20 +75,28 @@ class HealthcareRepository {
           description
           formattedAddress
           children {
-            id
-            name
-            slug
-            storeType
-            city
+            edges {
+              node {
+                id
+                name
+                slug
+                storeType
+                city
+              }
+            }
           }
           doctors {
-            id
-            specialty
-            isVerified
-            user {
-              username
-              firstName
-              lastName
+            edges {
+              node {
+                id
+                specialty
+                isVerified
+                user {
+                  username
+                  firstName
+                  lastName
+                }
+              }
             }
           }
           servicesList {
