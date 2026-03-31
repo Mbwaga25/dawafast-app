@@ -31,7 +31,7 @@ class OffersPage extends ConsumerWidget {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 gradient: const LinearGradient(
-                  colors: [AppTheme.primaryTeal, Color(0xFF1CB5AC)],
+                  colors: [AppTheme.primaryBlue, Color(0xFF1CB5AC)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
@@ -83,7 +83,7 @@ class OffersPage extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('Shop by Category', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  Text('View All', style: TextStyle(color: AppTheme.primaryTeal)),
+                  Text('View All', style: TextStyle(color: AppTheme.primaryBlue)),
                 ],
               ),
             ),
@@ -201,7 +201,7 @@ class OffersPage extends ConsumerWidget {
                   Positioned.fill(
                     child: Container(
                       decoration: BoxDecoration(
-                        color: AppTheme.backgroundGray,
+                        color: AppTheme.backgroundWhite,
                       ),
                       child: product.images.isNotEmpty
                           ? Image.network(product.images.first, fit: BoxFit.cover, width: double.infinity)
@@ -222,7 +222,7 @@ class OffersPage extends ConsumerWidget {
                             icon: Icon(
                               isFavorite ? Icons.favorite : Icons.favorite_border,
                               size: 20,
-                              color: AppTheme.accentPink,
+                              color: AppTheme.accentBlue,
                             ),
                             onPressed: () => ref.read(wishlistProvider.notifier).toggle(product),
                           ),
@@ -248,13 +248,13 @@ class OffersPage extends ConsumerWidget {
                         children: [
                           if (product.discountPercentage > 0)
                             Text('${product.discountPercentage.toInt()}% OFF', 
-                              style: const TextStyle(fontSize: 12, color: AppTheme.accentPink, fontWeight: FontWeight.bold),
+                              style: const TextStyle(fontSize: 12, color: AppTheme.accentBlue, fontWeight: FontWeight.bold),
                             ),
                           Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
                         ],
                       ),
                       IconButton(
-                        icon: const Icon(Icons.add_shopping_cart, color: AppTheme.primaryTeal, size: 20),
+                        icon: const Icon(Icons.add_shopping_cart, color: AppTheme.primaryBlue, size: 20),
                         onPressed: () {
                           ref.read(cartProvider.notifier).addItem(
                             CartItem(

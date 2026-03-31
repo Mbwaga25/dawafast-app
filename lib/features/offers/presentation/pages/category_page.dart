@@ -13,9 +13,7 @@ class CategoryPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // For now, we reuse the productsProvider but filter by category
-    // In a real app, you'd have a specific query for productsByCategoryId
-    final productsAsync = ref.watch(productsProvider);
+    final productsAsync = ref.watch(relatedProductsProvider(category.slug));
     final currencyConf = ref.watch(currencySettingsProvider).value;
     final symbol = currencyConf?.symbol ?? 'Tsh';
 
@@ -23,40 +21,91 @@ class CategoryPage extends ConsumerWidget {
       appBar: AppBar(
         title: Text(category.name),
       ),
-      body: productsAsync.when(
-        data: (products) {
-          final categoryProducts = products.where((p) => p.categoryName == category.name).toList();
-          
-          if (categoryProducts.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.inventory_2_outlined, size: 64, color: AppTheme.textSecondary),
-                  const SizedBox(height: 16),
-                  Text('No products found in ${category.name}', style: const TextStyle(color: AppTheme.textSecondary)),
-                ],
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (category.children != null && category.children!.isNotEmpty)
+            Container(
+              height: 110,
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              color: AppTheme.backgroundWhite,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                padding: const EdgeInsets.symmetric(horizontal: 16),
+                itemCount: category.children!.length,
+                itemBuilder: (context, index) {
+                  final childCat = category.children![index];
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => CategoryPage(category: childCat)));
+                    },
+                    child: Container(
+                      width: 80,
+                      margin: const EdgeInsets.only(right: 16),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 50,
+                            width: 50,
+                            decoration: BoxDecoration(
+                              color: AppTheme.surfaceWhite,
+                              shape: BoxShape.circle,
+                              border: Border.all(color: AppTheme.borderColor),
+                            ),
+                            child: const Icon(Icons.category_outlined, color: AppTheme.primaryBlue),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            childCat.name,
+                            style: const TextStyle(fontSize: 12),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
+                },
               ),
-            );
-          }
-
-          return GridView.builder(
-            padding: const EdgeInsets.all(16),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              childAspectRatio: 0.75,
-              crossAxisSpacing: 16,
-              mainAxisSpacing: 16,
             ),
-            itemCount: categoryProducts.length,
-            itemBuilder: (context, index) {
-              final product = categoryProducts[index];
-              return _buildProductCard(context, product, symbol);
-            },
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (err, stack) => Center(child: Text('Error: $err')),
+          
+          Expanded(
+            child: productsAsync.when(
+              data: (categoryProducts) {
+                if (categoryProducts.isEmpty) {
+                  return Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(Icons.inventory_2_outlined, size: 64, color: AppTheme.textSecondary),
+                        const SizedBox(height: 16),
+                        Text('No products found in ${category.name}', style: const TextStyle(color: AppTheme.textSecondary)),
+                      ],
+                    ),
+                  );
+                }
+
+                return GridView.builder(
+                  padding: const EdgeInsets.all(16),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.75,
+                    crossAxisSpacing: 16,
+                    mainAxisSpacing: 16,
+                  ),
+                  itemCount: categoryProducts.length,
+                  itemBuilder: (context, index) {
+                    final product = categoryProducts[index];
+                    return _buildProductCard(context, product, symbol);
+                  },
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, stack) => Center(child: Text('Error: $err')),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -73,7 +122,7 @@ class CategoryPage extends ConsumerWidget {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  color: AppTheme.backgroundGray,
+                  color: AppTheme.backgroundWhite,
                   borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
                 ),
                 child: product.images.isNotEmpty
@@ -88,7 +137,7 @@ class CategoryPage extends ConsumerWidget {
                 children: [
                   Text(product.name, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis),
                   const SizedBox(height: 4),
-                  Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 14, color: AppTheme.primaryTeal, fontWeight: FontWeight.bold)),
+                  Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 14, color: AppTheme.primaryBlue, fontWeight: FontWeight.bold)),
                 ],
               ),
             ),

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app/core/theme.dart';
 import 'package:app/features/auth/data/models/user_model.dart';
+import 'package:app/features/orders/data/repositories/order_repository.dart';
+import 'package:app/features/orders/data/models/order_model.dart';
 
 class PharmacyDashboard extends ConsumerWidget {
   final User user;
@@ -9,6 +11,8 @@ class PharmacyDashboard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final ordersAsync = ref.watch(myOrdersProvider(null));
+
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -47,7 +51,7 @@ class PharmacyDashboard extends ConsumerWidget {
                 const SizedBox(height: 16),
                 Row(
                   children: [
-                    _buildActionCard('New Orders', '08', Icons.shopping_basket, Colors.blue),
+                    _buildActionCard('New Orders', ordersAsync.value?.where((o) => o.status.toLowerCase() == 'pending').length.toString().padLeft(2, '0') ?? '00', Icons.shopping_basket, Colors.blue),
                     const SizedBox(width: 16),
                     _buildActionCard('Inventory', '2.4k', Icons.inventory, Colors.green),
                   ],
@@ -64,9 +68,27 @@ class PharmacyDashboard extends ConsumerWidget {
                 const SizedBox(height: 32),
                 const Text('Recent Orders', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 16),
-                _buildOrderItem('ORD-8821', 'Aspirin (x2), Paracetamol', 'Pending'),
-                _buildOrderItem('ORD-8819', 'Hand Sanitizer, Masks', 'Ready'),
-                _buildOrderItem('ORD-8815', 'Vitamin C Supplement', 'Delivered'),
+                
+                ordersAsync.when(
+                  data: (orders) {
+                    if (orders.isEmpty) {
+                      return const Center(
+                        child: Padding(
+                          padding: EdgeInsets.all(24.0),
+                          child: Text('No orders found recently', style: TextStyle(color: AppTheme.textSecondary)),
+                        ),
+                      );
+                    }
+                    return Column(
+                      children: orders.take(5).map((order) {
+                        final itemsStr = order.items.map((i) => '${i.quantity}x ${i.productName}').join(', ');
+                        return _buildOrderItem('ORD-${order.id}', itemsStr, order.status);
+                      }).toList(),
+                    );
+                  },
+                  loading: () => const Center(child: CircularProgressIndicator()),
+                  error: (err, stack) => Center(child: Text('Error: $err')),
+                ),
               ],
             ),
           ),

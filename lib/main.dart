@@ -59,7 +59,7 @@ class _MainLayoutState extends State<MainLayout> {
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         type: BottomNavigationBarType.fixed,
-        selectedItemColor: AppTheme.primaryTeal,
+        selectedItemColor: AppTheme.primaryBlue,
         unselectedItemColor: AppTheme.textSecondary,
         items: const [
           BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Home'),

@@ -7,7 +7,9 @@ class Product {
   final double? rating;
   final String? description;
   final String? categoryName;
+  final String? categorySlug;
   final String? brandName;
+  final String? brandSlug;
   final List<String> images;
 
   Product({
@@ -19,7 +21,9 @@ class Product {
     this.rating,
     this.description,
     this.categoryName,
+    this.categorySlug,
     this.brandName,
+    this.brandSlug,
     required this.images,
   });
 
@@ -49,7 +53,9 @@ class Product {
       rating: json['rating'] != null ? double.parse(json['rating'].toString()) : null,
       description: json['description'],
       categoryName: json['category']?['name'],
+      categorySlug: json['category']?['slug'],
       brandName: json['brand']?['name'],
+      brandSlug: json['brand']?['slug'],
       images: imageUrls,
     );
   }
@@ -91,12 +97,14 @@ class Category {
   final String name;
   final String slug;
   final String? image;
+  final List<Category>? children;
 
   Category({
     required this.id,
     required this.name,
     required this.slug,
     this.image,
+    this.children,
   });
 
   factory Category.fromJson(Map<String, dynamic> json) {
@@ -105,6 +113,9 @@ class Category {
       name: json['name'],
       slug: json['slug'],
       image: json['image'],
+      children: json['children'] != null
+          ? (json['children'] as List).map((i) => Category.fromJson(i)).toList()
+          : null,
     );
   }
 }

@@ -76,7 +76,7 @@ class ProfilePage extends ConsumerWidget {
               children: [
                 const CircleAvatar(
                   radius: 40,
-                  backgroundColor: AppTheme.primaryTeal,
+                  backgroundColor: AppTheme.primaryBlue,
                   child: Icon(Icons.person, size: 40, color: Colors.white),
                 ),
                 const SizedBox(width: 16),
@@ -98,7 +98,7 @@ class ProfilePage extends ConsumerWidget {
                   onPressed: () {
                     Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsPage()));
                   }, 
-                  icon: const Icon(Icons.edit_outlined, color: AppTheme.primaryTeal),
+                  icon: const Icon(Icons.edit_outlined, color: AppTheme.primaryBlue),
                 ),
               ],
             ),
@@ -145,8 +145,8 @@ class ProfilePage extends ConsumerWidget {
               },
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
-                side: const BorderSide(color: AppTheme.accentPink),
-                foregroundColor: AppTheme.accentPink,
+                side: const BorderSide(color: AppTheme.accentBlue),
+                foregroundColor: AppTheme.accentBlue,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
               child: const Text('Logout', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -180,7 +180,7 @@ class ProfilePage extends ConsumerWidget {
 
   Widget _buildOption(IconData icon, String title, String subtitle, VoidCallback onTap) {
     return ListTile(
-      leading: Icon(icon, color: AppTheme.primaryTeal),
+      leading: Icon(icon, color: AppTheme.primaryBlue),
       title: Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
       subtitle: Text(subtitle, style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
       trailing: const Icon(Icons.chevron_right, size: 20),

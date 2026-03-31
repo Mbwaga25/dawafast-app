@@ -17,7 +17,7 @@ class DoctorDashboard extends ConsumerWidget {
             height: 200,
             width: double.infinity,
             decoration: const BoxDecoration(
-              color: AppTheme.primaryTeal,
+              color: AppTheme.primaryBlue,
             ),
             child: Stack(
               children: [
@@ -118,7 +118,7 @@ class DoctorDashboard extends ConsumerWidget {
       ),
       child: Row(
         children: [
-          CircleAvatar(backgroundColor: AppTheme.primaryTeal.withOpacity(0.1), child: Text(patient[0])),
+          CircleAvatar(backgroundColor: AppTheme.primaryBlue.withOpacity(0.1), child: Text(patient[0])),
           const SizedBox(width: 16),
           Expanded(
             child: Column(
@@ -129,7 +129,7 @@ class DoctorDashboard extends ConsumerWidget {
               ],
             ),
           ),
-          Text(time, style: const TextStyle(color: AppTheme.primaryTeal, fontWeight: FontWeight.bold)),
+          Text(time, style: const TextStyle(color: AppTheme.primaryBlue, fontWeight: FontWeight.bold)),
         ],
       ),
     );

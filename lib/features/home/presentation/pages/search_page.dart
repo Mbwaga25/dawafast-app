@@ -60,16 +60,16 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
               ) : null,
               border: InputBorder.none,
               filled: true,
-              fillColor: AppTheme.backgroundGray,
+              fillColor: AppTheme.backgroundWhite,
             ),
             onChanged: (val) => setState(() => _query = val),
           ),
         ),
         bottom: TabBar(
           controller: _tabController,
-          labelColor: AppTheme.primaryTeal,
+          labelColor: AppTheme.primaryBlue,
           unselectedLabelColor: AppTheme.textSecondary,
-          indicatorColor: AppTheme.primaryTeal,
+          indicatorColor: AppTheme.primaryBlue,
           tabs: const [
             Tab(text: 'Products'),
             Tab(text: 'Healthcare'),
@@ -105,7 +105,7 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
           itemBuilder: (context, index) {
             final p = filtered[index];
             return ListTile(
-              leading: Icon(Icons.medical_services_outlined, color: AppTheme.primaryTeal),
+              leading: Icon(Icons.medical_services_outlined, color: AppTheme.primaryBlue),
               title: Text(p.name),
               subtitle: Text('$symbol ${p.price.toStringAsFixed(0)}'),
               trailing: Row(
@@ -115,13 +115,13 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
                     builder: (context, ref, child) {
                       final isFav = ref.watch(wishlistProvider.notifier).isFavorite(p.id);
                       return IconButton(
-                        icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, color: AppTheme.accentPink, size: 20),
+                        icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, color: AppTheme.accentBlue, size: 20),
                         onPressed: () => ref.read(wishlistProvider.notifier).toggle(p),
                       );
                     },
                   ),
                   IconButton(
-                    icon: const Icon(Icons.add_shopping_cart, color: AppTheme.primaryTeal, size: 20),
+                    icon: const Icon(Icons.add_shopping_cart, color: AppTheme.primaryBlue, size: 20),
                     onPressed: () {
                       ref.read(cartProvider.notifier).addItem(
                         CartItem(
@@ -194,7 +194,7 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
           itemBuilder: (context, index) {
             final d = filtered[index];
             return ListTile(
-              leading: CircleAvatar(backgroundColor: AppTheme.primaryTeal.withOpacity(0.1), child: const Icon(Icons.person, color: AppTheme.primaryTeal)),
+              leading: CircleAvatar(backgroundColor: AppTheme.primaryBlue.withOpacity(0.1), child: const Icon(Icons.person, color: AppTheme.primaryBlue)),
               title: Text('Dr. ${d.fullName}'),
               subtitle: Text(d.specialty ?? 'General Physician'),
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DoctorDetailPage(doctorId: d.id))),

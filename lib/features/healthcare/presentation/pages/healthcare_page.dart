@@ -48,7 +48,7 @@ class _HealthcarePageState extends ConsumerState<HealthcarePage> {
                       child: Container(
                         padding: const EdgeInsets.all(2),
                         decoration: BoxDecoration(
-                          color: AppTheme.accentPink,
+                          color: AppTheme.accentBlue,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
@@ -188,16 +188,16 @@ class _HealthcarePageState extends ConsumerState<HealthcarePage> {
           }
         },
         backgroundColor: AppTheme.surfaceWhite,
-        selectedColor: AppTheme.primaryTeal.withOpacity(0.2),
-        checkmarkColor: AppTheme.primaryTeal,
+        selectedColor: AppTheme.primaryBlue.withOpacity(0.2),
+        checkmarkColor: AppTheme.primaryBlue,
         labelStyle: TextStyle(
-          color: isSelected ? AppTheme.primaryTeal : AppTheme.textPrimary,
+          color: isSelected ? AppTheme.primaryBlue : AppTheme.textPrimary,
           fontSize: 13,
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
         ),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: BorderSide(color: isSelected ? AppTheme.primaryTeal : AppTheme.borderColor),
+          side: BorderSide(color: isSelected ? AppTheme.primaryBlue : AppTheme.borderColor),
         ),
       ),
     );

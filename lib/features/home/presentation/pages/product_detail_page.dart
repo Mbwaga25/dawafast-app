@@ -7,9 +7,11 @@ import 'package:app/features/offers/data/models/product_model.dart';
 import 'package:app/features/profile/data/repositories/settings_repository.dart';
 import 'package:app/features/cart/presentation/providers/cart_provider.dart';
 import 'package:app/features/cart/presentation/pages/cart_page.dart';
+import 'package:app/features/cart/presentation/pages/checkout_page.dart';
 import 'package:app/features/cart/data/models/cart_model.dart';
 import 'package:app/features/profile/presentation/providers/wishlist_provider.dart';
-import 'package:app/features/profile/data/repositories/settings_repository.dart';
+import 'package:app/features/offers/presentation/providers/compare_provider.dart';
+import 'package:app/features/offers/presentation/pages/compare_page.dart';
 
 class ProductDetailPage extends ConsumerWidget {
   final String idOrSlug;
@@ -34,9 +36,30 @@ class ProductDetailPage extends ConsumerWidget {
                     ref.read(wishlistProvider.notifier).toggle(product);
                   }
                 },
-                icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, color: AppTheme.accentPink),
+                icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, color: AppTheme.accentBlue),
               );
             },
+          ),
+          IconButton(
+            onPressed: () {
+              final product = ref.read(productDetailProvider(idOrSlug)).value;
+              if (product != null) {
+                ref.read(compareProvider.notifier).addProduct(product, context);
+              }
+            },
+            icon: const Icon(Icons.compare_arrows_outlined),
+          ),
+          Consumer(
+            builder: (context, ref, child) {
+              final compareCount = ref.watch(compareProvider).length;
+              if (compareCount > 0) {
+                 return IconButton(
+                   onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ComparePage())),
+                   icon: const Icon(Icons.layers_outlined, color: AppTheme.primaryBlue),
+                 );
+              }
+              return const SizedBox();
+            }
           ),
           IconButton(onPressed: () {}, icon: const Icon(Icons.share_outlined)),
           Consumer(
@@ -55,7 +78,7 @@ class ProductDetailPage extends ConsumerWidget {
                       child: Container(
                         padding: const EdgeInsets.all(2),
                         decoration: BoxDecoration(
-                          color: AppTheme.accentPink,
+                          color: AppTheme.accentBlue,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
@@ -106,7 +129,7 @@ class ProductDetailPage extends ConsumerWidget {
                     return CachedNetworkImage(
                       imageUrl: product.images[index],
                       fit: BoxFit.cover,
-                      placeholder: (context, url) => Container(color: AppTheme.backgroundGray),
+                      placeholder: (context, url) => Container(color: AppTheme.backgroundWhite),
                       errorWidget: (context, url, error) => Image.asset('lib/assets/images/product_placeholder.png', fit: BoxFit.cover),
                     );
                   },
@@ -122,12 +145,12 @@ class ProductDetailPage extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: AppTheme.primaryTeal.withOpacity(0.1),
+                    color: AppTheme.primaryBlue.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     product.categoryName ?? 'Health',
-                    style: const TextStyle(color: AppTheme.primaryTeal, fontSize: 12, fontWeight: FontWeight.bold),
+                    style: const TextStyle(color: AppTheme.primaryBlue, fontSize: 12, fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -139,7 +162,7 @@ class ProductDetailPage extends ConsumerWidget {
                   children: [
                     Text(
                       '$symbol ${product.price.toStringAsFixed(0)}',
-                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppTheme.primaryTeal),
+                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue),
                     ),
                     const SizedBox(width: 12),
                     if ((product.rating ?? 0) > 0) ...[
@@ -163,6 +186,13 @@ class ProductDetailPage extends ConsumerWidget {
                 _buildInfoTile(Icons.verified_user_outlined, '100% Genuine Product'),
                 _buildInfoTile(Icons.local_shipping_outlined, 'Fast Delivery within 24 hours'),
                 _buildInfoTile(Icons.assignment_return_outlined, 'Easy 7-day returns'),
+                const SizedBox(height: 16),
+
+                if (product.categorySlug != null)
+                  _buildRelatedProducts(context, ref, product.categorySlug!, product.id),
+
+                if (product.brandSlug != null)
+                  _buildSimilarBrands(context, ref, product.brandSlug!, product.id),
               ],
             ),
           ),
@@ -176,7 +206,7 @@ class ProductDetailPage extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: 12.0),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: AppTheme.primaryTeal),
+          Icon(icon, size: 20, color: AppTheme.primaryBlue),
           const SizedBox(width: 12),
           Text(text, style: const TextStyle(color: AppTheme.textSecondary)),
         ],
@@ -185,8 +215,15 @@ class ProductDetailPage extends ConsumerWidget {
   }
 
   Widget _buildBottomAction(BuildContext context, WidgetRef ref, Product product) {
+    final CartItem cartItem = CartItem(
+      productId: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.images.isNotEmpty ? product.images.first : null,
+    );
+
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
@@ -194,45 +231,152 @@ class ProductDetailPage extends ConsumerWidget {
         ],
       ),
       child: SafeArea(
-        child: Row(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              decoration: BoxDecoration(
-                border: Border.all(color: AppTheme.backgroundGray),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: IconButton(
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CartPage())),
-                icon: const Icon(Icons.shopping_cart_outlined, color: AppTheme.primaryTeal),
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: ElevatedButton(
+            // Buy Now – primary action
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                icon: const Icon(Icons.bolt, size: 18),
                 onPressed: () {
-                  ref.read(cartProvider.notifier).addItem(
-                    CartItem(
-                      productId: product.id,
-                      name: product.name,
-                      price: product.price,
-                      image: product.images.isNotEmpty ? product.images.first : null,
-                    ),
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('${product.name} added to cart'),
-                      action: SnackBarAction(
-                        label: 'VIEW CART',
-                        onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CartPage())),
-                      ),
-                    ),
-                  );
+                  ref.read(cartProvider.notifier).addItem(cartItem);
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const CheckoutPage()));
                 },
                 style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 50)),
-                child: const Text('Add to Cart'),
+                label: const Text('Buy Now', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              ),
+            ),
+            const SizedBox(height: 8),
+            // Add to Cart + View Cart icon row
+            Row(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(color: AppTheme.borderColor),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: IconButton(
+                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CartPage())),
+                    icon: const Icon(Icons.shopping_cart_outlined, color: AppTheme.primaryBlue),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () {
+                      ref.read(cartProvider.notifier).addItem(cartItem);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text('${product.name} added to cart'),
+                          action: SnackBarAction(
+                            label: 'GO TO CHECKOUT',
+                            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CheckoutPage())),
+                          ),
+                        ),
+                      );
+                    },
+                    style: OutlinedButton.styleFrom(minimumSize: const Size(double.infinity, 48)),
+                    child: const Text('Add to Cart'),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 4),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildRelatedProducts(BuildContext context, WidgetRef ref, String categorySlug, String currentProductId) {
+    final asyncProducts = ref.watch(relatedProductsProvider(categorySlug));
+    return _buildHorizontalList(context, 'Related Products', asyncProducts, currentProductId);
+  }
+
+  Widget _buildSimilarBrands(BuildContext context, WidgetRef ref, String brandSlug, String currentProductId) {
+    final asyncProducts = ref.watch(similarBrandsProvider(brandSlug));
+    return _buildHorizontalList(context, 'More from this Brand', asyncProducts, currentProductId);
+  }
+
+  Widget _buildHorizontalList(BuildContext context, String title, AsyncValue<List<Product>> asyncProducts, String currentProductId) {
+    return asyncProducts.when(
+      data: (products) {
+        final filtered = products.where((p) => p.id != currentProductId).toList();
+        if (filtered.isEmpty) return const SizedBox.shrink();
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(height: 24),
+            Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+            const SizedBox(height: 16),
+            SizedBox(
+              height: 220,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: filtered.length,
+                itemBuilder: (context, index) {
+                  return _buildProductCard(context, filtered[index]);
+                },
               ),
             ),
           ],
+        );
+      },
+      loading: () => const Padding(padding: EdgeInsets.all(24), child: Center(child: CircularProgressIndicator())),
+      error: (e, s) => const SizedBox.shrink(),
+    );
+  }
+
+  Widget _buildProductCard(BuildContext context, Product product) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(context, MaterialPageRoute(builder: (_) => ProductDetailPage(idOrSlug: product.slug)));
+      },
+      child: Container(
+        width: 150,
+        margin: const EdgeInsets.only(right: 16),
+        child: Card(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Container(
+                  width: double.infinity,
+                  decoration: const BoxDecoration(
+                    color: AppTheme.backgroundWhite,
+                    borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                  ),
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                    child: product.images.isNotEmpty 
+                      ? CachedNetworkImage(
+                          imageUrl: product.images.first, 
+                          fit: BoxFit.cover,
+                          errorWidget: (context, url, err) => Image.asset('lib/assets/images/product_placeholder.png', fit: BoxFit.cover),
+                        )
+                      : Image.asset('lib/assets/images/product_placeholder.png', fit: BoxFit.cover),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(product.name, 
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold), 
+                      maxLines: 1, 
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text('Tsh ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.primaryBlue)),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -62,7 +62,7 @@ class _MeetingPageState extends State<MeetingPage> {
                     CircleAvatar(
                       radius: 60,
                       backgroundImage: const AssetImage('lib/assets/images/doctor_placeholder.png'),
-                      backgroundColor: AppTheme.backgroundGray,
+                      backgroundColor: AppTheme.backgroundWhite,
                     ),
                     const SizedBox(height: 20),
                     Text(
@@ -75,7 +75,7 @@ class _MeetingPageState extends State<MeetingPage> {
                       style: const TextStyle(color: Colors.white70, fontSize: 16),
                     ),
                     const SizedBox(height: 40),
-                    const CircularProgressIndicator(color: AppTheme.primaryTeal),
+                    const CircularProgressIndicator(color: AppTheme.primaryBlue),
                     const SizedBox(height: 20),
                     const Text('Connecting to securely...', style: TextStyle(color: Colors.white54)),
                   ],

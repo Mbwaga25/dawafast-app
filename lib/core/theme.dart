@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  static const Color primaryTeal = Color(0xFF00A391); // More vibrant teal
-  static const Color accentPink = Color(0xFFFF5A70); // Softer pink
-  static const Color backgroundGray = Color(0xFFF8FAFB); // Brighter gray
+  // Slate/Blue theme inspired by Dawafast Web Frontend (globals.css OKLCH colors)
+  static const Color primaryBlue = Color(0xFF1E293B); // Slate 800
+  static const Color accentBlue = Color(0xFF334155); // Slate 700
+  static const Color backgroundWhite = Color(0xFFFFFFFF); // Pure White
   static const Color surfaceWhite = Color(0xFFFFFFFF);
-  static const Color textPrimary = Color(0xFF1A1C1E); // Darker text
-  static const Color textSecondary = Color(0xFF6E7781); // Softer secondary
-  static const Color borderColor = Color(0xFFEDEFF2); // Lighter borders
+  static const Color textPrimary = Color(0xFF0F172A); // Slate 900
+  static const Color textSecondary = Color(0xFF64748B); // Slate 500
+  static const Color borderColor = Color(0xFFE2E8F0); // Slate 200
 
-  static const TextStyle headingStyle = TextStyle(
+  static final TextStyle headingStyle = GoogleFonts.inter(
     color: textPrimary,
     fontSize: 22,
     fontWeight: FontWeight.bold,
@@ -18,59 +20,59 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
-      primaryColor: primaryTeal,
-      colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryTeal,
-        primary: primaryTeal,
-        secondary: accentPink,
-        surface: surfaceWhite,
-        background: backgroundGray,
-        onSurface: textPrimary,
-      ),
-      scaffoldBackgroundColor: backgroundGray,
-      textTheme: const TextTheme(
-        headlineLarge: TextStyle(
+      primaryColor: primaryBlue,
+      textTheme: GoogleFonts.interTextTheme().copyWith(
+        headlineLarge: GoogleFonts.inter(
           color: textPrimary,
           fontSize: 28,
           fontWeight: FontWeight.bold,
           letterSpacing: -0.5,
         ),
-        headlineMedium: TextStyle(
+        headlineMedium: GoogleFonts.inter(
           color: textPrimary,
           fontSize: 22,
           fontWeight: FontWeight.w700,
           letterSpacing: -0.2,
         ),
-        titleLarge: TextStyle(
+        titleLarge: GoogleFonts.inter(
           color: textPrimary,
           fontSize: 18,
           fontWeight: FontWeight.w600,
         ),
-        bodyLarge: TextStyle(
+        bodyLarge: GoogleFonts.inter(
           color: textPrimary,
           fontSize: 16,
           height: 1.5,
         ),
-        bodyMedium: TextStyle(
+        bodyMedium: GoogleFonts.inter(
           color: textPrimary,
           fontSize: 14,
           height: 1.4,
         ),
       ),
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: primaryBlue,
+        primary: primaryBlue,
+        secondary: accentBlue,
+        surface: surfaceWhite,
+        background: backgroundWhite,
+        onSurface: textPrimary,
+      ),
+      scaffoldBackgroundColor: backgroundWhite,
       cardTheme: CardThemeData(
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(10), // Dawafast Web radius (0.625rem = 10px)
           side: const BorderSide(color: borderColor),
         ),
         color: surfaceWhite,
       ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: backgroundGray,
+      appBarTheme: AppBarTheme(
+        backgroundColor: backgroundWhite,
         elevation: 0,
         centerTitle: false,
-        iconTheme: IconThemeData(color: textPrimary),
-        titleTextStyle: TextStyle(
+        iconTheme: const IconThemeData(color: textPrimary),
+        titleTextStyle: GoogleFonts.inter(
           color: textPrimary,
           fontSize: 20,
           fontWeight: FontWeight.bold,
@@ -79,10 +81,11 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           elevation: 0,
-          backgroundColor: primaryTeal,
+          backgroundColor: primaryBlue,
           foregroundColor: Colors.white,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),
+          textStyle: GoogleFonts.inter(fontWeight: FontWeight.w600),
         ),
       ),
     );

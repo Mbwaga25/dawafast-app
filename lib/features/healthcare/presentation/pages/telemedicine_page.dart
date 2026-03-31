@@ -117,7 +117,7 @@ class _TelemedicinePageState extends ConsumerState<TelemedicinePage> {
   Widget _buildStat(String value, String label) {
     return Column(
       children: [
-        Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryTeal)),
+        Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
         Text(label, style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
       ],
     );
@@ -144,7 +144,7 @@ class _TeleDoctorCard extends StatelessWidget {
                 CircleAvatar(
                   radius: 30,
                   backgroundImage: const AssetImage('lib/assets/images/doctor_placeholder.png'),
-                  backgroundColor: AppTheme.backgroundGray,
+                  backgroundColor: AppTheme.backgroundWhite,
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -183,7 +183,7 @@ class _TeleDoctorCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('Video Fee', style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
-                    const Text('Tsh 30,000', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryTeal)),
+                    const Text('Tsh 30,000', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
                   ],
                 ),
                 Row(

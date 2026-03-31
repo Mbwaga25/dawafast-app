@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme.dart';
+import '../../../../core/api_client.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/user_repository.dart';
 import 'signup_page.dart';
@@ -33,14 +34,21 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       );
       
       if (token != null) {
-        // Refresh current user
+        // Reset GraphQL client so the new token is picked up immediately
+        ApiClient.resetClient();
+        // Invalidate the user provider so it re-fetches with the new token
         ref.invalidate(currentUserProvider);
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Login successful!')),
           );
+          // Pop back to home instead of replacing so navigation stack is preserved
           Navigator.pop(context);
         }
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Login failed: Invalid credentials')),
+        );
       }
     } catch (e) {
       if (mounted) {
@@ -64,7 +72,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Welcome Back', style: AppTheme.headingStyle),
+            Text('Welcome Back', style: AppTheme.headingStyle),
             const SizedBox(height: 8),
             const Text('Login to continue your healthcare journey', style: TextStyle(color: AppTheme.textSecondary)),
             const SizedBox(height: 48),

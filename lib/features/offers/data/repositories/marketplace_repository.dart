@@ -2,6 +2,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/api_client.dart';
 import '../models/product_model.dart';
+import '../models/brand_model.dart';
 
 final marketplaceRepositoryProvider = Provider((ref) => MarketplaceRepository());
 
@@ -14,6 +15,12 @@ class MarketplaceRepository {
         slug
         description
         image
+        children {
+          id
+          name
+          slug
+          image
+        }
       }
     }
   ''';
@@ -59,8 +66,8 @@ class MarketplaceRepository {
   }
 
   static const String _allProductsQuery = r'''
-    query GetAllProducts($limit: Int, $offset: Int) {
-      allProducts(limit: $limit, offset: $offset) {
+    query GetAllProducts($limit: Int, $offset: Int, $categorySlugs: [String], $brandSlugs: [String]) {
+      allProducts(limit: $limit, offset: $offset, categorySlugs: $categorySlugs, brandSlugs: $brandSlugs) {
         id
         name
         slug
@@ -102,10 +109,15 @@ class MarketplaceRepository {
     return categories.map((json) => Category.fromJson(json)).toList();
   }
 
-  Future<List<Product>> fetchProducts({int? limit, int? offset}) async {
+  Future<List<Product>> fetchProducts({int? limit, int? offset, List<String>? categorySlugs, List<String>? brandSlugs}) async {
     final QueryOptions options = QueryOptions(
       document: gql(_allProductsQuery),
-      variables: {'limit': limit, 'offset': offset},
+      variables: {
+        'limit': limit, 
+        'offset': offset,
+        if (categorySlugs != null) 'categorySlugs': categorySlugs,
+        if (brandSlugs != null) 'brandSlugs': brandSlugs,
+      },
       fetchPolicy: FetchPolicy.cacheAndNetwork,
     );
 
@@ -151,7 +163,7 @@ class MarketplaceRepository {
 
     final QueryOptions options = QueryOptions(
       document: gql(productDetailQuery),
-      variables: idOrSlug.length > 20 ? {'id': idOrSlug} : {'slug': idOrSlug},
+      variables: int.tryParse(idOrSlug) != null ? {'id': idOrSlug} : {'slug': idOrSlug},
     );
 
     final QueryResult result = await ApiClient.client.value.query(options);
@@ -163,6 +175,35 @@ class MarketplaceRepository {
     final data = result.data?['productByIdOrSlug'];
     if (data == null) return null;
     return Product.fromJson(data);
+  }
+
+  static const String _allBrandsQuery = r'''
+    query GetAllBrands($limit: Int, $offset: Int) {
+      allBrands(limit: $limit, offset: $offset) {
+        id
+        name
+        slug
+        description
+        logo
+      }
+    }
+  ''';
+
+  Future<List<Brand>> fetchBrands({int? limit, int? offset}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(_allBrandsQuery),
+      variables: {'limit': limit, 'offset': offset},
+      fetchPolicy: FetchPolicy.cacheAndNetwork,
+    );
+
+    final QueryResult result = await ApiClient.client.value.query(options);
+
+    if (result.hasException) {
+      throw result.exception!;
+    }
+
+    final List brands = result.data?['allBrands'] ?? [];
+    return brands.map((json) => Brand.fromJson(json)).toList();
   }
 }
 
@@ -184,4 +225,19 @@ final productDetailProvider = FutureProvider.family<Product?, String>((ref, idOr
 final allSegmentsProvider = FutureProvider<List<ProductSegment>>((ref) async {
   final repository = ref.watch(marketplaceRepositoryProvider);
   return repository.fetchSegments();
+});
+
+final brandsProvider = FutureProvider<List<Brand>>((ref) async {
+  final repository = ref.watch(marketplaceRepositoryProvider);
+  return repository.fetchBrands();
+});
+
+final relatedProductsProvider = FutureProvider.family<List<Product>, String>((ref, categorySlug) async {
+  final repository = ref.watch(marketplaceRepositoryProvider);
+  return repository.fetchProducts(limit: 10, categorySlugs: [categorySlug]);
+});
+
+final similarBrandsProvider = FutureProvider.family<List<Product>, String>((ref, brandSlug) async {
+  final repository = ref.watch(marketplaceRepositoryProvider);
+  return repository.fetchProducts(limit: 10, brandSlugs: [brandSlug]);
 });

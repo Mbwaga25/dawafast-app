@@ -72,8 +72,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               Tab(icon: Icon(Icons.palette_outlined), text: 'Appearance'),
               Tab(icon: Icon(Icons.security_outlined), text: 'Security'),
             ],
-            indicatorColor: AppTheme.primaryTeal,
-            labelColor: AppTheme.primaryTeal,
+            indicatorColor: AppTheme.primaryBlue,
+            labelColor: AppTheme.primaryBlue,
             unselectedLabelColor: AppTheme.textSecondary,
           ),
         ),
@@ -94,7 +94,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Personal Information', style: AppTheme.headingStyle),
+          Text('Personal Information', style: AppTheme.headingStyle),
           const SizedBox(height: 24),
           TextField(
             controller: _firstNameController,
@@ -128,10 +128,10 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     return ListView(
       padding: const EdgeInsets.all(24),
       children: [
-        const Text('Display Preferences', style: AppTheme.headingStyle),
+        Text('Display Preferences', style: AppTheme.headingStyle),
         const SizedBox(height: 16),
         ListTile(
-          leading: const Icon(Icons.brightness_medium_outlined, color: AppTheme.primaryTeal),
+          leading: const Icon(Icons.brightness_medium_outlined, color: AppTheme.primaryBlue),
           title: const Text('Theme Mode'),
           subtitle: const Text('System Default'),
           trailing: const Icon(Icons.chevron_right),
@@ -145,7 +145,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
           final settings = ref.watch(currencySettingsProvider);
           return settings.when(
             data: (conf) => ListTile(
-              leading: const Icon(Icons.attach_money, color: AppTheme.primaryTeal),
+              leading: const Icon(Icons.attach_money, color: AppTheme.primaryBlue),
               title: const Text('System Currency'),
               subtitle: Text('${conf?.name} (${conf?.symbol})'),
               trailing: const Icon(Icons.check_circle, color: Colors.green),
@@ -171,7 +171,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
   Widget _buildMenuOption(IconData icon, String title, String subtitle) {
     return ListTile(
-      leading: Icon(icon, color: AppTheme.primaryTeal),
+      leading: Icon(icon, color: AppTheme.primaryBlue),
       title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
       subtitle: Text(subtitle, style: const TextStyle(fontSize: 12)),
       trailing: const Icon(Icons.chevron_right, size: 20),

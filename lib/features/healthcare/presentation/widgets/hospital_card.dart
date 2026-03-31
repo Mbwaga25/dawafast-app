@@ -70,14 +70,14 @@ class HospitalCard extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: AppTheme.primaryTeal.withOpacity(0.1),
+                            color: AppTheme.primaryBlue.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Text(
                             'Open 24/7',
                             style: TextStyle(
                               fontSize: 10,
-                              color: AppTheme.primaryTeal,
+                              color: AppTheme.primaryBlue,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -103,7 +103,7 @@ class HospitalCard extends StatelessWidget {
                   TextButton(
                     onPressed: () {},
                     style: TextButton.styleFrom(
-                      foregroundColor: AppTheme.primaryTeal,
+                      foregroundColor: AppTheme.primaryBlue,
                       padding: EdgeInsets.zero,
                       minimumSize: const Size(0, 0),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,

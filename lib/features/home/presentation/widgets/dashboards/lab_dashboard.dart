@@ -110,7 +110,7 @@ class LabDashboard extends ConsumerWidget {
               ],
             ),
           ),
-          Text(status, style: TextStyle(color: status == 'Completed' ? Colors.green : AppTheme.primaryTeal, fontSize: 12, fontWeight: FontWeight.bold)),
+          Text(status, style: TextStyle(color: status == 'Completed' ? Colors.green : AppTheme.primaryBlue, fontSize: 12, fontWeight: FontWeight.bold)),
         ],
       ),
     );

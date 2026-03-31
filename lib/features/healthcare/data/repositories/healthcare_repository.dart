@@ -75,15 +75,11 @@ class HealthcareRepository {
           description
           formattedAddress
           children {
-            edges {
-              node {
-                id
-                name
-                slug
-                storeType
-                city
-              }
-            }
+            id
+            name
+            slug
+            storeType
+            city
           }
           doctors {
             id
@@ -106,7 +102,7 @@ class HealthcareRepository {
 
     final QueryOptions options = QueryOptions(
       document: gql(hospitalDetailQuery),
-      variables: idOrSlug.length > 20 ? {'id': idOrSlug} : {'slug': idOrSlug},
+      variables: int.tryParse(idOrSlug) != null ? {'id': idOrSlug} : {'slug': idOrSlug},
     );
 
     final QueryResult result = await ApiClient.client.value.query(options);

@@ -5,6 +5,7 @@ import 'package:app/features/offers/data/models/product_model.dart';
 import 'package:app/features/offers/data/repositories/marketplace_repository.dart';
 import 'package:app/features/profile/data/repositories/settings_repository.dart';
 import 'package:app/features/offers/presentation/pages/category_page.dart';
+import 'package:app/features/offers/presentation/pages/brands_page.dart';
 import 'package:app/features/home/presentation/pages/product_detail_page.dart';
 import 'package:app/features/auth/data/models/user_model.dart';
 
@@ -17,6 +18,7 @@ class PatientDashboard extends ConsumerWidget {
     final categoriesAsync = ref.watch(categoriesProvider(null));
     final productsAsync = ref.watch(productsProvider);
     final segmentsAsync = ref.watch(allSegmentsProvider);
+    final brandsAsync = ref.watch(brandsProvider);
 
     return SingleChildScrollView(
       child: Column(
@@ -49,13 +51,13 @@ class PatientDashboard extends ConsumerWidget {
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
                 gradient: const LinearGradient(
-                  colors: [AppTheme.primaryTeal, Color(0xFF1CB5AC)],
+                  colors: [AppTheme.primaryBlue, Color(0xFF1CB5AC)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
                 ),
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
-                  BoxShadow(color: AppTheme.primaryTeal.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 5)),
+                  BoxShadow(color: AppTheme.primaryBlue.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 5)),
                 ],
               ),
               child: Row(
@@ -76,7 +78,7 @@ class PatientDashboard extends ConsumerWidget {
                           onPressed: () {},
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.white,
-                            foregroundColor: AppTheme.primaryTeal,
+                            foregroundColor: AppTheme.primaryBlue,
                             minimumSize: const Size(100, 36),
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                           ),
@@ -134,7 +136,7 @@ class PatientDashboard extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(segment.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                            TextButton(onPressed: () {}, child: const Text('View All', style: TextStyle(color: AppTheme.primaryTeal))),
+                            TextButton(onPressed: () {}, child: const Text('View All', style: TextStyle(color: AppTheme.primaryBlue))),
                           ],
                         ),
                       ),
@@ -159,6 +161,68 @@ class PatientDashboard extends ConsumerWidget {
             error: (err, stack) => const SizedBox.shrink(),
           ),
 
+          // Top Brands
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Top Brands', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                TextButton(
+                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BrandsPage())),
+                  child: const Text('View All', style: TextStyle(color: AppTheme.primaryBlue)),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: 100,
+            child: brandsAsync.when(
+              data: (brands) {
+                if (brands.isEmpty) return const SizedBox.shrink();
+                return ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  padding: const EdgeInsets.only(left: 16),
+                  itemCount: brands.length > 5 ? 5 : brands.length,
+                  itemBuilder: (context, index) {
+                    final brand = brands[index];
+                    return GestureDetector(
+                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BrandsPage())),
+                      child: Container(
+                        width: 80,
+                        margin: const EdgeInsets.only(right: 16),
+                        child: Column(
+                          children: [
+                            Container(
+                              height: 60,
+                              width: 60,
+                              decoration: BoxDecoration(
+                                color: AppTheme.surfaceWhite,
+                                shape: BoxShape.circle,
+                                border: Border.all(color: AppTheme.borderColor),
+                              ),
+                              child: ClipOval(
+                                child: (brand.logoUrl != null && brand.logoUrl!.isNotEmpty)
+                                  ? Image.network(brand.logoUrl!, fit: BoxFit.cover)
+                                  : const Icon(Icons.branding_watermark, color: AppTheme.textSecondary),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(brand.name, style: const TextStyle(fontSize: 12), maxLines: 1, overflow: TextOverflow.ellipsis),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (err, stack) => const SizedBox.shrink(),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
           // Fallback Deals
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -166,7 +230,7 @@ class PatientDashboard extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Recommend For You', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                TextButton(onPressed: () {}, child: const Text('View All', style: TextStyle(color: AppTheme.primaryTeal))),
+                TextButton(onPressed: () {}, child: const Text('View All', style: TextStyle(color: AppTheme.primaryBlue))),
               ],
             ),
           ),
@@ -208,7 +272,7 @@ class PatientDashboard extends ConsumerWidget {
             width: 56,
             height: 56,
             decoration: BoxDecoration(
-              color: AppTheme.backgroundGray,
+              color: AppTheme.backgroundWhite,
               shape: BoxShape.circle,
             ),
             child: ClipOval(
@@ -246,7 +310,7 @@ class PatientDashboard extends ConsumerWidget {
                 child: Container(
                   width: double.infinity,
                   decoration: const BoxDecoration(
-                    color: AppTheme.backgroundGray,
+                    color: AppTheme.backgroundWhite,
                     borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
                   ),
                   child: product.images.isNotEmpty 
@@ -265,7 +329,7 @@ class PatientDashboard extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
-                    Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.primaryTeal)),
+                    Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.primaryBlue)),
                   ],
                 ),
               ),

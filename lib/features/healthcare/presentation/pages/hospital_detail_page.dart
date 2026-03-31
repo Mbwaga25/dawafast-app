@@ -64,7 +64,7 @@ class HospitalDetailPage extends ConsumerWidget {
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(Icons.location_on, color: AppTheme.accentPink, size: 12),
+                      const Icon(Icons.location_on, color: AppTheme.accentBlue, size: 12),
                       const SizedBox(width: 4),
                       Text(hospital.city ?? 'Unknown', style: const TextStyle(color: Colors.white70, fontSize: 10)),
                     ],
@@ -76,9 +76,9 @@ class HospitalDetailPage extends ConsumerWidget {
           SliverPersistentHeader(
             delegate: _SliverAppBarDelegate(
               TabBar(
-                labelColor: AppTheme.primaryTeal,
+                labelColor: AppTheme.primaryBlue,
                 unselectedLabelColor: AppTheme.textSecondary,
-                indicatorColor: AppTheme.primaryTeal,
+                indicatorColor: AppTheme.primaryBlue,
                 tabs: const [
                   Tab(text: 'Overview'),
                   Tab(text: 'Doctors'),
@@ -126,7 +126,7 @@ class HospitalDetailPage extends ConsumerWidget {
               children: hospital.services!.map((s) => Container(
                 padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppTheme.backgroundGray,
+                  color: AppTheme.backgroundWhite,
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Text(s.name, style: const TextStyle(fontSize: 12)),
@@ -182,8 +182,8 @@ class HospitalDetailPage extends ConsumerWidget {
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: const BorderSide(color: AppTheme.borderColor)),
           child: ListTile(
             leading: CircleAvatar(
-              backgroundColor: AppTheme.primaryTeal.withOpacity(0.1),
-              child: const Icon(Icons.person, color: AppTheme.primaryTeal),
+              backgroundColor: AppTheme.primaryBlue.withOpacity(0.1),
+              child: const Icon(Icons.person, color: AppTheme.primaryBlue),
             ),
             title: Text(doctor.fullName, style: const TextStyle(fontWeight: FontWeight.bold)),
             subtitle: Text(doctor.specialty),
@@ -222,10 +222,10 @@ class HospitalDetailPage extends ConsumerWidget {
           child: ListTile(
             leading: Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: AppTheme.accentPink.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: AppTheme.accentBlue.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
               child: Icon(
                 unit.storeType == 'LAB' ? Icons.biotech : Icons.local_pharmacy,
-                color: AppTheme.accentPink,
+                color: AppTheme.accentBlue,
               ),
             ),
             title: Text(unit.name, style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -248,10 +248,10 @@ class HospitalDetailPage extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: AppTheme.backgroundGray,
+              color: AppTheme.backgroundWhite,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, size: 20, color: AppTheme.primaryTeal),
+            child: Icon(icon, size: 20, color: AppTheme.primaryBlue),
           ),
           const SizedBox(width: 16),
           Text(text ?? 'N/A', style: const TextStyle(fontSize: 16)),
