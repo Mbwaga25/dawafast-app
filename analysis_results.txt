@@ -1,0 +1,74 @@
+Resolving dependencies...
+Downloading packages...
+  flutter_riverpod 2.6.1 (3.3.1 available)
+  gql_dedupe_link 2.0.4-alpha+1715521079596 (4.0.0 available)
+  intl 0.19.0 (0.20.2 available)
+  meta 1.17.0 (1.18.2 available)
+  riverpod 2.6.1 (3.2.1 available)
+  test_api 0.7.10 (0.7.11 available)
+  vector_math 2.2.0 (2.3.0 available)
+Got dependencies!
+7 packages have newer versions incompatible with dependency constraints.
+Try `flutter pub outdated` for more information.
+Analyzing lib...                                                
+
+   info • 'background' is deprecated and shouldn't be used. Use surface instead. This feature was deprecated after v3.18.0-0.1.pre • lib/core/theme.dart:27:9 • deprecated_member_use
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/auth/data/repositories/user_repository.dart:90:11 • use_null_aware_elements
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/auth/data/repositories/user_repository.dart:91:11 • use_null_aware_elements
+warning • The value of the local variable 'symbol' isn't used • lib/features/cart/presentation/pages/cart_page.dart:15:11 • unused_local_variable
+  error • Undefined name 'ref' • lib/features/cart/presentation/pages/cart_page.dart:69:26 • undefined_identifier
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/cart/presentation/pages/cart_page.dart:77:41 • deprecated_member_use
+   info • An uninitialized field should have an explicit type annotation • lib/features/cart/presentation/pages/cart_page.dart:124:9 • prefer_typing_uninitialized_variables
+   info • Missing type annotation • lib/features/cart/presentation/pages/cart_page.dart:124:9 • strict_top_level_inference
+   info • Missing type annotation • lib/features/cart/presentation/pages/checkout_page.dart:82:29 • strict_top_level_inference
+   info • Don't use 'BuildContext's across async gaps • lib/features/cart/presentation/pages/checkout_page.dart:138:21 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/cart/presentation/pages/checkout_page.dart:140:9 • use_build_context_synchronously
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/cart/presentation/pages/order_success_page.dart:22:47 • deprecated_member_use
+warning • Unused import: '../../../auth/data/models/user_model.dart' • lib/features/healthcare/data/models/doctor_model.dart:1:8 • unused_import
+  error • Expected an identifier • lib/features/healthcare/presentation/pages/doctor_detail_page.dart:102:39 • missing_identifier
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/doctor_detail_page.dart:167:33 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/doctor_detail_page.dart:321:104 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/doctor_detail_page.dart:328:97 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/doctor_detail_page.dart:365:52 • deprecated_member_use
+   info • Don't use 'BuildContext's across async gaps • lib/features/healthcare/presentation/pages/doctor_detail_page.dart:389:21 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/healthcare/presentation/pages/doctor_detail_page.dart:390:21 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/healthcare/presentation/pages/doctor_detail_page.dart:394:21 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/healthcare/presentation/pages/doctor_detail_page.dart:395:28 • use_build_context_synchronously
+  error • Undefined name 'cartProvider' • lib/features/healthcare/presentation/pages/healthcare_page.dart:35:43 • undefined_identifier
+  error • The name 'CartPage' isn't a class • lib/features/healthcare/presentation/pages/healthcare_page.dart:39:102 • creation_with_non_type
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/healthcare_page.dart:189:45 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/hospital_detail_page.dart:49:67 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/hospital_detail_page.dart:185:53 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/hospital_detail_page.dart:225:68 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/labs_page.dart:51:56 • deprecated_member_use
+warning • Unused import: 'package:app/features/healthcare/presentation/pages/telemedicine_page.dart' • lib/features/healthcare/presentation/pages/meeting_page.dart:4:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/pharmacies_page.dart:34:69 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/pharmacies_page.dart:51:56 • deprecated_member_use
+warning • Unused import: 'package:app/features/profile/data/repositories/settings_repository.dart' • lib/features/healthcare/presentation/pages/telemedicine_page.dart:8:8 • unused_import
+   info • The private field _searchQuery could be 'final' • lib/features/healthcare/presentation/pages/telemedicine_page.dart:18:10 • prefer_final_fields
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/telemedicine_page.dart:54:56 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/telemedicine_page.dart:137:114 • deprecated_member_use
+warning • Unused import: 'package:cached_network_image/cached_network_image.dart' • lib/features/healthcare/presentation/widgets/hospital_card.dart:5:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/widgets/hospital_card.dart:73:57 • deprecated_member_use
+warning • Unused import: 'package:app/features/cart/data/models/cart_model.dart' • lib/features/home/presentation/pages/home_page.dart:18:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/home_page.dart:200:47 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/home_page.dart:387:43 • deprecated_member_use
+warning • Duplicate import • lib/features/home/presentation/pages/product_detail_page.dart:12:8 • duplicate_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/product_detail_page.dart:125:49 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/product_detail_page.dart:193:41 • deprecated_member_use
+warning • Unused import: 'package:app/features/healthcare/presentation/pages/hospital_detail_page.dart' • lib/features/home/presentation/pages/search_page.dart:9:8 • unused_import
+warning • The value of the local variable 'filters' isn't used • lib/features/home/presentation/pages/search_page.dart:152:11 • unused_local_variable
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/search_page.dart:197:75 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:33:82 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:39:47 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:121:62 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/widgets/dashboards/patient_dashboard.dart:58:57 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/widgets/dashboards/pharmacy_dashboard.dart:27:77 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/widgets/dashboards/pharmacy_dashboard.dart:122:58 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/widgets/dashboards/pharmacy_dashboard.dart:122:90 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/offers/presentation/pages/offers_page.dart:44:83 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/offers/presentation/pages/offers_page.dart:54:49 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/offers/presentation/pages/offers_page.dart:176:34 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/profile/presentation/pages/wishlist_page.dart:40:80 • deprecated_member_use
+
+58 issues found. (ran in 0.7s)
