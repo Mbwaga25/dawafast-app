@@ -143,8 +143,8 @@ class _TeleDoctorCard extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 30,
-                  backgroundImage: const AssetImage('lib/assets/images/doctor_placeholder.png'),
-                  backgroundColor: AppTheme.backgroundWhite,
+                  backgroundColor: Colors.blue.withOpacity(0.1),
+                  child: const Icon(Icons.person, color: Colors.blue, size: 30),
                 ),
                 const SizedBox(width: 16),
                 Expanded(

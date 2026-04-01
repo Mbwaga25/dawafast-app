@@ -10,24 +10,16 @@ class MarketplaceRepository {
   static const String _categoriesQuery = r'''
     query GetCategories($module: String) {
       allCategories(module: $module) {
-        edges {
-          node {
-            id
-            name
-            slug
-            description
-            image
-            children {
-              edges {
-                node {
-                  id
-                  name
-                  slug
-                  image
-                }
-              }
-            }
-          }
+        id
+        name
+        slug
+        description
+        image
+        children {
+          id
+          name
+          slug
+          image
         }
       }
     }
@@ -36,29 +28,21 @@ class MarketplaceRepository {
   static const String _allSegmentsQuery = r'''
     query GetAllSegments {
       allSegments {
-        edges {
-          node {
-            id
-            title
-            slug
-            products {
-              edges {
-                node {
-                  id
-                  name
-                  slug
-                  price
-                  originalPrice
-                  rating
-                  image {
-                    imageUrl
-                  }
-                  images {
-                    imageUrl
-                  }
-                }
-              }
-            }
+        id
+        title
+        slug
+        products {
+          id
+          name
+          slug
+          price
+          originalPrice
+          rating
+          image {
+            imageUrl
+          }
+          images {
+            imageUrl
           }
         }
       }
@@ -91,29 +75,25 @@ class MarketplaceRepository {
   static const String _allProductsQuery = r'''
     query GetAllProducts($limit: Int, $offset: Int, $categorySlugs: [String], $brandSlugs: [String]) {
       allProducts(limit: $limit, offset: $offset, categorySlugs: $categorySlugs, brandSlugs: $brandSlugs) {
-        edges {
-          node {
-            id
-            name
-            slug
-            price
-            originalPrice
-            rating
-            description
-            category {
-              name
-              slug
-            }
-            brand {
-              name
-              slug
-            }
-            images {
-              imageUrl
-              altText
-              isPrimary
-            }
-          }
+        id
+        name
+        slug
+        price
+        originalPrice
+        rating
+        description
+        category {
+          name
+          slug
+        }
+        brand {
+          name
+          slug
+        }
+        images {
+          imageUrl
+          altText
+          isPrimary
         }
       }
     }
@@ -190,17 +170,13 @@ class MarketplaceRepository {
             slug
           }
           allStoreListings {
-            edges {
-              node {
-                id
-                store {
-                  id
-                  name
-                }
-                isAvailable
-                price
-              }
+            id
+            store {
+              id
+              name
             }
+            isAvailable
+            price
           }
         }
       }
@@ -225,15 +201,11 @@ class MarketplaceRepository {
   static const String _allBrandsQuery = r'''
     query GetAllBrands($limit: Int, $offset: Int) {
       allBrands(limit: $limit, offset: $offset) {
-        edges {
-          node {
-            id
-            name
-            slug
-            description
-            logo
-          }
-        }
+        id
+        name
+        slug
+        description
+        logo
       }
     }
   ''';

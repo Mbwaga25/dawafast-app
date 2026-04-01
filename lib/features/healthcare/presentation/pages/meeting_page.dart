@@ -61,8 +61,8 @@ class _MeetingPageState extends State<MeetingPage> {
                   children: [
                     CircleAvatar(
                       radius: 60,
-                      backgroundImage: const AssetImage('lib/assets/images/doctor_placeholder.png'),
-                      backgroundColor: AppTheme.backgroundWhite,
+                      backgroundColor: Colors.blue.withOpacity(0.1),
+                      child: const Icon(Icons.person, color: Colors.blue, size: 60),
                     ),
                     const SizedBox(height: 20),
                     Text(

@@ -45,7 +45,7 @@ class HomePage extends ConsumerWidget {
       data: (user) {
         // If not logged in or is a patient, show the 5-tab e-commerce shell
         if (user == null || user.role == null || user.role!.toUpperCase() == 'PATIENT') {
-          return _buildMainShell(context, ref, tabIndex);
+          return _buildMainShell(context, ref, tabIndex, user: user);
         }
         // Otherwise show the specialized dashboard for their role
         return _buildRoleDashboard(context, ref, user);
@@ -109,9 +109,9 @@ class HomePage extends ConsumerWidget {
   }
 
   // ─── Main shell with 5-tab bottom nav ────────────────────────────────────
-  Widget _buildMainShell(BuildContext context, WidgetRef ref, int tabIndex) {
+  Widget _buildMainShell(BuildContext context, WidgetRef ref, int tabIndex, {User? user}) {
     final tabs = [
-      _buildGuestHome(context, ref),
+      (user != null && user.role?.toUpperCase() == 'PATIENT') ? PatientDashboard(user: user) : _buildGuestHome(context, ref),
       const OffersPage(),
       const HealthcarePage(),
       const TelemedicinePage(),
@@ -154,6 +154,30 @@ class HomePage extends ConsumerWidget {
         ),
       ),
       actions: [
+        Consumer(
+          builder: (context, ref, child) {
+            final userAsync = ref.watch(currentUserProvider);
+            return userAsync.maybeWhen(
+              data: (user) {
+                if (user == null) {
+                  return Padding(
+                    padding: const EdgeInsets.only(right: 0.0),
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        visualDensity: VisualDensity.compact,
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                      ),
+                      onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginPage())),
+                      child: const Text('Login', style: TextStyle(color: AppTheme.primaryBlue, fontWeight: FontWeight.bold, fontSize: 13)),
+                    ),
+                  );
+                }
+                return const SizedBox.shrink();
+              },
+              orElse: () => const SizedBox.shrink(),
+            );
+          },
+        ),
         Consumer(
           builder: (context, ref, child) {
             final cartCount = ref.watch(cartProvider).items.length;
@@ -415,7 +439,7 @@ class HomePage extends ConsumerWidget {
   // ─── Category horizontal strip ────────────────────────────────────────────
   Widget _buildCategoryStrip(BuildContext context, WidgetRef ref, List<Category> categories) {
     return SizedBox(
-      height: 96,
+      height: 105,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -453,7 +477,14 @@ class HomePage extends ConsumerWidget {
 
   // ─── Deals of the Day / Product strips ───────────────────────────────────
   Widget _buildDealsStrip(BuildContext context, WidgetRef ref, List<Product> products) {
-    return _buildProductStrip(context, ref, products, showDiscount: true);
+    // Filter out items that actually have a discount, otherwise fallback to top products
+    var deals = products.where((p) => p.discountPercentage > 0 || (p.originalPrice != null && p.originalPrice! > p.price)).toList();
+    if (deals.isEmpty) {
+      deals = products.take(12).toList();
+    } else {
+      deals = deals.take(12).toList();
+    }
+    return _buildProductStrip(context, ref, deals, showDiscount: true);
   }
 
   Widget _buildProductStrip(BuildContext context, WidgetRef ref, List<Product> products, {bool showDiscount = false}) {
@@ -547,28 +578,77 @@ class HomePage extends ConsumerWidget {
                   if (product.originalPrice != null && product.originalPrice! > product.price)
                     Text('$symbol ${product.originalPrice!.toStringAsFixed(0)}',
                         style: const TextStyle(fontSize: 11, decoration: TextDecoration.lineThrough, color: AppTheme.textSecondary)),
-                  const SizedBox(height: 6),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        ref.read(cartProvider.notifier).addItem(CartItem(
-                          productId: product.id,
-                          name: product.name,
-                          price: product.price,
-                          image: product.images.isNotEmpty ? product.images.first : null,
-                        ));
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('${product.name} added!'), duration: const Duration(seconds: 1)),
+                  Consumer(
+                    builder: (context, ref, child) {
+                      final cartState = ref.watch(cartProvider);
+                      final existingItem = cartState.items.firstWhere(
+                        (item) => item.productId == product.id,
+                        orElse: () => CartItem(productId: '', name: '', price: 0),
+                      );
+
+                      if (existingItem.productId.isNotEmpty) {
+                        return Container(
+                          height: 28,
+                          decoration: BoxDecoration(
+                            color: AppTheme.primaryBlue.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(color: AppTheme.primaryBlue.withOpacity(0.3)),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              IconButton(
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(minWidth: 32),
+                                icon: const Icon(Icons.remove, size: 16, color: AppTheme.primaryBlue),
+                                onPressed: () {
+                                  if (existingItem.quantity > 1) {
+                                    ref.read(cartProvider.notifier).updateQuantity(existingItem.productId, existingItem.quantity - 1);
+                                  } else {
+                                    ref.read(cartProvider.notifier).removeItem(existingItem.productId);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(content: Text('${product.name} removed from cart!'), duration: const Duration(seconds: 1)),
+                                    );
+                                  }
+                                },
+                              ),
+                              Text('${existingItem.quantity}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.primaryBlue)),
+                              IconButton(
+                                padding: EdgeInsets.zero,
+                                constraints: const BoxConstraints(minWidth: 32),
+                                icon: const Icon(Icons.add, size: 16, color: AppTheme.primaryBlue),
+                                onPressed: () {
+                                  ref.read(cartProvider.notifier).updateQuantity(existingItem.productId, existingItem.quantity + 1);
+                                },
+                              ),
+                            ],
+                          ),
                         );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 6),
-                        minimumSize: const Size(0, 28),
-                        textStyle: const TextStyle(fontSize: 11),
-                      ),
-                      child: const Text('Add to Cart'),
-                    ),
+                      }
+
+                      return SizedBox(
+                        width: double.infinity,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            ref.read(cartProvider.notifier).addItem(CartItem(
+                              productId: product.id,
+                              name: product.name,
+                              price: product.price,
+                              image: product.images.isNotEmpty ? product.images.first : null,
+                            ));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('${product.name} added!'), duration: const Duration(seconds: 1)),
+                            );
+                          },
+                          style: ElevatedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            minimumSize: const Size(0, 28),
+                            textStyle: const TextStyle(fontSize: 11),
+                          ),
+                          child: const Text('Add to Cart'),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),

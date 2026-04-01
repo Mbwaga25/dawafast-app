@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 import 'package:app/core/theme.dart';
-import 'package:app/features/offers/data/models/product_model.dart';
-import 'package:app/features/offers/data/repositories/marketplace_repository.dart';
-import 'package:app/features/profile/data/repositories/settings_repository.dart';
-import 'package:app/features/offers/presentation/pages/category_page.dart';
-import 'package:app/features/offers/presentation/pages/brands_page.dart';
-import 'package:app/features/home/presentation/pages/product_detail_page.dart';
 import 'package:app/features/auth/data/models/user_model.dart';
+import 'package:app/features/orders/data/repositories/order_repository.dart';
+import 'package:app/features/appointments/data/repositories/appointment_repository.dart';
+import 'package:app/features/healthcare/presentation/pages/telemedicine_page.dart';
+import 'package:app/features/healthcare/presentation/pages/healthcare_page.dart';
+import 'package:app/features/appointments/data/models/appointment_model.dart';
+import 'package:app/features/orders/data/models/order_model.dart';
 
 class PatientDashboard extends ConsumerWidget {
   final User user;
@@ -15,327 +16,357 @@ class PatientDashboard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final categoriesAsync = ref.watch(categoriesProvider(null));
-    final productsAsync = ref.watch(productsProvider);
-    final segmentsAsync = ref.watch(allSegmentsProvider);
-    final brandsAsync = ref.watch(brandsProvider);
-
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          // Search Bar
-          Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppTheme.surfaceWhite,
-                borderRadius: BorderRadius.circular(30),
-                border: Border.all(color: AppTheme.borderColor),
-              ),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              height: 50,
-              child: const Row(
-                children: [
-                  Icon(Icons.search, color: AppTheme.textSecondary),
-                  SizedBox(width: 8),
-                  Text('Search medicine/healthcare products', style: TextStyle(color: AppTheme.textSecondary)),
-                ],
-              ),
-            ),
+    return Scaffold(
+      backgroundColor: AppTheme.backgroundWhite,
+      // Minimal app bar for the Dashboard specifically
+      appBar: AppBar(
+        title: Text('My Dashboard', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+        backgroundColor: AppTheme.primaryBlue,
+        elevation: 0,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications_none, color: Colors.white),
+            onPressed: () {},
+          )
+        ],
+      ),
+      body: CustomScrollView(
+        slivers: [
+          SliverToBoxAdapter(
+            child: _buildWelcomeHeader(),
           ),
-
-          // Welcome Card
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Container(
-              padding: const EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                gradient: const LinearGradient(
-                  colors: [AppTheme.primaryBlue, Color(0xFF1CB5AC)],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                ),
-                borderRadius: BorderRadius.circular(16),
-                boxShadow: [
-                  BoxShadow(color: AppTheme.primaryBlue.withOpacity(0.3), blurRadius: 10, offset: const Offset(0, 5)),
-                ],
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Hello, ${user.firstName ?? user.username}!', 
-                          style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)
-                        ),
-                        const SizedBox(height: 8),
-                        const Text('Get your medicines delivered\nin 60 minutes.', 
-                          style: TextStyle(color: Colors.white70, fontSize: 14)
-                        ),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white,
-                            foregroundColor: AppTheme.primaryBlue,
-                            minimumSize: const Size(100, 36),
-                            padding: const EdgeInsets.symmetric(horizontal: 16),
-                          ),
-                          child: const Text('Shop Now'),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const Icon(Icons.medication_liquid, size: 80, color: Colors.white24),
-                ],
-              ),
-            ),
+          SliverToBoxAdapter(
+            child: const SizedBox(height: 20),
           ),
-
-          const SizedBox(height: 24),
-
-          // Category Grid
-          categoriesAsync.when(
-            data: (categories) {
-              return GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 4),
-                padding: const EdgeInsets.symmetric(horizontal: 8),
-                itemCount: categories.length > 8 ? 8 : categories.length,
-                itemBuilder: (context, index) {
-                  final cat = categories[index];
-                  String assetPath = 'lib/assets/images/category_placeholder.png';
-                  if (cat.name.toLowerCase().contains('medicine')) assetPath = 'lib/assets/images/medicine_category.png';
-                  if (cat.name.toLowerCase().contains('lab')) assetPath = 'lib/assets/images/lab_test_category.png';
-                  if (cat.name.toLowerCase().contains('wellness')) assetPath = 'lib/assets/images/wellness_category.png';
-                  if (cat.name.toLowerCase().contains('healthcare')) assetPath = 'lib/assets/images/healthcare_category.png';
-                  
-                  return _buildCategoryItem(context, assetPath, cat.name, category: cat);
-                },
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, stack) => const SizedBox.shrink(),
+          SliverToBoxAdapter(
+            child: _buildFindServicesStrip(context),
           ),
-
-          const SizedBox(height: 24),
-
-          // Product Segments
-          segmentsAsync.when(
-            data: (segments) {
-              return Column(
-                children: segments.map((segment) {
-                  if (segment.products.isEmpty) return const SizedBox.shrink();
-                  return Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(segment.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                            TextButton(onPressed: () {}, child: const Text('View All', style: TextStyle(color: AppTheme.primaryBlue))),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 220,
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.only(left: 16),
-                          itemCount: segment.products.length,
-                          itemBuilder: (context, index) {
-                            return _buildDealCard(context, ref, segment.products[index]);
-                          },
-                        ),
-                      ),
-                      const SizedBox(height: 24),
-                    ],
-                  );
-                }).toList(),
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, stack) => const SizedBox.shrink(),
+          SliverToBoxAdapter(
+            child: const SizedBox(height: 24),
           ),
-
-          // Top Brands
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Top Brands', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                TextButton(
-                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BrandsPage())),
-                  child: const Text('View All', style: TextStyle(color: AppTheme.primaryBlue)),
-                ),
-              ],
-            ),
+          SliverToBoxAdapter(
+            child: _buildAppointmentsSection(context, ref),
           ),
-          SizedBox(
-            height: 100,
-            child: brandsAsync.when(
-              data: (brands) {
-                if (brands.isEmpty) return const SizedBox.shrink();
-                return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.only(left: 16),
-                  itemCount: brands.length > 5 ? 5 : brands.length,
-                  itemBuilder: (context, index) {
-                    final brand = brands[index];
-                    return GestureDetector(
-                      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const BrandsPage())),
-                      child: Container(
-                        width: 80,
-                        margin: const EdgeInsets.only(right: 16),
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 60,
-                              width: 60,
-                              decoration: BoxDecoration(
-                                color: AppTheme.surfaceWhite,
-                                shape: BoxShape.circle,
-                                border: Border.all(color: AppTheme.borderColor),
-                              ),
-                              child: ClipOval(
-                                child: (brand.logo != null && brand.logo!.isNotEmpty)
-                                  ? Image.network(brand.logo!, fit: BoxFit.cover)
-                                  : const Icon(Icons.branding_watermark, color: AppTheme.textSecondary),
-                              ),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(brand.name, style: const TextStyle(fontSize: 12), maxLines: 1, overflow: TextOverflow.ellipsis),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                );
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => const SizedBox.shrink(),
-            ),
+          SliverToBoxAdapter(
+            child: const SizedBox(height: 32),
           ),
-
-          const SizedBox(height: 16),
-
-          // Fallback Deals
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Recommend For You', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                TextButton(onPressed: () {}, child: const Text('View All', style: TextStyle(color: AppTheme.primaryBlue))),
-              ],
-            ),
+          SliverToBoxAdapter(
+            child: _buildRecentOrdersSection(context, ref),
           ),
-          SizedBox(
-            height: 220,
-            child: productsAsync.when(
-              data: (products) {
-                return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  padding: const EdgeInsets.only(left: 16),
-                  itemCount: products.length,
-                  itemBuilder: (context, index) {
-                    return _buildDealCard(context, ref, products[index]);
-                  },
-                );
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (err, stack) => const SizedBox.shrink(),
-            ),
+          SliverToBoxAdapter(
+            child: const SizedBox(height: 48), // Padding bottom
           ),
-
-          const SizedBox(height: 32),
         ],
       ),
     );
   }
 
-  Widget _buildCategoryItem(BuildContext context, String assetPath, String label, {Category? category}) {
+  Widget _buildWelcomeHeader() {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
+      decoration: const BoxDecoration(
+        color: AppTheme.primaryBlue,
+        borderRadius: BorderRadius.only(
+          bottomLeft: Radius.circular(24),
+          bottomRight: Radius.circular(24),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Hello, ${user.firstName ?? user.username ?? 'Guest'} 👋',
+            style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 4),
+          const Text(
+            'What do you need help with today?',
+            style: TextStyle(color: Colors.white70, fontSize: 14),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFindServicesStrip(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('Quick Find', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _buildServiceButton(context, 
+                title: 'Doctor', 
+                icon: Icons.person_search_outlined, 
+                color: Colors.indigo,
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TelemedicinePage())),
+              ),
+              _buildServiceButton(context, 
+                title: 'Lab Test', 
+                icon: Icons.science_outlined, 
+                color: Colors.teal,
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HealthcarePage())),
+              ),
+              _buildServiceButton(context, 
+                title: 'Pharmacy', 
+                icon: Icons.local_pharmacy_outlined, 
+                color: Colors.purple,
+                onTap: () {
+                  // Direct to default tab navigator for Shopping
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Select "Offers" tab for Pharmacy')));
+                },
+              ),
+              _buildServiceButton(context, 
+                title: 'Medicines', 
+                icon: Icons.health_and_safety_outlined, 
+                color: Colors.redAccent,
+                onTap: () {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Use the core Search bar below to find products')));
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildServiceButton(BuildContext context, {required String title, required IconData icon, required Color color, required VoidCallback onTap}) {
     return GestureDetector(
-      onTap: () {
-        if (category != null) {
-          Navigator.push(context, MaterialPageRoute(builder: (_) => CategoryPage(category: category)));
-        }
-      },
+      onTap: onTap,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
           Container(
-            width: 56,
-            height: 56,
+            width: 60,
+            height: 60,
             decoration: BoxDecoration(
-              color: AppTheme.backgroundWhite,
-              shape: BoxShape.circle,
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(16),
             ),
-            child: ClipOval(
-              child: Image.asset(assetPath, fit: BoxFit.cover),
-            ),
+            child: Icon(icon, color: color, size: 28),
           ),
           const SizedBox(height: 8),
-          Text(label, 
-            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w500), 
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.ellipsis,
+          Text(title, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, color: AppTheme.textSecondary)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppointmentsSection(BuildContext context, WidgetRef ref) {
+    final upcomingAsync = ref.watch(upcomingAppointmentsProvider);
+    final pastAsync = ref.watch(pastAppointmentsProvider);
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('My Appointments', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
+          const SizedBox(height: 12),
+          
+          const Text('Upcoming', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
+          const SizedBox(height: 8),
+          upcomingAsync.when(
+            data: (appts) {
+              if (appts.isEmpty) {
+                return _buildEmptyState('No upcoming appointments', Icons.calendar_today);
+              }
+              return Column(
+                children: appts.map((a) => _buildAppointmentCard(a)).toList(),
+              );
+            },
+            loading: () => const Center(child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator())),
+            error: (err, stack) => const Text('Failed to load appointments', style: TextStyle(color: Colors.red)),
+          ),
+
+          const SizedBox(height: 16),
+          const Text('Accomplished', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppTheme.textSecondary)),
+          const SizedBox(height: 8),
+          pastAsync.when(
+            data: (appts) {
+              if (appts.isEmpty) {
+                return _buildEmptyState('No past records', Icons.history);
+              }
+              return Column(
+                children: appts.map((a) => _buildAppointmentCard(a, isPast: true)).toList(),
+              );
+            },
+            loading: () => const SizedBox.shrink(),
+            error: (e, s) => const SizedBox.shrink(),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildDealCard(BuildContext context, WidgetRef ref, Product product) {
-    final currencyConf = ref.watch(currencySettingsProvider).value;
-    final symbol = currencyConf?.symbol ?? 'Tsh';
-    
-    return GestureDetector(
-      onTap: () {
-        Navigator.push(context, MaterialPageRoute(builder: (_) => ProductDetailPage(idOrSlug: product.slug)));
-      },
-      child: Container(
-        width: 150,
-        margin: const EdgeInsets.only(right: 16),
-        child: Card(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: AppTheme.backgroundWhite,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                  ),
-                  child: product.images.isNotEmpty 
-                    ? Image.network(product.images.first, fit: BoxFit.cover)
-                    : Image.asset('lib/assets/images/product_placeholder.png', fit: BoxFit.cover),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(12),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildEmptyState(String message, IconData icon) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceWhite,
+        border: Border.all(color: AppTheme.borderColor),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: AppTheme.textSecondary.withOpacity(0.5), size: 32),
+          const SizedBox(height: 8),
+          Text(message, style: const TextStyle(color: AppTheme.textSecondary)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppointmentCard(Appointment a, {bool isPast = false}) {
+    final dateFormat = DateFormat('EEE, MMM d • h:mm a');
+    final isVideo = a.type == 'telemedicine';
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceWhite,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.borderColor),
+        boxShadow: isPast ? [] : [
+          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 10, offset: const Offset(0, 4))
+        ]
+      ),
+      child: Row(
+        children: [
+          Container(
+            width: 50,
+            height: 50,
+            decoration: BoxDecoration(
+              color: isVideo ? Colors.blue.withOpacity(0.1) : Colors.teal.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: Icon(
+              isVideo ? Icons.video_camera_front : Icons.local_hospital,
+              color: isVideo ? Colors.blue : Colors.teal,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(a.doctorName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                Text(a.specialization, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
+                const SizedBox(height: 8),
+                Row(
                   children: [
-                    Text(product.name, 
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold), 
-                      maxLines: 1, 
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.primaryBlue)),
+                    const Icon(Icons.access_time, size: 14, color: AppTheme.primaryBlue),
+                    const SizedBox(width: 4),
+                    Text(dateFormat.format(a.date), style: const TextStyle(color: AppTheme.primaryBlue, fontSize: 12, fontWeight: FontWeight.w600)),
                   ],
                 ),
+              ],
+            ),
+          ),
+          if (!isPast)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: AppTheme.primaryBlue,
+                borderRadius: BorderRadius.circular(20),
               ),
+              child: const Text('Join', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRecentOrdersSection(BuildContext context, WidgetRef ref) {
+    final ordersAsync = ref.watch(myOrdersProvider(null));
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Recent Orders', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
+              TextButton(onPressed: () {}, child: const Text('View All', style: TextStyle(color: AppTheme.primaryBlue))),
             ],
           ),
-        ),
+          ordersAsync.when(
+            data: (orders) {
+              if (orders.isEmpty) {
+                return _buildEmptyState('No recent orders', Icons.shopping_bag_outlined);
+              }
+              // Just show first 3
+              final recent = orders.take(3).toList();
+              return Column(
+                children: recent.map((o) => _buildOrderTile(o)).toList(),
+              );
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (err, stack) => _buildEmptyState('Could not load orders', Icons.error_outline),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOrderTile(Order order) {
+    // Generate a quick summary of items
+    final itemCount = order.items.length;
+    final summary = order.items.isNotEmpty ? order.items.map((i) => i.productName).take(2).join(', ') : 'Order items';
+    final hasMore = itemCount > 2 ? ' +${itemCount - 2} more' : '';
+
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppTheme.surfaceWhite,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: AppTheme.borderColor),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Colors.orange.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: const Icon(Icons.inbox_outlined, color: Colors.orange),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Order #${order.id.substring(0, order.id.length > 6 ? 6 : order.id.length)}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                    Text(order.status, style: TextStyle(
+                      color: order.status.toLowerCase() == 'completed' ? Colors.green : Colors.orange,
+                      fontWeight: FontWeight.bold, fontSize: 12
+                    )),
+                  ],
+                ),
+                const SizedBox(height: 4),
+                Text('$summary$hasMore', style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13), maxLines: 1, overflow: TextOverflow.ellipsis),
+                const SizedBox(height: 8),
+                Text(DateFormat('MMM d, yyyy').format(order.orderDate), style: const TextStyle(color: Colors.grey, fontSize: 11)),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

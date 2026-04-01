@@ -10,22 +10,18 @@ class HealthcareRepository {
     query GetAllStores($storeType: String) {
       stores {
         allStores(isActive: true, storeType: $storeType) {
-          edges {
-            node {
-              id
-              name
-              slug
-              description
-              email
-              phoneNumber
-              formattedAddress
-              city
-              latitude
-              longitude
-              storeType
-              isActive
-            }
-          }
+          id
+          name
+          slug
+          description
+          email
+          phoneNumber
+          formattedAddress
+          city
+          latitude
+          longitude
+          storeType
+          isActive
         }
       }
     }
@@ -75,28 +71,20 @@ class HealthcareRepository {
           description
           formattedAddress
           children {
-            edges {
-              node {
-                id
-                name
-                slug
-                storeType
-                city
-              }
-            }
+            id
+            name
+            slug
+            storeType
+            city
           }
           doctors {
-            edges {
-              node {
-                id
-                specialty
-                isVerified
-                user {
-                  username
-                  firstName
-                  lastName
-                }
-              }
+            id
+            specialty
+            isVerified
+            user {
+              username
+              firstName
+              lastName
             }
           }
           servicesList {
