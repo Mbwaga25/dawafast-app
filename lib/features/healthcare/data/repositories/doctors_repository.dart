@@ -2,6 +2,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/api_client.dart';
 import '../models/doctor_model.dart';
+import '../models/referral_model.dart';
 
 final doctorsRepositoryProvider = Provider((ref) => DoctorsRepository());
 
@@ -123,14 +124,16 @@ class DoctorsRepository {
 
   static const String _requestInstantCallMutation = r'''
     mutation RequestInstantCall($appointmentId: ID!) {
-       requestInstantCall(appointmentId: $appointmentId) {
-         success
-         message
-         appointment {
-           id
-           status
-         }
-       }
+      appointments {
+        requestInstantCall(appointmentId: $appointmentId) {
+          success
+          message
+          appointment {
+            id
+            status
+          }
+        }
+      }
     }
   ''';
 
@@ -157,6 +160,96 @@ class DoctorsRepository {
           roomId
           status
           mobileSupported
+        }
+      }
+    }
+  ''';
+
+  static const String _rejectAppointmentMutation = r'''
+    mutation RejectAppointment($appointmentId: ID!, $reason: String) {
+      appointments {
+        cancelAppointment(appointmentId: $appointmentId, reason: $reason) {
+          success
+          errors
+        }
+      }
+    }
+  ''';
+
+  static const String _receivedReferralsQuery = r'''
+    query GetReceivedReferrals($status: String) {
+      receivedReferrals(status: $status) {
+        id
+        status
+        reason
+        notes
+        createdAt
+        patient {
+          id
+          user {
+            firstName
+            lastName
+            email
+          }
+        }
+        referringDoctor {
+          id
+          user {
+            firstName
+            lastName
+          }
+        }
+        attachments {
+          id
+          fileName
+          fileType
+          fileUrl
+        }
+      }
+    }
+  ''';
+
+  static const String _patientHistoryQuery = r'''
+    query GetPatientHistory($patientId: ID!) {
+      patientHistory(patientId: $patientId) {
+        id
+        createdAt
+        symptoms
+        diagnosis
+        treatmentPlan
+        doctor {
+          id
+          user {
+            lastName
+          }
+        }
+      }
+    }
+  ''';
+
+  static const String _referPatientMutation = r'''
+    mutation ReferPatient(
+      $patientId: ID!,
+      $providerType: String!,
+      $providerId: ID!,
+      $reason: String!,
+      $notes: String,
+      $labTestIds: [ID!],
+      $productIds: [ID!]
+    ) {
+      referPatient(
+        patientId: $patientId,
+        providerType: $providerType,
+        providerId: $providerId,
+        reason: $reason,
+        notes: $notes,
+        labTestIds: $labTestIds,
+        productIds: $productIds
+      ) {
+        success
+        referral {
+          id
+          status
         }
       }
     }
@@ -284,6 +377,30 @@ class DoctorsRepository {
     return result.data?['appointments']?['bookAppointment']?['appointment'] ?? {};
   }
 
+  static const String _confirmAppointmentMutation = r'''
+    mutation ConfirmAppointment($appointmentId: ID!) {
+      appointments {
+        confirmAppointment(appointmentId: $appointmentId) {
+          appointment {
+            id
+            status
+          }
+        }
+      }
+    }
+  ''';
+
+  Future<Map<String, dynamic>> confirmAppointment(String appointmentId) async {
+    final MutationOptions options = MutationOptions(
+      document: gql(_confirmAppointmentMutation),
+      variables: {'appointmentId': appointmentId},
+    );
+
+    final QueryResult result = await ApiClient.client.value.mutate(options);
+    if (result.hasException) throw result.exception!;
+    return result.data?['appointments']?['confirmAppointment']?['appointment'] ?? {};
+  }
+
   Future<Map<String, dynamic>> requestInstantCall(String appointmentId) async {
     final MutationOptions options = MutationOptions(
       document: gql(_requestInstantCallMutation),
@@ -292,7 +409,7 @@ class DoctorsRepository {
 
     final QueryResult result = await ApiClient.client.value.mutate(options);
     if (result.hasException) throw result.exception!;
-    return result.data?['requestInstantCall'] ?? {};
+    return result.data?['appointments']?['requestInstantCall'] ?? {};
   }
 
   Future<Map<String, dynamic>> startCallSession(String appointmentId) async {
@@ -316,6 +433,68 @@ class DoctorsRepository {
     final QueryResult result = await ApiClient.client.value.query(options);
     if (result.hasException) throw result.exception!;
     return result.data?['appointments']?['getCallSession'];
+  }
+
+  Future<bool> rejectAppointment(String appointmentId, {String? reason}) async {
+    final MutationOptions options = MutationOptions(
+      document: gql(_rejectAppointmentMutation),
+      variables: {'appointmentId': appointmentId, 'reason': reason},
+    );
+
+    final QueryResult result = await ApiClient.client.value.mutate(options);
+    if (result.hasException) throw result.exception!;
+    return result.data?['appointments']?['cancelAppointment']?['success'] ?? false;
+  }
+
+  Future<List<Map<String, dynamic>>> fetchReceivedReferrals({String? status}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(_receivedReferralsQuery),
+      variables: {'status': status},
+      fetchPolicy: FetchPolicy.noCache,
+    );
+
+    final QueryResult result = await ApiClient.client.value.query(options);
+    if (result.hasException) throw result.exception!;
+    return List<Map<String, dynamic>>.from(result.data?['receivedReferrals'] ?? []);
+  }
+
+  Future<List<Map<String, dynamic>>> fetchPatientHistory(String patientId) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(_patientHistoryQuery),
+      variables: {'patientId': patientId},
+      fetchPolicy: FetchPolicy.noCache,
+    );
+
+    final QueryResult result = await ApiClient.client.value.query(options);
+    if (result.hasException) throw result.exception!;
+    return List<Map<String, dynamic>>.from(result.data?['patientHistory'] ?? []);
+  }
+
+  Future<bool> referPatient({
+    required String patientId,
+    required String providerType,
+    required String providerId,
+    required String reason,
+    String? notes,
+    List<String>? labTestIds,
+    List<String>? productIds,
+  }) async {
+    final MutationOptions options = MutationOptions(
+      document: gql(_referPatientMutation),
+      variables: {
+        'patientId': patientId,
+        'providerType': providerType,
+        'providerId': providerId,
+        'reason': reason,
+        'notes': notes,
+        'labTestIds': labTestIds,
+        'productIds': productIds,
+      },
+    );
+
+    final QueryResult result = await ApiClient.client.value.mutate(options);
+    if (result.hasException) throw result.exception!;
+    return result.data?['referPatient']?['success'] ?? false;
   }
 }
 
@@ -345,4 +524,16 @@ final availableSlotsProvider = FutureProvider.family<List<Map<String, dynamic>>,
 final myAppointmentsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
   final repository = ref.watch(doctorsRepositoryProvider);
   return repository.fetchMyAppointments();
+});
+
+final receivedReferralsProvider = FutureProvider.family<List<Referral>, String?>((ref, status) async {
+  final repository = ref.watch(doctorsRepositoryProvider);
+  final data = await repository.fetchReceivedReferrals(status: status);
+  return data.map((json) => Referral.fromJson(json)).toList();
+});
+
+final patientHistoryProvider = FutureProvider.family<List<PatientHistoryRecord>, String>((ref, patientId) async {
+  final repository = ref.watch(doctorsRepositoryProvider);
+  final data = await repository.fetchPatientHistory(patientId);
+  return data.map((json) => PatientHistoryRecord.fromJson(json)).toList();
 });

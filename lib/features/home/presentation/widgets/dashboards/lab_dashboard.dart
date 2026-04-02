@@ -10,12 +10,43 @@ class LabReferralsNotifier extends StateNotifier<List<Appointment>> {
   LabReferralsNotifier() : super([]) { _initMock(); }
   void _initMock() {
     state = [
-      Appointment(id: 'LAB-REF-01', doctorName: 'Dr. Sarah Johnson', patientName: 'Jane Doe', specialization: 'Requested: Complete Blood Count (CBC)', date: DateTime.now().subtract(const Duration(minutes: 5)), status: 'awaiting_lab', type: 'Transfer', isTransferred: true, transferredFrom: 'Dr. Sarah Johnson'),
-      Appointment(id: 'LAB-REF-02', doctorName: 'Dr. Michael Ross', patientName: 'John Smith', specialization: 'Requested: Lipid Panel', date: DateTime.now().subtract(const Duration(minutes: 50)), status: 'awaiting_lab', type: 'Transfer', isTransferred: true, transferredFrom: 'Dr. Michael Ross'),
+      Appointment(
+        id: 'LAB-REF-01', 
+        doctorName: 'Dr. Sarah Johnson', 
+        patientName: 'Jane Doe', 
+        specialization: 'Requested: Complete Blood Count (CBC)', 
+        date: DateTime.now().subtract(const Duration(minutes: 5)), 
+        status: 'awaiting_lab', 
+        type: 'Transfer', 
+        isTransferred: true, 
+        transferredFrom: 'Dr. Sarah Johnson'
+      ),
+      Appointment(
+        id: 'LAB-REF-02', 
+        doctorName: 'Dr. Michael Ross', 
+        patientName: 'John Smith', 
+        specialization: 'Requested: Lipid Panel', 
+        date: DateTime.now().subtract(const Duration(minutes: 50)), 
+        status: 'awaiting_lab', 
+        type: 'Transfer', 
+        isTransferred: true, 
+        transferredFrom: 'Dr. Michael Ross'
+      ),
     ];
   }
   void resolveReferral(String id) {
-    state = state.map((a) => a.id == id ? Appointment(id: a.id, doctorName: a.doctorName, patientName: a.patientName, specialization: a.specialization, date: a.date, status: 'resolved', type: a.type, isTransferred: a.isTransferred, transferredFrom: a.transferredFrom) : a).toList();
+    state = state.map((a) => a.id == id ? Appointment(
+      id: a.id, 
+      doctorName: a.doctorName, 
+      patientName: a.patientName, 
+      specialization: a.specialization, 
+      date: a.date, 
+      status: 'resolved', 
+      type: a.type, 
+      isTransferred: a.isTransferred, 
+      transferredFrom: a.transferredFrom,
+      notes: a.notes,
+    ) : a).toList();
   }
 }
 

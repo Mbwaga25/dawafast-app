@@ -38,12 +38,19 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         ApiClient.resetClient();
         // Invalidate the user provider so it re-fetches with the new token
         ref.invalidate(currentUserProvider);
+        
+        // Reset tab index to 0 (Home/Dashboard)
+        // Note: Home page uses a private _tabIndexProvider, but we can't access it easily.
+        // However, we can push a new HomePage and clear the stack to ensure index 0.
+        
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Login successful!')),
           );
-          // Pop back to home instead of replacing so navigation stack is preserved
-          Navigator.pop(context);
+          
+          // Redirect to Home and clear the navigation stack
+          // This ensures the role-based dashboard logic in HomePage is triggered from scratch.
+          Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
         }
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

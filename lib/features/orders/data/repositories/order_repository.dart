@@ -8,21 +8,23 @@ final orderRepositoryProvider = Provider((ref) => OrderRepository());
 class OrderRepository {
   static const String _myOrdersQuery = r'''
     query GetMyOrders($status: String) {
-      myOrders(status: $status) {
-        id
-        clientName
-        status
-        totalAmount
-        orderDate
-        user {
-          firstName
-          lastName
-        }
-        items {
-          quantity
-          finalPricePerUnit
-          product {
-            name
+      orders {
+        myOrders(status: $status) {
+          id
+          clientName
+          status
+          totalAmount
+          orderDate
+          user {
+            firstName
+            lastName
+          }
+          items {
+            quantity
+            finalPricePerUnit
+            product {
+              name
+            }
           }
         }
       }
@@ -42,7 +44,7 @@ class OrderRepository {
       throw Exception(result.exception.toString());
     }
 
-    final data = result.data?['myOrders'] as List?;
+    final data = result.data?['orders']?['myOrders'] as List?;
     if (data == null) return [];
 
     return data.map((json) => Order.fromJson(json)).toList();

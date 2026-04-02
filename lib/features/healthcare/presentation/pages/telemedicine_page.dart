@@ -7,6 +7,8 @@ import 'package:app/features/healthcare/presentation/pages/doctor_detail_page.da
 import 'package:app/features/healthcare/presentation/pages/meeting_page.dart';
 import 'package:app/features/profile/data/repositories/settings_repository.dart';
 import 'package:app/features/auth/data/repositories/user_repository.dart';
+import 'package:app/core/ui_utils.dart';
+import 'package:app/features/healthcare/presentation/pages/hospital_create_page.dart';
 
 class TelemedicinePage extends ConsumerStatefulWidget {
   const TelemedicinePage({super.key});
@@ -57,6 +59,8 @@ class _TelemedicinePageState extends ConsumerState<TelemedicinePage> {
               ],
             ),
           ),
+          
+          _buildRegistrationPromo(context),
 
           // Quick Stats
           Padding(
@@ -123,6 +127,41 @@ class _TelemedicinePageState extends ConsumerState<TelemedicinePage> {
       ],
     );
   }
+
+  Widget _buildRegistrationPromo(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppTheme.accentBlue.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppTheme.accentBlue.withOpacity(0.2)),
+      ),
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: const BoxDecoration(color: AppTheme.accentBlue, shape: BoxShape.circle),
+            child: const Icon(Icons.add_business, color: Colors.white),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Own a Facility?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                const Text('Register your Hospital, Lab, or Pharmacy on DawaFast.', style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
+              ],
+            ),
+          ),
+          TextButton(
+            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HospitalCreatePage())),
+            child: const Text('Register'),
+          ),
+        ],
+      ),
+    );
+  }
 }
 
 class _TeleDoctorCard extends ConsumerStatefulWidget {
@@ -138,6 +177,12 @@ class _TeleDoctorCardState extends ConsumerState<_TeleDoctorCard> {
   bool _isLoading = false;
 
   Future<void> _handleStartCall(BuildContext context, WidgetRef ref) async {
+    final user = ref.read(currentUserProvider).value;
+    if (user == null || user.role?.toUpperCase() == 'GUEST') {
+      UIUtils.showAuthGuardDialog(context, message: 'You need an account to request a video consultation.');
+      return;
+    }
+    
     setState(() => _isLoading = true);
     try {
       final repo = ref.read(doctorsRepositoryProvider);
@@ -210,7 +255,10 @@ class _TeleDoctorCardState extends ConsumerState<_TeleDoctorCard> {
 
       final appId = appointment['id'];
       if (appId != null) {
-        // Request instant flag
+        // Step 2: Confirm the appointment (Status must be CONFIRMED for instant calls)
+        await repo.confirmAppointment(appId);
+
+        // Step 3: Request instant flag and notification
         await repo.requestInstantCall(appId);
         
         if (mounted) {

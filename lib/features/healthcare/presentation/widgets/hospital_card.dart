@@ -1,16 +1,46 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:app/core/services/location_service.dart';
 import '../../../../core/theme.dart';
 import 'package:app/features/healthcare/presentation/pages/hospital_detail_page.dart';
 import '../../data/models/hospital_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
-class HospitalCard extends StatelessWidget {
+class HospitalCard extends ConsumerStatefulWidget {
   final Hospital hospital;
 
   const HospitalCard({super.key, required this.hospital});
 
   @override
+  ConsumerState<HospitalCard> createState() => _HospitalCardState();
+}
+
+class _HospitalCardState extends ConsumerState<HospitalCard> {
+  Position? _userPosition;
+  final _locationService = LocationService();
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserLocation();
+  }
+
+  Future<void> _getUserLocation() async {
+    final pos = await _locationService.getCurrentPosition();
+    if (mounted) setState(() => _userPosition = pos);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    String? distanceStr;
+    String? timeStr;
+    if (_userPosition != null && widget.hospital.latitude != null && widget.hospital.longitude != null) {
+      final dist = _locationService.calculateDistance(_userPosition!.latitude, _userPosition!.longitude, widget.hospital.latitude!, widget.hospital.longitude!);
+      distanceStr = '${dist.toStringAsFixed(1)} km';
+      timeStr = _locationService.estimateTravelTime(dist);
+    }
+
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       child: InkWell(
@@ -18,7 +48,7 @@ class HospitalCard extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => HospitalDetailPage(idOrSlug: hospital.slug),
+              builder: (context) => HospitalDetailPage(idOrSlug: widget.hospital.slug),
             ),
           );
         },
@@ -48,7 +78,7 @@ class HospitalCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          hospital.name,
+                          widget.hospital.name,
                           style: const TextStyle(
                             fontSize: 16,
                             fontWeight: FontWeight.bold,
@@ -61,11 +91,24 @@ class HospitalCard extends StatelessWidget {
                             const Icon(Icons.location_on_outlined, size: 14, color: AppTheme.textSecondary),
                             const SizedBox(width: 4),
                             Text(
-                              hospital.city ?? 'Dar es Salaam',
+                              widget.hospital.city ?? 'Dar es Salaam',
                               style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary),
                             ),
                           ],
                         ),
+                        if (distanceStr != null) ...[
+                          const SizedBox(height: 4),
+                          Row(
+                            children: [
+                              const Icon(Icons.near_me, size: 14, color: AppTheme.accentBlue),
+                              const SizedBox(width: 4),
+                              Text(
+                                '$distanceStr • $timeStr',
+                                style: const TextStyle(fontSize: 12, color: AppTheme.primaryBlue, fontWeight: FontWeight.w600),
+                              ),
+                            ],
+                          ),
+                        ],
                         const SizedBox(height: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),

@@ -30,11 +30,32 @@ class PharmacyReferralsNotifier extends StateNotifier<List<Appointment>> {
   PharmacyReferralsNotifier() : super([]) { _initMock(); }
   void _initMock() {
     state = [
-      Appointment(id: 'REF-01', doctorName: 'Dr. Sarah Johnson', patientName: 'Jane Doe', specialization: 'Prescribed: Amoxicillin 500mg, 1x3', date: DateTime.now().subtract(const Duration(minutes: 15)), status: 'awaiting_pharmacy', type: 'Transfer', isTransferred: true, transferredFrom: 'Dr. Sarah Johnson'),
+      Appointment(
+        id: 'REF-01', 
+        doctorName: 'Dr. Sarah Johnson', 
+        patientName: 'Jane Doe', 
+        specialization: 'Prescribed: Amoxicillin 500mg, 1x3', 
+        date: DateTime.now().subtract(const Duration(minutes: 15)), 
+        status: 'awaiting_pharmacy', 
+        type: 'Transfer', 
+        isTransferred: true, 
+        transferredFrom: 'Dr. Sarah Johnson'
+      ),
     ];
   }
   void resolveReferral(String id) {
-    state = state.map((a) => a.id == id ? Appointment(id: a.id, doctorName: a.doctorName, patientName: a.patientName, specialization: a.specialization, date: a.date, status: 'resolved', type: a.type, isTransferred: a.isTransferred, transferredFrom: a.transferredFrom) : a).toList();
+    state = state.map((a) => a.id == id ? Appointment(
+      id: a.id, 
+      doctorName: a.doctorName, 
+      patientName: a.patientName, 
+      specialization: a.specialization, 
+      date: a.date, 
+      status: 'resolved', 
+      type: a.type, 
+      isTransferred: a.isTransferred, 
+      transferredFrom: a.transferredFrom,
+      notes: a.notes,
+    ) : a).toList();
   }
 }
 

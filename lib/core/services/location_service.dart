@@ -1,0 +1,41 @@
+import 'package:geolocator/geolocator.dart';
+import 'package:latlong2/latlong.dart';
+
+class LocationService {
+  static final LocationService _instance = LocationService._internal();
+  factory LocationService() => _instance;
+  LocationService._internal();
+
+  Future<Position?> getCurrentPosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) return null;
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) return null;
+    }
+
+    if (permission == LocationPermission.deniedForever) return null;
+
+    return await Geolocator.getCurrentPosition();
+  }
+
+  double calculateDistance(double startLat, double startLng, double endLat, double endLng) {
+    const Distance distance = Distance();
+    return distance.as(LengthUnit.Meter, LatLng(startLat, startLng), LatLng(endLat, endLng)) / 1000;
+  }
+
+  String estimateTravelTime(double distanceKm) {
+    // Average speed in city: 30 km/h
+    final totalMinutes = (distanceKm / 30) * 60;
+    if (totalMinutes < 1) return 'Less than 1 min';
+    if (totalMinutes < 60) return '${totalMinutes.round()} mins';
+    final hours = (totalMinutes / 60).floor();
+    final mins = (totalMinutes % 60).round();
+    return '${hours}h ${mins}m';
+  }
+}

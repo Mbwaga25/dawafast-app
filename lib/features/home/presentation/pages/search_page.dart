@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:async';
 import 'package:app/core/theme.dart';
+import 'package:app/features/offers/data/models/product_model.dart';
 import 'package:app/features/healthcare/data/repositories/healthcare_repository.dart';
 import 'package:app/features/healthcare/data/repositories/doctors_repository.dart';
 import 'package:app/features/offers/data/repositories/marketplace_repository.dart';
@@ -24,6 +26,9 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
   String _query = '';
+  String _selectedCategory = 'All';
+  final List<String> _recentSearches = ['Panadol', 'Vitamin C', 'Syrup', 'Face Mask'];
+  Timer? _debounce;
 
   @override
   void initState() {
@@ -62,7 +67,12 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
               filled: true,
               fillColor: AppTheme.backgroundWhite,
             ),
-            onChanged: (val) => setState(() => _query = val),
+            onChanged: (val) {
+              if (_debounce?.isActive ?? false) _debounce!.cancel();
+              _debounce = Timer(const Duration(milliseconds: 500), () {
+                setState(() => _query = val);
+              });
+            },
           ),
         ),
         bottom: TabBar(
@@ -90,61 +100,188 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
 
   Widget _buildProductsTab() {
     final productsAsync = ref.watch(productsProvider);
-    return productsAsync.when(
-      data: (products) {
-        final currencyConf = ref.watch(currencySettingsProvider).value;
-        final symbol = currencyConf?.symbol ?? 'Tsh';
-        
-        final filtered = products.where((p) => p.name.toLowerCase().contains(_query.toLowerCase())).toList();
-        if (_query.isEmpty) return const Center(child: Text('Start searching for products'));
-        if (filtered.isEmpty) return const Center(child: Text('No products found'));
-        
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: filtered.length,
-          itemBuilder: (context, index) {
-            final p = filtered[index];
-            return ListTile(
-              leading: Icon(Icons.medical_services_outlined, color: AppTheme.primaryBlue),
-              title: Text(p.name),
-              subtitle: Text('$symbol ${p.price.toStringAsFixed(0)}'),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Consumer(
-                    builder: (context, ref, child) {
-                      final isFav = ref.watch(wishlistProvider.notifier).isFavorite(p.id);
-                      return IconButton(
-                        icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, color: AppTheme.accentBlue, size: 20),
-                        onPressed: () => ref.read(wishlistProvider.notifier).toggle(p),
-                      );
-                    },
+    final categoriesAsync = ref.watch(categoriesProvider(null));
+
+    return Column(
+      children: [
+        if (_query.isNotEmpty) _buildCategoryFilters(categoriesAsync),
+        Expanded(
+          child: productsAsync.when(
+            data: (products) {
+              final currencyConf = ref.watch(currencySettingsProvider).value;
+              final symbol = currencyConf?.symbol ?? 'Tsh';
+              
+              var filtered = products.where((p) => 
+                p.name.toLowerCase().contains(_query.toLowerCase())
+              ).toList();
+
+              if (_selectedCategory != 'All') {
+                filtered = filtered.where((p) => p.categoryName == _selectedCategory).toList();
+              }
+
+              if (_query.isEmpty) return _buildRecentSearches();
+              if (filtered.isEmpty) return _buildNoResults();
+              
+              return GridView.builder(
+                padding: const EdgeInsets.all(16),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  mainAxisSpacing: 12,
+                  crossAxisSpacing: 12,
+                  childAspectRatio: 0.75,
+                ),
+                itemCount: filtered.length,
+                itemBuilder: (context, index) => _buildSmartProductCard(context, ref, filtered[index], symbol),
+              );
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (e, s) => Center(child: Text('Error: $e')),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildCategoryFilters(AsyncValue<List<Category>> categoriesAsync) {
+    return categoriesAsync.maybeWhen(
+      data: (categories) {
+        final list = ['All', ...categories.map((c) => c.name)];
+        return Container(
+          height: 50,
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: list.length,
+            itemBuilder: (context, i) {
+              final cat = list[i];
+              final isSelected = _selectedCategory == cat;
+              return Padding(
+                padding: const EdgeInsets.only(right: 8),
+                child: ChoiceChip(
+                  label: Text(cat, style: TextStyle(fontSize: 12, color: isSelected ? Colors.white : AppTheme.textPrimary)),
+                  selected: isSelected,
+                  onSelected: (val) => setState(() => _selectedCategory = cat),
+                  selectedColor: AppTheme.primaryBlue,
+                  backgroundColor: AppTheme.backgroundWhite,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(color: AppTheme.borderColor),
                   ),
-                  IconButton(
-                    icon: const Icon(Icons.add_shopping_cart, color: AppTheme.primaryBlue, size: 20),
-                    onPressed: () {
-                      ref.read(cartProvider.notifier).addItem(
-                        CartItem(
-                          productId: p.id,
-                          name: p.name,
-                          price: p.price,
-                          image: p.images.isNotEmpty ? p.images.first : null,
-                        ),
-                      );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('${p.name} added to cart'), duration: const Duration(seconds: 1)),
-                      );
-                    },
+                ),
+              );
+            },
+          ),
+        );
+      },
+      orElse: () => const SizedBox.shrink(),
+    );
+  }
+
+  Widget _buildRecentSearches() {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        const Text('Recent Searches', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 12),
+        Wrap(
+          spacing: 8,
+          children: _recentSearches.map((s) => ActionChip(
+            label: Text(s),
+            onPressed: () {
+              _searchController.text = s;
+              setState(() => _query = s);
+            },
+          )).toList(),
+        ),
+        const SizedBox(height: 24),
+        const Text('Trending Categories', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 12),
+        _buildTrendingGrid(),
+      ],
+    );
+  }
+
+  Widget _buildTrendingGrid() {
+    final categories = ['Vitamins', 'Pain Relief', 'Skincare', 'Baby Care'];
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: 10, crossAxisSpacing: 10, childAspectRatio: 2.5),
+      itemCount: categories.length,
+      itemBuilder: (context, i) => Container(
+        decoration: BoxDecoration(color: AppTheme.primaryBlue.withOpacity(0.05), borderRadius: BorderRadius.circular(12), border: Border.all(color: AppTheme.primaryBlue.withOpacity(0.1))),
+        child: Center(child: Text(categories[i], style: const TextStyle(fontWeight: FontWeight.w600, color: AppTheme.primaryBlue))),
+      ),
+    );
+  }
+
+  Widget _buildNoResults() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.search_off, size: 64, color: AppTheme.textSecondary.withOpacity(0.5)),
+          const SizedBox(height: 16),
+          const Text('No products found matching your search', style: TextStyle(color: AppTheme.textSecondary)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSmartProductCard(BuildContext context, WidgetRef ref, Product product, String symbol) {
+    return GestureDetector(
+      onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ProductDetailPage(idOrSlug: product.slug))),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppTheme.borderColor),
+          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 4, offset: const Offset(0, 2))],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                child: Container(
+                  color: AppTheme.backgroundWhite,
+                  width: double.infinity,
+                  child: product.images.isNotEmpty 
+                    ? Image.network(product.images.first, fit: BoxFit.cover, errorBuilder: (c, e, s) => const Icon(Icons.medication))
+                    : const Icon(Icons.medication, size: 40, color: AppTheme.textSecondary),
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(product.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13)),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(color: AppTheme.primaryBlue, fontWeight: FontWeight.w700, fontSize: 14)),
+                      IconButton(
+                        visualDensity: VisualDensity.compact,
+                        padding: EdgeInsets.zero,
+                        icon: const Icon(Icons.add_circle, color: AppTheme.primaryBlue),
+                        onPressed: () {
+                          ref.read(cartProvider.notifier).addItem(CartItem(productId: product.id, name: product.name, price: product.price, image: product.images.isNotEmpty ? product.images.first : null));
+                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Added to cart'), duration: Duration(seconds: 1)));
+                        },
+                      ),
+                    ],
                   ),
                 ],
               ),
-              onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ProductDetailPage(idOrSlug: p.slug))),
-            );
-          },
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, s) => Center(child: Text('Error: $e')),
+            ),
+          ],
+        ),
+      ),
     );
   }
 

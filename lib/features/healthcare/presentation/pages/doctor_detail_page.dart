@@ -4,6 +4,8 @@ import 'package:app/core/theme.dart';
 import 'package:intl/intl.dart';
 import 'package:app/features/healthcare/data/repositories/doctors_repository.dart';
 import 'package:app/features/healthcare/data/models/doctor_model.dart';
+import 'package:app/features/auth/data/repositories/user_repository.dart';
+import 'package:app/core/ui_utils.dart';
 
 class DoctorDetailPage extends ConsumerWidget {
   final String doctorId;
@@ -378,6 +380,12 @@ class _BookingBottomSheetState extends ConsumerState<BookingBottomSheet> {
   }
 
   Future<void> _handleBooking() async {
+    final user = ref.read(currentUserProvider).value;
+    if (user == null || user.role?.toUpperCase() == 'GUEST') {
+      UIUtils.showAuthGuardDialog(context, message: 'You need an account to book an appointment with a doctor.');
+      return;
+    }
+    
     try {
       showDialog(context: context, barrierDismissible: false, builder: (_) => const Center(child: CircularProgressIndicator()));
       

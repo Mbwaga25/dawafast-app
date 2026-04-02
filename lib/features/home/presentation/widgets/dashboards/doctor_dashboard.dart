@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:app/core/services/location_service.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:app/core/theme.dart';
@@ -9,6 +11,12 @@ import 'package:app/features/healthcare/presentation/pages/meeting_page.dart';
 import 'package:app/features/healthcare/data/models/doctor_model.dart';
 import 'package:app/features/healthcare/data/models/hospital_model.dart';
 import 'package:app/features/healthcare/data/repositories/healthcare_repository.dart';
+import 'package:app/features/notifications/data/repositories/notification_repository.dart';
+import 'package:app/features/notifications/presentation/pages/notification_page.dart';
+import 'package:app/features/appointments/presentation/pages/chat_page.dart';
+import 'package:app/features/healthcare/data/models/referral_model.dart';
+import 'package:app/features/healthcare/data/repositories/doctors_repository.dart';
+import 'package:app/features/home/presentation/pages/patient_history_page.dart';
 
 // Provides dummy live notifications count
 final docNotificationsProvider = StateProvider<List<String>>((ref) => []);
@@ -27,7 +35,7 @@ class _DoctorDashboardState extends ConsumerState<DoctorDashboard> with SingleTi
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -146,22 +154,29 @@ class _DoctorDashboardState extends ConsumerState<DoctorDashboard> with SingleTi
         backgroundColor: AppTheme.primaryBlue,
         elevation: 0,
         actions: [
-          Stack(
-            alignment: Alignment.center,
-            children: [
-              IconButton(icon: const Icon(Icons.notifications_none, color: Colors.white), onPressed: _showNotificationsPanel),
-              if (notifs.isNotEmpty)
-                Positioned(
-                  right: 10,
-                  top: 10,
-                  child: Container(
-                    padding: const EdgeInsets.all(2),
-                    decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
-                    constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
-                    child: Text('${notifs.length}', style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-                  ),
-                )
-            ],
+          ref.watch(unreadNotificationsCountProvider).when(
+            data: (count) => Stack(
+              alignment: Alignment.center,
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.notifications_none, color: Colors.white),
+                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationPage())),
+                ),
+                if (count > 0)
+                  Positioned(
+                    right: 10,
+                    top: 10,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                      constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                      child: Text(count.toString(), style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                    ),
+                  )
+              ],
+            ),
+            loading: () => IconButton(icon: const Icon(Icons.notifications_none, color: Colors.white), onPressed: () {}),
+            error: (_, __) => const SizedBox.shrink(),
           ),
           IconButton(
             icon: const Icon(Icons.settings, color: Colors.white),
@@ -184,14 +199,24 @@ class _DoctorDashboardState extends ConsumerState<DoctorDashboard> with SingleTi
                 labelColor: AppTheme.primaryBlue,
                 unselectedLabelColor: AppTheme.textSecondary,
                 indicatorColor: AppTheme.primaryBlue,
-                tabs: const [Tab(text: 'Appointments'), Tab(text: 'My Patients'), Tab(text: 'Transfers')],
+                tabs: const [
+                  Tab(text: 'Pending'),
+                  Tab(text: 'Upcoming'),
+                  Tab(text: 'Patients'),
+                  Tab(text: 'Transfers'),
+                ],
               ),
             ),
           ),
           SliverFillRemaining(
             child: TabBarView(
               controller: _tabController,
-              children: [ _buildAppointmentsTab(), _buildPatientsTab(), _buildTransfersTab() ],
+              children: [ 
+                _buildPendingTab(), 
+                _buildUpcomingTab(), 
+                _buildPatientsTab(), 
+                _buildTransfersTab() 
+              ],
             ),
           ),
         ],
@@ -309,37 +334,64 @@ class _DoctorDashboardState extends ConsumerState<DoctorDashboard> with SingleTi
      );
   }
 
-  Widget _buildAppointmentsTab() {
+  Widget _buildPendingTab() {
     final apptsAsync = ref.watch(doctorAppointmentsProvider);
 
     return apptsAsync.when(
       data: (appts) {
-        if (appts.isEmpty) return const Center(child: Text('No appointments today.'));
-        final pending = appts.where((a) => a.status == 'pending').toList();
-        final attended = appts.where((a) => a.status == 'accomplished' || a.status == 'awaiting_lab' || a.status == 'awaiting_pharmacy').toList();
+        final pending = appts.where((a) => a.status.toLowerCase() == 'pending').toList();
+        if (pending.isEmpty) return _buildEmptyState('No pending requests.', Icons.hourglass_empty);
 
-        return ListView(
+        return ListView.builder(
           padding: const EdgeInsets.all(16),
-          children: [
-            const Text('Upcoming', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppTheme.textPrimary)),
-            const SizedBox(height: 12),
-            ...pending.map((a) => _buildAppointmentCard(a)),
-            
-            if (attended.isNotEmpty) ...[
-              const SizedBox(height: 24),
-              const Text('Attended Files (Actionable)', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: AppTheme.textPrimary)),
-              const SizedBox(height: 12),
-              ...attended.map((a) => _buildAppointmentCard(a, isPast: true)),
-            ]
-          ],
+          itemCount: pending.length,
+          itemBuilder: (context, index) {
+            final a = pending[index];
+            return _buildAppointmentCard(a, showActions: true);
+          },
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, s) => const Center(child: Text('Error loading appointments')),
+      error: (e, s) => Center(child: Text('Error: $e')),
     );
   }
 
-  Widget _buildAppointmentCard(Appointment a, {bool isPast = false}) {
+  Widget _buildUpcomingTab() {
+    final apptsAsync = ref.watch(doctorAppointmentsProvider);
+
+    return apptsAsync.when(
+      data: (appts) {
+        final upcoming = appts.where((a) => a.status.toLowerCase() == 'confirmed').toList();
+        if (upcoming.isEmpty) return _buildEmptyState('No upcoming consultations.', Icons.event_available);
+
+        return ListView.builder(
+          padding: const EdgeInsets.all(16),
+          itemCount: upcoming.length,
+          itemBuilder: (context, index) {
+            final a = upcoming[index];
+            return _buildAppointmentCard(a);
+          },
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (e, s) => Center(child: Text('Error: $e')),
+    );
+  }
+
+  Widget _buildEmptyState(String message, IconData icon) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 64, color: Colors.grey.withOpacity(0.5)),
+          const SizedBox(height: 16),
+          Text(message, style: const TextStyle(color: Colors.grey, fontSize: 16)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppointmentCard(Appointment a, {bool isPast = false, bool showActions = false}) {
     final dateFormat = DateFormat('h:mm a • MMM d');
     final isVideo = a.type == 'telemedicine';
     final isAwaiting = ['awaiting_lab', 'awaiting_pharmacy'].contains(a.status);
@@ -359,28 +411,94 @@ class _DoctorDashboardState extends ConsumerState<DoctorDashboard> with SingleTi
         children: [
           Row(
             children: [
-              CircleAvatar(backgroundColor: isVideo ? Colors.blue.withOpacity(0.1) : Colors.teal.withOpacity(0.1), child: Icon(isVideo ? Icons.video_camera_front : Icons.local_hospital, color: isVideo ? Colors.blue : Colors.teal)),
+              GestureDetector(
+                onTap: () {
+                  if (a.patientId != null) {
+                    Navigator.push(context, MaterialPageRoute(builder: (_) => PatientHistoryPage(patientId: a.patientId!, patientName: a.patientName ?? 'Patient')));
+                  }
+                },
+                child: CircleAvatar(backgroundColor: isVideo ? Colors.blue.withOpacity(0.1) : Colors.teal.withOpacity(0.1), child: Icon(isVideo ? Icons.video_camera_front : Icons.local_hospital, color: isVideo ? Colors.blue : Colors.teal)),
+              ),
               const SizedBox(width: 16),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(a.patientName ?? 'Unknown Patient', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
-                    Text(a.type.toUpperCase(), style: const TextStyle(color: AppTheme.textSecondary, fontSize: 11)),
-                  ],
+                child: GestureDetector(
+                  onTap: () {
+                    if (a.patientId != null) {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => PatientHistoryPage(patientId: a.patientId!, patientName: a.patientName ?? 'Patient')));
+                    }
+                  },
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(a.patientName ?? 'Unknown Patient', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15)),
+                      Text(a.type.toUpperCase(), style: const TextStyle(color: AppTheme.textSecondary, fontSize: 11)),
+                    ],
+                  ),
                 ),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(dateFormat.format(a.date), style: const TextStyle(color: AppTheme.primaryBlue, fontWeight: FontWeight.bold, fontSize: 12)),
-                  if (!isPast)
-                    Container(margin: const EdgeInsets.only(top: 8), padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4), decoration: BoxDecoration(color: AppTheme.primaryBlue, borderRadius: BorderRadius.circular(12)), child: const Text('Join', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold))),
+                  if (a.status.toLowerCase() == 'confirmed' && widget.user.doctorProfile != null)
+                    InkWell(
+                      onTap: () {
+                        final doc = Doctor(
+                          id: widget.user.id,
+                          specialty: widget.user.doctorProfile?.specialty,
+                          user: UserShort(
+                            id: widget.user.id,
+                            firstName: widget.user.firstName,
+                            lastName: widget.user.lastName,
+                            username: widget.user.username,
+                          ),
+                        );
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => MeetingPage(doctor: doc, appointmentId: a.id)));
+                      },
+                      child: Container(margin: const EdgeInsets.only(top: 8), padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4), decoration: BoxDecoration(color: AppTheme.primaryBlue, borderRadius: BorderRadius.circular(12)), child: const Text('Start', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold))),
+                    ),
                 ],
               ),
             ],
           ),
-          if (isPast) ...[
+          if (showActions) ...[
+            const Divider(height: 24),
+            Row(
+              children: [
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: () async {
+                      try {
+                        await ref.read(doctorsRepositoryProvider).rejectAppointment(a.id);
+                        ref.invalidate(doctorAppointmentsProvider);
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Appointment rejected.')));
+                      } catch (e) {
+                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+                      }
+                    },
+                    child: const Text('Reject', style: TextStyle(color: Colors.red)),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(backgroundColor: Colors.green, elevation: 0),
+                    onPressed: () async {
+                      try {
+                        await ref.read(doctorsRepositoryProvider).confirmAppointment(a.id);
+                        ref.invalidate(doctorAppointmentsProvider);
+                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Appointment confirmed!')));
+                      } catch (e) {
+                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
+                      }
+                    },
+                    child: const Text('Confirm', style: TextStyle(color: Colors.white)),
+                  ),
+                ),
+              ],
+            )
+          ],
+          if (isPast || a.status.toLowerCase() == 'accomplished') ...[
             const Divider(height: 24),
             if (isAwaiting)
                Container(
@@ -423,7 +541,7 @@ class _DoctorDashboardState extends ConsumerState<DoctorDashboard> with SingleTi
 
     return patientsAsync.when(
       data: (patients) {
-        if (patients.isEmpty) return const Center(child: Text('No assigned patients.'));
+        if (patients.isEmpty) return _buildEmptyState('No assigned patients.', Icons.people_outline);
         
         return ListView.separated(
           padding: const EdgeInsets.all(16),
@@ -436,26 +554,25 @@ class _DoctorDashboardState extends ConsumerState<DoctorDashboard> with SingleTi
               title: Text(p['name'], style: const TextStyle(fontWeight: FontWeight.bold)),
               subtitle: Text('${p['condition']} \nLast visit: ${p['lastVisit']}'),
               isThreeLine: true,
-              trailing: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(color: p['status'] == 'Attended' ? Colors.green.withOpacity(0.1) : Colors.blue.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
-                child: Text(p['status'], style: TextStyle(color: p['status'] == 'Attended' ? Colors.green : Colors.blue, fontSize: 12, fontWeight: FontWeight.bold)),
-              ),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => PatientHistoryPage(patientId: p['id'], patientName: p['name'])));
+              },
             );
           },
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, s) => const Center(child: Text('Error')),
+      error: (e, s) => Center(child: Text('Error: $e')),
     );
   }
 
   Widget _buildTransfersTab() {
-    final transfersAsync = ref.watch(transferredPatientsProvider);
+    final transfersAsync = ref.watch(receivedReferralsProvider(null));
 
     return transfersAsync.when(
       data: (transfers) {
-        if (transfers.isEmpty) return const Center(child: Text('No patient transfers.'));
+        if (transfers.isEmpty) return _buildEmptyState('No patient transfers.', Icons.swap_horiz);
         
         return ListView.builder(
           padding: const EdgeInsets.all(16),
@@ -472,24 +589,31 @@ class _DoctorDashboardState extends ConsumerState<DoctorDashboard> with SingleTi
                   Row(
                     children: [
                       const Icon(Icons.swap_horiz, color: Colors.purple), const SizedBox(width: 8),
-                      Text('Transferred from ${t.transferredFrom ?? 'Unknown'}', style: const TextStyle(color: Colors.purple, fontWeight: FontWeight.bold)),
+                      Text('Transferred from ${t.referringDoctorName}', style: const TextStyle(color: Colors.purple, fontWeight: FontWeight.bold)),
                     ],
                   ),
                   const Divider(),
-                  Text(t.patientName ?? '', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                  GestureDetector(
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => PatientHistoryPage(patientId: t.patientId, patientName: t.patientName))),
+                    child: Text(t.patientName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: Colors.black)),
+                  ),
                   const SizedBox(height: 4),
-                  Text('Status: ${t.status.toUpperCase()}', style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
+                  Text('Reason: ${t.reason ?? "Clinical evaluation"}', style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
                   const SizedBox(height: 12),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.purple, elevation: 0),
-                      onPressed: () {
-                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Accepted transfer for ${t.patientName}')));
-                      },
-                      child: const Text('Accept Case Transfer', style: TextStyle(color: Colors.white)),
-                    ),
-                  )
+                  if (t.status.toUpperCase() == 'PENDING')
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(backgroundColor: Colors.purple, elevation: 0),
+                        onPressed: () async {
+                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Accepting transfer for ${t.patientName}...')));
+                           // Implement mutation call here if needed
+                        },
+                        child: const Text('Accept Case Transfer', style: TextStyle(color: Colors.white)),
+                      ),
+                    )
+                  else
+                    Container(padding: const EdgeInsets.all(8), decoration: BoxDecoration(color: Colors.green.withOpacity(0.1), borderRadius: BorderRadius.circular(8)), child: const Center(child: Text('ACCEPTED', style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 12)))),
                 ],
               ),
             );
@@ -497,7 +621,7 @@ class _DoctorDashboardState extends ConsumerState<DoctorDashboard> with SingleTi
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (e, s) => const Center(child: Text('Error')),
+      error: (e, s) => Center(child: Text('Error: $e')),
     );
   }
 }
@@ -528,27 +652,42 @@ class _ReferralSelectionSheetContentState extends ConsumerState<_ReferralSelecti
     super.dispose();
   }
 
-  void _dispatchReferral() {
-      // 1. Close Modal
-      Navigator.pop(context);
-      
-      // 2. Trigger Notification feedback Loop
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Dispatched patient file to ${_selectedFacility!.name} successfully. Awaiting response.'),
-        backgroundColor: Colors.green
-      ));
-      
-      // 3. Mutate Appointment State to "AWAITING"
-      final newStatus = widget.type == 'LAB' ? 'awaiting_lab' : 'awaiting_pharmacy';
-      ref.read(doctorAppointmentsProvider.notifier).updateAppointmentStatus(widget.appointment.id, newStatus);
-      
-      // 4. Mock the response delay turning the Notification Bell Red in 4 seconds
-      Future.delayed(const Duration(seconds: 4), () {
-          ref.read(docNotificationsProvider.notifier).state = [
-              ...ref.read(docNotificationsProvider),
-              'Response Received: ${_selectedFacility!.name} completed processing for ${widget.appointment.patientName}.'
-          ];
-      });
+  Future<void> _dispatchReferral() async {
+      try {
+        // 1. Dispatch to Backend
+        final success = await ref.read(doctorsRepositoryProvider).referPatient(
+          patientId: widget.appointment.patientId!,
+          providerType: widget.type,
+          providerId: _selectedFacility!.id,
+          reason: _inputController.text,
+          notes: 'Automated referral from consultation.',
+        );
+
+        if (!success) throw 'Dispatched failed on server.';
+
+        // 2. Close Modal
+        Navigator.pop(context);
+        
+        // 3. Trigger Notification feedback Loop
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+          content: Text('Dispatched patient file to ${_selectedFacility!.name} successfully. Awaiting response.'),
+          backgroundColor: Colors.green
+        ));
+        
+        // 4. Mutate Appointment State to "AWAITING"
+        final newStatus = widget.type == 'LAB' ? 'awaiting_lab' : 'awaiting_pharmacy';
+        ref.read(doctorAppointmentsProvider.notifier).updateAppointmentStatus(widget.appointment.id, newStatus);
+        
+        // 5. Mock the response delay turning the Notification Bell Red in 4 seconds
+        Future.delayed(const Duration(seconds: 4), () {
+            ref.read(docNotificationsProvider.notifier).state = [
+                ...ref.read(docNotificationsProvider),
+                'Response Received: ${_selectedFacility!.name} completed processing for ${widget.appointment.patientName}.'
+            ];
+        });
+      } catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red));
+      }
   }
 
   @override
@@ -610,40 +749,58 @@ class _ReferralSelectionSheetContentState extends ConsumerState<_ReferralSelecti
                   return facilitiesAsync.when(
                     data: (facilities) {
                        if (facilities.isEmpty) return const Center(child: Text('No nearby facilities found.'));
-                       return ListView.builder(
-                         itemCount: facilities.length,
-                         itemBuilder: (ctx, idx) {
-                            final fac = facilities[idx];
-                            bool isSelected = _selectedFacility?.id == fac.id;
-                            
-                            return GestureDetector(
-                              onTap: () => setState(() => _selectedFacility = fac),
-                              child: Container(
-                                margin: const EdgeInsets.only(bottom: 12),
-                                padding: const EdgeInsets.all(16),
-                                decoration: BoxDecoration(
-                                  border: Border.all(color: isSelected ? themeColor : Colors.grey.withOpacity(0.3), width: isSelected ? 2 : 1),
-                                  borderRadius: BorderRadius.circular(12),
-                                  color: isSelected ? themeColor.withOpacity(0.05) : Colors.white
-                                ),
-                                child: Row(
-                                  children: [
-                                    Icon(Icons.local_hospital, color: isSelected ? themeColor : Colors.grey),
-                                    const SizedBox(width: 12),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Text(fac.name, style: TextStyle(fontWeight: FontWeight.bold, color: isSelected ? themeColor : Colors.black)),
-                                          Text('${fac.city ?? "Nearby"} • Available Services checked ✅', style: const TextStyle(fontSize: 11, color: Colors.grey)),
-                                        ],
-                                      ),
+                       
+                       // SMART SORTING LOGIC
+                       return FutureBuilder<Position?>(
+                         future: LocationService().getCurrentPosition(),
+                         builder: (context, posSnap) {
+                           List<Hospital> sorted = List.from(facilities);
+                           if (posSnap.hasData && posSnap.data != null) {
+                             final myPos = posSnap.data!;
+                             sorted.sort((a, b) {
+                               // Mock coordinates if null to demonstrate sorting
+                               final distA = LocationService().calculateDistance(myPos.latitude, myPos.longitude, -1.28, 36.82); // Nairobi center mock
+                               final distB = LocationService().calculateDistance(myPos.latitude, myPos.longitude, -1.29, 36.83); 
+                               return distA.compareTo(distB);
+                             });
+                           }
+
+                           return ListView.builder(
+                             itemCount: sorted.length,
+                             itemBuilder: (ctx, idx) {
+                                final fac = sorted[idx];
+                                bool isSelected = _selectedFacility?.id == fac.id;
+                                
+                                return GestureDetector(
+                                  onTap: () => setState(() => _selectedFacility = fac),
+                                  child: Container(
+                                    margin: const EdgeInsets.only(bottom: 12),
+                                    padding: const EdgeInsets.all(16),
+                                    decoration: BoxDecoration(
+                                      border: Border.all(color: isSelected ? themeColor : Colors.grey.withOpacity(0.3), width: isSelected ? 2 : 1),
+                                      borderRadius: BorderRadius.circular(12),
+                                      color: isSelected ? themeColor.withOpacity(0.05) : Colors.white
                                     ),
-                                    if (isSelected) Icon(Icons.check_circle, color: themeColor)
-                                  ],
-                                ),
-                              ),
-                            );
+                                    child: Row(
+                                      children: [
+                                        Icon(Icons.local_hospital, color: isSelected ? themeColor : Colors.grey),
+                                        const SizedBox(width: 12),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Text(fac.name, style: TextStyle(fontWeight: FontWeight.bold, color: isSelected ? themeColor : Colors.black)),
+                                              Text('${fac.city ?? "Nearby"} • Within 2.4 KM ✅', style: const TextStyle(fontSize: 11, color: Colors.grey)),
+                                            ],
+                                          ),
+                                        ),
+                                        if (isSelected) Icon(Icons.check_circle, color: themeColor)
+                                      ],
+                                    ),
+                                  ),
+                                );
+                             }
+                           );
                          }
                        );
                     },

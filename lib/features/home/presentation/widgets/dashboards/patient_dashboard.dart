@@ -10,6 +10,10 @@ import 'package:app/features/healthcare/presentation/pages/healthcare_page.dart'
 import 'package:app/features/appointments/data/models/appointment_model.dart';
 import 'package:app/features/orders/data/models/order_model.dart';
 import 'package:app/features/healthcare/presentation/widgets/instant_call_button.dart';
+import 'package:app/features/notifications/data/repositories/notification_repository.dart';
+import 'package:app/features/notifications/presentation/pages/notification_page.dart';
+import 'package:app/features/appointments/presentation/pages/chat_page.dart';
+import 'package:app/features/appointments/data/repositories/appointment_repository.dart';
 
 class PatientDashboard extends ConsumerWidget {
   final User user;
@@ -25,10 +29,29 @@ class PatientDashboard extends ConsumerWidget {
         backgroundColor: AppTheme.primaryBlue,
         elevation: 0,
         actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_none, color: Colors.white),
-            onPressed: () {},
-          )
+          ref.watch(unreadNotificationsCountProvider).when(
+            data: (count) => Stack(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.notifications_none, color: Colors.white),
+                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationPage())),
+                ),
+                if (count > 0)
+                  Positioned(
+                    right: 8,
+                    top: 8,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(10)),
+                      constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
+                      child: Text(count.toString(), style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
+                    ),
+                  ),
+              ],
+            ),
+            loading: () => IconButton(icon: const Icon(Icons.notifications_none, color: Colors.white), onPressed: () {}),
+            error: (_, __) => const SizedBox.shrink(),
+          ),
         ],
       ),
       body: CustomScrollView(
@@ -179,7 +202,7 @@ class PatientDashboard extends ConsumerWidget {
                 return _buildEmptyState('No upcoming appointments', Icons.calendar_today);
               }
               return Column(
-                children: appts.map((a) => _buildAppointmentCard(a)).toList(),
+                children: appts.map((a) => _buildAppointmentCard(context, a)).toList(),
               );
             },
             loading: () => const Center(child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator())),
@@ -195,7 +218,7 @@ class PatientDashboard extends ConsumerWidget {
                 return _buildEmptyState('No past records', Icons.history);
               }
               return Column(
-                children: appts.map((a) => _buildAppointmentCard(a, isPast: true)).toList(),
+                children: appts.map((a) => _buildAppointmentCard(context, a, isPast: true)).toList(),
               );
             },
             loading: () => const SizedBox.shrink(),
@@ -225,7 +248,7 @@ class PatientDashboard extends ConsumerWidget {
     );
   }
 
-  Widget _buildAppointmentCard(Appointment a, {bool isPast = false}) {
+  Widget _buildAppointmentCard(BuildContext context, Appointment a, {bool isPast = false}) {
     final dateFormat = DateFormat('EEE, MMM d • h:mm a');
     final isVideo = a.type == 'telemedicine';
 
@@ -259,7 +282,13 @@ class PatientDashboard extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(a.doctorName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(a.doctorName, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                    _buildStatusChip(a.status),
+                  ],
+                ),
                 Text(a.specialization, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 13)),
                 const SizedBox(height: 8),
                 Row(
@@ -272,17 +301,16 @@ class PatientDashboard extends ConsumerWidget {
               ],
             ),
           ),
-          if (!isPast)
-            isVideo 
-              ? InstantCallButton(appointmentId: a.id)
-              : Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: AppTheme.primaryBlue,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: const Text('Join', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
-                ),
+          if (!isPast) ...[
+            const SizedBox(width: 8),
+            if (isVideo && a.status.toLowerCase() == 'confirmed')
+              InstantCallButton(appointmentId: a.id)
+            else if (a.status.toLowerCase() == 'confirmed')
+              IconButton(
+                icon: const Icon(Icons.chat_outlined, color: AppTheme.primaryBlue),
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ChatPage(appointmentId: a.id))),
+              ),
+          ],
         ],
       ),
     );
@@ -371,6 +399,20 @@ class PatientDashboard extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildStatusChip(String status) {
+    Color color = Colors.grey;
+    final s = status.toLowerCase();
+    if (s == 'confirmed' || s == 'completed') color = Colors.green;
+    if (s == 'pending' || s == 'processing') color = Colors.orange;
+    if (s == 'cancelled' || s == 'failed') color = Colors.red;
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+      decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(4)),
+      child: Text(status.toUpperCase(), style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold)),
     );
   }
 }

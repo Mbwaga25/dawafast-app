@@ -1,15 +1,19 @@
 class Appointment {
   final String id;
   final String doctorName;
-  final String? patientName; // Added for Doctor Dashboard
-  final String? patientId;   // Added for Doctor Dashboard
-  final bool isTransferred;  // Added for transfers tracking
-  final String? transferredFrom; // Name of doctor who transferred
+  final String? patientName;
+  final String? patientId;
+  final bool isTransferred;
+  final String? transferredFrom;
   final String specialization;
   final DateTime date;
-  final String status; // 'pending', 'accomplished', 'cancelled'
-  final String type; // 'telemedicine', 'in-person', 'lab'
+  final String status;
+  final String type;
   final String? imageUrl;
+  final String? symptoms;
+  final String? diagnosis;
+  final String? treatmentPlan;
+  final List<String> notes;
 
   Appointment({
     required this.id,
@@ -23,6 +27,10 @@ class Appointment {
     required this.status,
     required this.type,
     this.imageUrl,
+    this.symptoms,
+    this.diagnosis,
+    this.treatmentPlan,
+    this.notes = const [],
   });
 
   factory Appointment.fromJson(Map<String, dynamic> json) {
@@ -38,6 +46,8 @@ class Appointment {
       status: json['status'] ?? 'pending',
       type: json['type'] ?? 'in-person',
       imageUrl: json['imageUrl'],
+      symptoms: json['consultationNotes'] != null ? json['consultationNotes'] : null,
+      notes: (json['notes'] as List? ?? []).map((e) => e.toString()).toList(),
     );
   }
 }

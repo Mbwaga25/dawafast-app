@@ -1,0 +1,727 @@
+Analyzing app...                                                
+
+   info • 'background' is deprecated and shouldn't be used. Use surface instead. This feature was deprecated after v3.18.0-0.1.pre • lib/core/theme.dart:58:9 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/ui_utils.dart:17:45 • deprecated_member_use
+   info • Unnecessary use of multiple underscores • lib/core/widgets/product_image.dart:34:27 • unnecessary_underscores
+   info • Unnecessary use of multiple underscores • lib/core/widgets/product_image.dart:34:31 • unnecessary_underscores
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/core/widgets/product_image.dart:57:102 • deprecated_member_use
+   info • Use the '??' operator rather than '?:' when testing for 'null' • lib/features/appointments/data/models/appointment_model.dart:49:17 • prefer_if_null_operators
+warning • Unused import: 'package:app/features/auth/data/repositories/user_repository.dart' • lib/features/appointments/data/repositories/appointment_repository.dart:6:8 • unused_import
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/auth/data/repositories/user_repository.dart:90:11 • use_null_aware_elements
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/auth/data/repositories/user_repository.dart:91:11 • use_null_aware_elements
+warning • The value of the local variable 'symbol' isn't used • lib/features/cart/presentation/pages/cart_page.dart:17:11 • unused_local_variable
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/cart/presentation/pages/cart_page.dart:79:41 • deprecated_member_use
+   info • 'dart:html' is deprecated and shouldn't be used. Use package:web and dart:js_interop instead • lib/features/cart/presentation/pages/checkout_page.dart:1:1 • deprecated_member_use
+   info • Don't use web-only libraries outside Flutter web plugins • lib/features/cart/presentation/pages/checkout_page.dart:1:1 • avoid_web_libraries_in_flutter
+   info • Unnecessary use of multiple underscores • lib/features/cart/presentation/pages/checkout_page.dart:160:22 • unnecessary_underscores
+   info • Missing type annotation • lib/features/cart/presentation/pages/checkout_page.dart:205:29 • strict_top_level_inference
+   info • Don't use 'BuildContext's across async gaps • lib/features/cart/presentation/pages/checkout_page.dart:260:21 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/cart/presentation/pages/checkout_page.dart:262:9 • use_build_context_synchronously
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/cart/presentation/pages/order_success_page.dart:22:47 • deprecated_member_use
+warning • Unused import: '../../../auth/data/models/user_model.dart' • lib/features/healthcare/data/models/doctor_model.dart:1:8 • unused_import
+   info • The local variable '_extractNodes' starts with an underscore • lib/features/healthcare/data/models/hospital_model.dart:43:19 • no_leading_underscores_for_local_identifiers
+warning • Unused import: 'package:intl/intl.dart' • lib/features/healthcare/data/models/referral_model.dart:1:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/doctor_detail_page.dart:169:33 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/doctor_detail_page.dart:323:105 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/doctor_detail_page.dart:330:97 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/doctor_detail_page.dart:367:52 • deprecated_member_use
+   info • Don't use 'BuildContext's across async gaps • lib/features/healthcare/presentation/pages/doctor_detail_page.dart:397:21 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/healthcare/presentation/pages/doctor_detail_page.dart:398:21 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/healthcare/presentation/pages/doctor_detail_page.dart:402:21 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/healthcare/presentation/pages/doctor_detail_page.dart:403:28 • use_build_context_synchronously
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/healthcare_page.dart:191:45 • deprecated_member_use
+warning • Unused import: 'package:app/core/theme.dart' • lib/features/healthcare/presentation/pages/hospital_create_page.dart:3:8 • unused_import
+   info • Don't use 'BuildContext's across async gaps • lib/features/healthcare/presentation/pages/hospital_create_page.dart:52:30 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/healthcare/presentation/pages/hospital_create_page.dart:55:23 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/healthcare/presentation/pages/hospital_create_page.dart:59:30 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps • lib/features/healthcare/presentation/pages/hospital_create_page.dart:62:28 • use_build_context_synchronously
+   info • 'value' is deprecated and shouldn't be used. Use initialValue instead. This will set the initial value for the form field. This feature was deprecated after v3.33.0-1.0.pre • lib/features/healthcare/presentation/pages/hospital_create_page.dart:88:17 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/hospital_detail_page.dart:92:65 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/hospital_detail_page.dart:162:44 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/hospital_detail_page.dart:321:53 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/hospital_detail_page.dart:361:68 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/labs_page.dart:51:56 • deprecated_member_use
+warning • Unused import: 'package:app/features/healthcare/presentation/pages/telemedicine_page.dart' • lib/features/healthcare/presentation/pages/meeting_page.dart:6:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/meeting_page.dart:107:54 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/meeting_page.dart:134:54 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/meeting_page.dart:156:47 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/meeting_page.dart:165:56 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/meeting_page.dart:192:58 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/meeting_page.dart:204:45 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/meeting_page.dart:209:62 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/meeting_page.dart:229:59 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/meeting_page.dart:242:79 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/meeting_page.dart:259:56 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/meeting_page.dart:282:37 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/meeting_page.dart:284:56 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/meeting_page.dart:294:53 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/meeting_page.dart:308:53 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/pharmacies_page.dart:34:69 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/pharmacies_page.dart:51:56 • deprecated_member_use
+warning • Unused import: 'package:app/features/profile/data/repositories/settings_repository.dart' • lib/features/healthcare/presentation/pages/telemedicine_page.dart:8:8 • unused_import
+   info • The private field _searchQuery could be 'final' • lib/features/healthcare/presentation/pages/telemedicine_page.dart:21:10 • prefer_final_fields
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/telemedicine_page.dart:57:56 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/telemedicine_page.dart:136:36 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/telemedicine_page.dart:138:55 • deprecated_member_use
+warning • The value of the local variable 'session' isn't used • lib/features/healthcare/presentation/pages/telemedicine_page.dart:200:15 • unused_local_variable
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/features/healthcare/presentation/pages/telemedicine_page.dart:202:26 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/features/healthcare/presentation/pages/telemedicine_page.dart:209:37 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/features/healthcare/presentation/pages/telemedicine_page.dart:214:30 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/features/healthcare/presentation/pages/telemedicine_page.dart:265:32 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/features/healthcare/presentation/pages/telemedicine_page.dart:269:26 • use_build_context_synchronously
+   info • Don't use 'BuildContext's across async gaps, guarded by an unrelated 'mounted' check • lib/features/healthcare/presentation/pages/telemedicine_page.dart:276:30 • use_build_context_synchronously
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/telemedicine_page.dart:291:114 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/pages/telemedicine_page.dart:300:48 • deprecated_member_use
+warning • Unused import: 'package:cached_network_image/cached_network_image.dart' • lib/features/healthcare/presentation/widgets/hospital_card.dart:8:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/healthcare/presentation/widgets/hospital_card.dart:116:57 • deprecated_member_use
+warning • Unused import: 'package:app/features/profile/presentation/pages/settings_page.dart' • lib/features/home/presentation/pages/home_page.dart:28:8 • unused_import
+   info • Unnecessary use of multiple underscores • lib/features/home/presentation/pages/home_page.dart:282:24 • unnecessary_underscores
+   info • Unnecessary use of multiple underscores • lib/features/home/presentation/pages/home_page.dart:292:24 • unnecessary_underscores
+   info • Unnecessary use of multiple underscores • lib/features/home/presentation/pages/home_page.dart:312:24 • unnecessary_underscores
+   info • Unnecessary use of multiple underscores • lib/features/home/presentation/pages/home_page.dart:321:24 • unnecessary_underscores
+   info • Unnecessary use of multiple underscores • lib/features/home/presentation/pages/home_page.dart:331:24 • unnecessary_underscores
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/home_page.dart:417:49 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/home_page.dart:424:60 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/home_page.dart:460:51 • deprecated_member_use
+   info • Unnecessary use of multiple underscores • lib/features/home/presentation/pages/home_page.dart:464:148 • unnecessary_underscores
+   info • Unnecessary use of multiple underscores • lib/features/home/presentation/pages/home_page.dart:464:152 • unnecessary_underscores
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/home_page.dart:539:53 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/home_page.dart:593:57 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/home_page.dart:595:76 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/home_page.dart:690:93 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/home_page.dart:791:88 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/home_page.dart:801:61 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/patient_history_page.dart:74:70 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/patient_history_page.dart:104:53 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/product_detail_page.dart:148:49 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/product_detail_page.dart:230:41 • deprecated_member_use
+warning • Unused import: 'package:app/features/healthcare/presentation/pages/hospital_detail_page.dart' • lib/features/home/presentation/pages/search_page.dart:11:8 • unused_import
+warning • Unused import: 'package:app/features/profile/presentation/providers/wishlist_provider.dart' • lib/features/home/presentation/pages/search_page.dart:15:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/search_page.dart:213:63 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/search_page.dart:213:170 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/search_page.dart:224:74 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/search_page.dart:240:53 • deprecated_member_use
+warning • The value of the local variable 'filters' isn't used • lib/features/home/presentation/pages/search_page.dart:289:11 • unused_local_variable
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/pages/search_page.dart:334:75 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/widgets/dashboards/admin_dashboard.dart:115:84 • deprecated_member_use
+   info • Unnecessary use of multiple underscores • lib/features/home/presentation/widgets/dashboards/admin_dashboard.dart:131:32 • unnecessary_underscores
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/widgets/dashboards/admin_dashboard.dart:213:55 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/widgets/dashboards/admin_dashboard.dart:287:62 • deprecated_member_use
+  error • Classes can only mix in mixins and classes • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:31:73 • mixin_of_non_class
+  error • Undefined class 'TabController' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:32:8 • undefined_class
+  error • The method 'TabController' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:37:22 • undefined_method
+warning • The declaration '_showNotificationsPanel' isn't referenced • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:46:8 • unused_element
+  error • The method 'showModalBottomSheet' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:48:5 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:50:24 • undefined_identifier
+  error • The method 'Container' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:51:23 • undefined_method
+  error • The name 'BoxDecoration' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:52:27 • creation_with_non_type
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:53:18 • undefined_identifier
+  error • Undefined name 'BorderRadius' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:54:25 • undefined_identifier
+  error • Undefined name 'Radius' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:54:52 • undefined_identifier
+  error • Undefined name 'Radius' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:54:83 • undefined_identifier
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:56:24 • undefined_identifier
+  error • The method 'Column' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:57:16 • undefined_method
+  error • Undefined name 'CrossAxisAlignment' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:58:31 • undefined_identifier
+  error • The method 'Row' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:60:13 • undefined_method
+  error • Undefined name 'MainAxisAlignment' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:61:34 • undefined_identifier
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:63:23 • creation_with_non_type
+  error • The method 'TextStyle' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:63:53 • undefined_method
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:63:89 • undefined_identifier
+  error • The method 'IconButton' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:64:17 • undefined_method
+  error • The name 'Icon' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:64:40 • creation_with_non_type
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:64:45 • undefined_identifier
+  error • Undefined name 'Navigator' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:64:76 • undefined_identifier
+  error • The name 'Divider' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:67:19 • creation_with_non_type
+  error • The name 'Expanded' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:69:22 • creation_with_non_type
+  error • The method 'Center' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:69:38 • undefined_method
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:69:52 • undefined_method
+  error • The method 'TextStyle' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:69:107 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:69:124 • undefined_identifier
+  error • The method 'Expanded' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:71:16 • undefined_method
+  error • Undefined name 'ListView' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:72:25 • undefined_identifier
+  error • The method 'ListTile' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:74:47 • undefined_method
+  error • The method 'CircleAvatar' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:75:31 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:75:61 • undefined_identifier
+  error • The name 'Icon' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:75:95 • creation_with_non_type
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:75:100 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:75:126 • undefined_identifier
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:76:29 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:76:67 • creation_with_non_type
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:76:89 • undefined_identifier
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:77:38 • creation_with_non_type
+  error • The method 'SizedBox' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:82:15 • undefined_method
+  error • The method 'OutlinedButton' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:82:55 • undefined_method
+  error • Undefined name 'Navigator' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:84:17 • undefined_identifier
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:85:31 • creation_with_non_type
+  error • The method 'showModalBottomSheet' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:94:5 • undefined_method
+  error • The method 'StatefulBuilder' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:97:25 • undefined_method
+  error • The method 'Container' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:98:46 • undefined_method
+  error • Undefined name 'MediaQuery' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:99:19 • undefined_identifier
+  error • The name 'BoxDecoration' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:100:29 • creation_with_non_type
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:100:50 • undefined_identifier
+  error • Undefined name 'BorderRadius' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:100:78 • undefined_identifier
+  error • Undefined name 'Radius' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:100:105 • undefined_identifier
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:101:26 • undefined_identifier
+  error • The method 'Column' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:102:18 • undefined_method
+  error • Undefined name 'CrossAxisAlignment' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:103:33 • undefined_identifier
+  error • The method 'Row' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:105:15 • undefined_method
+  error • Undefined name 'MainAxisAlignment' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:106:36 • undefined_identifier
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:108:26 • creation_with_non_type
+  error • The method 'TextStyle' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:108:57 • undefined_method
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:108:93 • undefined_identifier
+  error • The method 'IconButton' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:109:20 • undefined_method
+  error • The name 'Icon' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:109:43 • creation_with_non_type
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:109:48 • undefined_identifier
+  error • Undefined name 'Navigator' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:109:79 • undefined_identifier
+  error • The name 'Divider' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:112:21 • creation_with_non_type
+  error • The method 'SwitchListTile' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:113:15 • undefined_method
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:114:30 • creation_with_non_type
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:115:33 • creation_with_non_type
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:117:30 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:120:21 • creation_with_non_type
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:121:21 • creation_with_non_type
+  error • The method 'TextStyle' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:121:63 • undefined_method
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:121:85 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:122:21 • creation_with_non_type
+  error • The method 'ListTile' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:123:15 • undefined_method
+  error • The name 'Icon' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:123:39 • creation_with_non_type
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:123:44 • undefined_identifier
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:123:109 • creation_with_non_type
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:123:150 • creation_with_non_type
+  error • The name 'Divider' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:124:21 • creation_with_non_type
+  error • The method 'ListTile' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:125:15 • undefined_method
+  error • The name 'Icon' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:125:39 • creation_with_non_type
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:125:44 • undefined_identifier
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:125:109 • creation_with_non_type
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:125:143 • creation_with_non_type
+  error • The name 'Spacer' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:126:21 • creation_with_non_type
+  error • The method 'SizedBox' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:127:15 • undefined_method
+  error • The method 'ElevatedButton' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:129:24 • undefined_method
+  error • Undefined name 'ElevatedButton' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:130:26 • undefined_identifier
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:130:105 • undefined_identifier
+  error • Undefined name 'Navigator' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:132:22 • undefined_identifier
+  error • Undefined name 'ScaffoldMessenger' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:133:22 • undefined_identifier
+  error • The name 'SnackBar' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:133:71 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:133:89 • undefined_method
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:135:32 • creation_with_non_type
+  error • The method 'TextStyle' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:135:60 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:135:77 • undefined_identifier
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:135:103 • undefined_identifier
+  error • Undefined class 'Widget' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:146:3 • undefined_class
+  error • Undefined class 'BuildContext' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:146:16 • undefined_class
+warning • The value of the local variable 'notifs' isn't used • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:147:11 • unused_local_variable
+  error • The method 'Scaffold' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:149:12 • undefined_method
+  error • The method 'AppBar' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:151:15 • undefined_method
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:152:22 • creation_with_non_type
+  error • The method 'TextStyle' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:152:51 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:152:68 • undefined_identifier
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:152:108 • undefined_identifier
+  error • The method 'Stack' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:157:30 • undefined_method
+  error • Undefined name 'Alignment' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:158:26 • undefined_identifier
+  error • The method 'IconButton' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:160:17 • undefined_method
+  error • The name 'Icon' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:161:31 • creation_with_non_type
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:161:36 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:161:69 • undefined_identifier
+  error • Undefined name 'Navigator' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:162:36 • undefined_identifier
+  error • The method 'MaterialPageRoute' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:162:60 • undefined_method
+  error • The method 'Positioned' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:165:19 • undefined_method
+  error • The method 'Container' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:168:28 • undefined_method
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:169:38 • undefined_identifier
+  error • The name 'BoxDecoration' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:170:41 • creation_with_non_type
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:170:62 • undefined_identifier
+  error • Undefined name 'BoxShape' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:170:81 • undefined_identifier
+  error • The name 'BoxConstraints' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:171:42 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:172:30 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:172:66 • creation_with_non_type
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:172:83 • undefined_identifier
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:172:123 • undefined_identifier
+  error • Undefined name 'TextAlign' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:172:152 • undefined_identifier
+  error • The method 'IconButton' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:177:28 • undefined_method
+  error • The name 'Icon' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:177:51 • creation_with_non_type
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:177:56 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:177:89 • undefined_identifier
+   info • Unnecessary use of multiple underscores • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:178:24 • unnecessary_underscores
+  error • Undefined name 'SizedBox' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:178:37 • undefined_identifier
+  error • The method 'IconButton' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:180:11 • undefined_method
+  error • The name 'Icon' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:181:25 • creation_with_non_type
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:181:30 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:181:53 • undefined_identifier
+  error • The method 'CustomScrollView' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:186:13 • undefined_method
+  error • The method 'SliverToBoxAdapter' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:188:11 • undefined_method
+  error • The method 'SliverToBoxAdapter' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:189:11 • undefined_method
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:189:43 • creation_with_non_type
+  error • The method 'SliverToBoxAdapter' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:190:11 • undefined_method
+  error • The method 'SliverToBoxAdapter' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:191:11 • undefined_method
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:191:43 • creation_with_non_type
+  error • The method 'SliverPersistentHeader' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:193:11 • undefined_method
+  error • The method 'TabBar' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:196:15 • undefined_method
+  error • The method 'Tab' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:202:19 • undefined_method
+  error • The values in a const list literal must be constants • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:202:19 • non_constant_list_element
+  error • The method 'Tab' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:203:19 • undefined_method
+  error • The values in a const list literal must be constants • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:203:19 • non_constant_list_element
+  error • The method 'Tab' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:204:19 • undefined_method
+  error • The values in a const list literal must be constants • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:204:19 • non_constant_list_element
+  error • The method 'Tab' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:205:19 • undefined_method
+  error • The values in a const list literal must be constants • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:205:19 • non_constant_list_element
+  error • The method 'SliverFillRemaining' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:210:11 • undefined_method
+  error • The method 'TabBarView' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:211:20 • undefined_method
+  error • Undefined class 'Widget' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:226:3 • undefined_class
+  error • The method 'Container' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:230:12 • undefined_method
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:232:22 • undefined_identifier
+  error • The name 'BoxDecoration' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:233:25 • creation_with_non_type
+  error • Undefined name 'BorderRadius' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:235:23 • undefined_identifier
+  error • Undefined name 'Radius' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:235:53 • undefined_identifier
+  error • Undefined name 'Radius' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:235:87 • undefined_identifier
+  error • The method 'Column' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:237:14 • undefined_method
+  error • Undefined name 'CrossAxisAlignment' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:238:29 • undefined_identifier
+  error • The method 'Row' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:240:11 • undefined_method
+  error • Undefined name 'MainAxisAlignment' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:241:32 • undefined_identifier
+  error • The method 'Expanded' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:243:15 • undefined_method
+  error • The method 'Column' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:244:24 • undefined_method
+  error • Undefined name 'CrossAxisAlignment' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:245:39 • undefined_identifier
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:247:21 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:247:111 • creation_with_non_type
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:247:128 • undefined_identifier
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:247:168 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:248:27 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:249:21 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:249:103 • creation_with_non_type
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:249:120 • undefined_identifier
+  error • The method 'CircleAvatar' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:253:15 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:253:57 • undefined_identifier
+  error • The name 'Icon' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:253:101 • creation_with_non_type
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:253:106 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:253:127 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:256:17 • creation_with_non_type
+  error • The method 'Row' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:257:11 • undefined_method
+  error • Undefined name 'MainAxisAlignment' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:258:32 • undefined_identifier
+  error • Undefined class 'Widget' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:270:3 • undefined_class
+  error • The method 'Column' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:271:12 • undefined_method
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:273:9 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:273:34 • creation_with_non_type
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:273:51 • undefined_identifier
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:273:91 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:274:15 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:275:9 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:275:34 • creation_with_non_type
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:275:51 • undefined_identifier
+  error • Undefined class 'Widget' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:280:3 • undefined_class
+  error • Undefined class 'BuildContext' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:280:36 • undefined_class
+  error • The method 'Padding' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:281:12 • undefined_method
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:282:22 • undefined_identifier
+  error • The method 'Row' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:283:14 • undefined_method
+  error • The method 'Expanded' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:285:11 • undefined_method
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:288:21 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:288:46 • undefined_identifier
+  error • Undefined name 'Navigator' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:291:17 • undefined_identifier
+  error • The method 'MaterialPageRoute' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:291:41 • undefined_method
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:295:17 • creation_with_non_type
+  error • The method 'Expanded' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:296:11 • undefined_method
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:299:21 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:299:55 • undefined_identifier
+  error • Undefined name 'ScaffoldMessenger' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:300:28 • undefined_identifier
+  error • The name 'SnackBar' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:300:77 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:300:95 • undefined_method
+  error • Undefined class 'Widget' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:308:3 • undefined_class
+  error • Undefined class 'IconData' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:308:62 • undefined_class
+  error • Undefined class 'Color' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:308:86 • undefined_class
+  error • Undefined class 'VoidCallback' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:308:108 • undefined_class
+  error • The method 'InkWell' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:309:12 • undefined_method
+  error • Undefined name 'BorderRadius' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:310:35 • undefined_identifier
+  error • The method 'Container' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:311:14 • undefined_method
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:312:24 • undefined_identifier
+  error • The method 'BoxDecoration' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:313:21 • undefined_method
+  error • Undefined name 'BorderRadius' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:313:80 • undefined_identifier
+  error • Undefined name 'Border' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:313:115 • undefined_identifier
+  error • The method 'Column' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:314:16 • undefined_method
+  error • The method 'Icon' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:314:34 • undefined_method
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:314:76 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:314:97 • undefined_method
+  error • The method 'TextStyle' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:314:116 • undefined_method
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:314:152 • undefined_identifier
+warning • The value of the local variable 'isLab' isn't used • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:322:17 • unused_local_variable
+  error • The method 'showModalBottomSheet' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:324:6 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:327:26 • undefined_identifier
+  error • The method 'Container' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:328:27 • undefined_method
+  error • Undefined name 'MediaQuery' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:329:21 • undefined_identifier
+  error • The name 'BoxDecoration' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:330:31 • creation_with_non_type
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:330:52 • undefined_identifier
+  error • Undefined name 'BorderRadius' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:330:80 • undefined_identifier
+  error • Undefined name 'Radius' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:330:107 • undefined_identifier
+  error • Undefined class 'Widget' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:336:3 • undefined_class
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:342:78 • undefined_identifier
+  error • Undefined name 'ListView' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:344:16 • undefined_identifier
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:345:26 • undefined_identifier
+  error • The name 'Center' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:353:28 • creation_with_non_type
+  error • The method 'CircularProgressIndicator' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:353:42 • undefined_method
+  error • The method 'Center' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:354:24 • undefined_method
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:354:38 • undefined_method
+  error • Undefined class 'Widget' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:358:3 • undefined_class
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:364:85 • undefined_identifier
+  error • Undefined name 'ListView' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:366:16 • undefined_identifier
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:367:26 • undefined_identifier
+  error • The name 'Center' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:375:28 • creation_with_non_type
+  error • The method 'CircularProgressIndicator' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:375:42 • undefined_method
+  error • The method 'Center' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:376:24 • undefined_method
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:376:38 • undefined_method
+  error • Undefined class 'Widget' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:380:3 • undefined_class
+  error • Undefined class 'IconData' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:380:43 • undefined_class
+  error • The method 'Center' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:381:12 • undefined_method
+  error • The method 'Column' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:382:14 • undefined_method
+  error • Undefined name 'MainAxisAlignment' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:383:28 • undefined_identifier
+  error • The method 'Icon' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:385:11 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:385:39 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:386:17 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:387:11 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:387:38 • creation_with_non_type
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:387:55 • undefined_identifier
+  error • Undefined class 'Widget' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:393:3 • undefined_class
+  error • The method 'Container' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:398:12 • undefined_method
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:399:21 • undefined_identifier
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:400:22 • undefined_identifier
+  error • The method 'BoxDecoration' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:401:19 • undefined_method
+  error • Undefined name 'BorderRadius' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:403:23 • undefined_identifier
+  error • Undefined name 'Border' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:404:17 • undefined_identifier
+  error • The method 'BoxShadow' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:406:11 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:406:28 • undefined_identifier
+  error • The name 'Offset' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:406:90 • creation_with_non_type
+  error • The method 'Column' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:409:14 • undefined_method
+  error • The method 'Row' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:411:11 • undefined_method
+  error • The method 'GestureDetector' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:413:15 • undefined_method
+  error • Undefined name 'Navigator' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:416:21 • undefined_identifier
+  error • The method 'MaterialPageRoute' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:416:45 • undefined_method
+  error • The method 'CircleAvatar' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:419:24 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:419:64 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:419:95 • undefined_identifier
+  error • The method 'Icon' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:419:132 • undefined_method
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:419:147 • undefined_identifier
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:419:174 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:419:213 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:419:227 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:421:21 • creation_with_non_type
+  error • The method 'Expanded' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:422:15 • undefined_method
+  error • The method 'GestureDetector' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:423:24 • undefined_method
+  error • Undefined name 'Navigator' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:426:23 • undefined_identifier
+  error • The method 'MaterialPageRoute' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:426:47 • undefined_method
+  error • The method 'Column' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:429:26 • undefined_method
+  error • Undefined name 'CrossAxisAlignment' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:430:41 • undefined_identifier
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:432:23 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:432:77 • creation_with_non_type
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:432:99 • undefined_identifier
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:433:23 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:433:63 • creation_with_non_type
+  error • The method 'Column' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:438:15 • undefined_method
+  error • Undefined name 'CrossAxisAlignment' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:439:37 • undefined_identifier
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:441:19 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:441:64 • creation_with_non_type
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:441:115 • undefined_identifier
+  error • The method 'InkWell' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:443:21 • undefined_method
+  error • Undefined name 'Navigator' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:444:40 • undefined_identifier
+  error • The method 'MaterialPageRoute' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:444:64 • undefined_method
+  error • The argument type 'DoctorProfile' can't be assigned to the parameter type 'Doctor'.  • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:444:118 • argument_type_not_assignable
+  error • The method 'Container' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:445:30 • undefined_method
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:445:54 • undefined_identifier
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:445:94 • undefined_identifier
+  error • The method 'BoxDecoration' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:445:157 • undefined_method
+  error • Undefined name 'BorderRadius' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:445:214 • undefined_identifier
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:445:255 • creation_with_non_type
+  error • The method 'TextStyle' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:445:276 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:445:293 • undefined_identifier
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:445:333 • undefined_identifier
+  error • The name 'Divider' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:452:19 • creation_with_non_type
+  error • The method 'Row' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:453:13 • undefined_method
+  error • The method 'Expanded' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:455:17 • undefined_method
+  error • The method 'OutlinedButton' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:456:26 • undefined_method
+  error • Undefined name 'ScaffoldMessenger' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:461:25 • undefined_identifier
+   info • Don't use 'BuildContext's across async gaps • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:461:46 • use_build_context_synchronously
+  error • The name 'SnackBar' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:461:74 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:461:92 • undefined_method
+  error • Undefined name 'ScaffoldMessenger' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:463:26 • undefined_identifier
+   info • Don't use 'BuildContext's across async gaps • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:463:47 • use_build_context_synchronously
+  error • The method 'SnackBar' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:463:69 • undefined_method
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:463:87 • undefined_method
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:466:34 • creation_with_non_type
+  error • The method 'TextStyle' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:466:56 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:466:73 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:469:23 • creation_with_non_type
+  error • The method 'Expanded' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:470:17 • undefined_method
+  error • The method 'ElevatedButton' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:471:26 • undefined_method
+  error • Undefined name 'ElevatedButton' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:472:28 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:472:70 • undefined_identifier
+  error • Undefined name 'ScaffoldMessenger' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:477:25 • undefined_identifier
+   info • Don't use 'BuildContext's across async gaps • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:477:46 • use_build_context_synchronously
+  error • The name 'SnackBar' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:477:74 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:477:92 • undefined_method
+  error • Undefined name 'ScaffoldMessenger' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:479:26 • undefined_identifier
+   info • Don't use 'BuildContext's across async gaps • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:479:47 • use_build_context_synchronously
+  error • The method 'SnackBar' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:479:69 • undefined_method
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:479:87 • undefined_method
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:482:34 • creation_with_non_type
+  error • The method 'TextStyle' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:482:57 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:482:74 • undefined_identifier
+  error • The name 'Divider' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:489:19 • creation_with_non_type
+  error • The method 'Container' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:491:16 • undefined_method
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:493:33 • undefined_identifier
+  error • The method 'BoxDecoration' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:494:30 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:494:51 • undefined_identifier
+  error • Undefined name 'BorderRadius' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:494:97 • undefined_identifier
+  error • Undefined name 'Border' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:494:131 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:494:149 • undefined_identifier
+  error • The method 'Row' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:495:25 • undefined_method
+  error • Undefined name 'MainAxisAlignment' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:496:39 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:498:28 • creation_with_non_type
+  error • The method 'CircularProgressIndicator' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:498:67 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:498:116 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:499:28 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:500:22 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:500:103 • creation_with_non_type
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:500:120 • undefined_identifier
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:500:147 • undefined_identifier
+  error • The method 'Row' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:505:16 • undefined_method
+  error • Undefined name 'MainAxisAlignment' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:506:37 • undefined_identifier
+  error • Undefined name 'OutlinedButton' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:508:20 • undefined_identifier
+  error • The name 'Icon' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:510:34 • creation_with_non_type
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:510:39 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:510:80 • undefined_identifier
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:511:35 • creation_with_non_type
+  error • The method 'TextStyle' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:511:62 • undefined_method
+  error • Undefined name 'OutlinedButton' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:513:20 • undefined_identifier
+  error • The name 'Icon' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:515:34 • creation_with_non_type
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:515:39 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:515:90 • undefined_identifier
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:516:35 • creation_with_non_type
+  error • The method 'TextStyle' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:516:62 • undefined_method
+  error • Undefined class 'Widget' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:526:3 • undefined_class
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:531:80 • undefined_identifier
+  error • Undefined name 'ListView' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:533:16 • undefined_identifier
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:534:26 • undefined_identifier
+   info • Unnecessary use of multiple underscores • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:536:33 • unnecessary_underscores
+  error • The name 'Divider' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:536:46 • creation_with_non_type
+  error • The method 'ListTile' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:539:20 • undefined_method
+  error • The method 'CircleAvatar' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:540:24 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:540:54 • undefined_identifier
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:540:93 • undefined_method
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:541:22 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:541:51 • creation_with_non_type
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:541:73 • undefined_identifier
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:542:25 • undefined_method
+  error • The name 'Icon' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:544:31 • creation_with_non_type
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:544:36 • undefined_identifier
+  error • Undefined name 'Navigator' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:546:17 • undefined_identifier
+  error • The method 'MaterialPageRoute' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:546:41 • undefined_method
+  error • The name 'Center' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:552:28 • creation_with_non_type
+  error • The method 'CircularProgressIndicator' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:552:42 • undefined_method
+  error • The method 'Center' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:553:24 • undefined_method
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:553:38 • undefined_method
+  error • Undefined class 'Widget' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:557:3 • undefined_class
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:562:81 • undefined_identifier
+  error • Undefined name 'ListView' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:564:16 • undefined_identifier
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:565:26 • undefined_identifier
+  error • The method 'Container' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:569:20 • undefined_method
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:570:29 • undefined_identifier
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:571:30 • undefined_identifier
+  error • The method 'BoxDecoration' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:572:27 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:572:48 • undefined_identifier
+  error • Undefined name 'BorderRadius' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:572:95 • undefined_identifier
+  error • Undefined name 'Border' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:572:130 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:572:148 • undefined_identifier
+  error • The method 'Column' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:573:22 • undefined_method
+  error • Undefined name 'CrossAxisAlignment' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:574:37 • undefined_identifier
+  error • The method 'Row' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:576:19 • undefined_method
+  error • The name 'Icon' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:578:29 • creation_with_non_type
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:578:34 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:578:59 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:578:81 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:579:23 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:579:86 • creation_with_non_type
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:579:103 • undefined_identifier
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:579:130 • undefined_identifier
+  error • The name 'Divider' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:582:25 • creation_with_non_type
+  error • The method 'GestureDetector' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:583:19 • undefined_method
+  error • Undefined name 'Navigator' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:584:34 • undefined_identifier
+  error • The method 'MaterialPageRoute' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:584:58 • undefined_method
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:585:28 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:585:61 • creation_with_non_type
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:585:83 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:585:121 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:587:25 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:588:19 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:588:85 • creation_with_non_type
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:589:25 • creation_with_non_type
+  error • The method 'SizedBox' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:591:21 • undefined_method
+  error • The method 'ElevatedButton' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:593:30 • undefined_method
+  error • Undefined name 'ElevatedButton' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:594:32 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:594:74 • undefined_identifier
+  error • Undefined name 'ScaffoldMessenger' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:596:28 • undefined_identifier
+  error • The method 'SnackBar' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:596:71 • undefined_method
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:596:89 • undefined_method
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:599:38 • creation_with_non_type
+  error • The method 'TextStyle' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:599:74 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:599:91 • undefined_identifier
+  error • The method 'Container' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:603:21 • undefined_method
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:603:46 • undefined_identifier
+  error • The method 'BoxDecoration' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:603:77 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:603:98 • undefined_identifier
+  error • Undefined name 'BorderRadius' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:603:143 • undefined_identifier
+  error • The name 'Center' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:603:183 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:603:197 • undefined_method
+  error • The method 'TextStyle' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:603:221 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:603:238 • undefined_identifier
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:603:264 • undefined_identifier
+  error • The name 'Center' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:610:28 • creation_with_non_type
+  error • The method 'CircularProgressIndicator' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:610:42 • undefined_method
+  error • The method 'Center' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:611:24 • undefined_method
+  error • The method 'Text' isn't defined for the type '_DoctorDashboardState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:611:38 • undefined_method
+  error • The method 'TextEditingController' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:633:28 • undefined_method
+  error • Undefined name 'Navigator' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:656:9 • undefined_identifier
+   info • Don't use 'BuildContext's across async gaps • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:656:23 • use_build_context_synchronously
+  error • Undefined name 'ScaffoldMessenger' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:659:9 • undefined_identifier
+   info • Don't use 'BuildContext's across async gaps • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:659:30 • use_build_context_synchronously
+  error • The method 'SnackBar' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:659:52 • undefined_method
+  error • The method 'Text' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:660:20 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:661:28 • undefined_identifier
+  error • Undefined name 'ScaffoldMessenger' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:676:9 • undefined_identifier
+   info • Don't use 'BuildContext's across async gaps • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:676:30 • use_build_context_synchronously
+  error • The method 'SnackBar' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:676:52 • undefined_method
+  error • The method 'Text' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:676:70 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:676:106 • undefined_identifier
+  error • Undefined class 'Widget' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:681:3 • undefined_class
+  error • Undefined class 'BuildContext' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:681:16 • undefined_class
+  error • Undefined class 'Color' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:684:5 • undefined_class
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:684:32 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:684:46 • undefined_identifier
+  error • The method 'Padding' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:686:12 • undefined_method
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:687:22 • undefined_identifier
+  error • The method 'Column' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:688:14 • undefined_method
+  error • Undefined name 'CrossAxisAlignment' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:689:29 • undefined_identifier
+  error • The method 'Row' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:691:11 • undefined_method
+  error • Undefined name 'MainAxisAlignment' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:692:32 • undefined_identifier
+  error • The method 'Text' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:694:16 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:694:45 • creation_with_non_type
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:694:81 • undefined_identifier
+  error • The method 'IconButton' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:695:16 • undefined_method
+  error • The name 'Icon' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:695:39 • creation_with_non_type
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:695:44 • undefined_identifier
+  error • Undefined name 'Navigator' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:695:75 • undefined_identifier
+  error • The name 'Divider' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:698:17 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:701:13 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:701:98 • creation_with_non_type
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:701:120 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:701:158 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:702:19 • creation_with_non_type
+  error • The method 'TextField' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:703:13 • undefined_method
+  error • The method 'InputDecoration' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:706:27 • undefined_method
+  error • The name 'OutlineInputBorder' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:708:31 • creation_with_non_type
+  error • The method 'Icon' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:709:29 • undefined_method
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:709:42 • undefined_identifier
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:709:58 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:713:19 • creation_with_non_type
+  error • The method 'SizedBox' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:714:13 • undefined_method
+  error • The method 'ElevatedButton' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:716:22 • undefined_method
+  error • Undefined name 'ElevatedButton' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:717:24 • undefined_identifier
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:717:93 • undefined_identifier
+  error • Undefined name 'ScaffoldMessenger' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:720:23 • undefined_identifier
+  error • The name 'SnackBar' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:720:72 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:720:90 • undefined_method
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:725:30 • creation_with_non_type
+  error • The method 'TextStyle' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:725:75 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:725:92 • undefined_identifier
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:725:118 • undefined_identifier
+  error • The method 'Text' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:729:13 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:729:81 • creation_with_non_type
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:729:103 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:730:19 • creation_with_non_type
+  error • The method 'Expanded' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:731:13 • undefined_method
+  error • The name 'Center' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:738:61 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:738:75 • undefined_method
+  error • The method 'FutureBuilder' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:741:31 • undefined_method
+  error • Undefined name 'ListView' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:755:35 • undefined_identifier
+  error • The method 'GestureDetector' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:761:40 • undefined_method
+  error • The method 'Container' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:763:42 • undefined_method
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:764:51 • undefined_identifier
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:765:52 • undefined_identifier
+  error • The method 'BoxDecoration' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:766:49 • undefined_method
+  error • Undefined name 'Border' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:767:47 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:767:91 • undefined_identifier
+  error • Undefined name 'BorderRadius' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:768:53 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:769:90 • undefined_identifier
+  error • The method 'Row' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:771:44 • undefined_method
+  error • The method 'Icon' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:773:41 • undefined_method
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:773:46 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:773:101 • undefined_identifier
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:774:47 • creation_with_non_type
+  error • The method 'Expanded' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:775:41 • undefined_method
+  error • The method 'Column' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:776:50 • undefined_method
+  error • Undefined name 'CrossAxisAlignment' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:777:65 • undefined_identifier
+  error • The method 'Text' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:779:47 • undefined_method
+  error • The method 'TextStyle' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:779:69 • undefined_method
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:779:91 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:779:141 • undefined_identifier
+  error • The method 'Text' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:780:47 • undefined_method
+  error • The name 'TextStyle' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:780:110 • creation_with_non_type
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:780:141 • undefined_identifier
+  error • The method 'Icon' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:784:57 • undefined_method
+  error • Undefined name 'Icons' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:784:62 • undefined_identifier
+  error • The name 'Center' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:794:42 • creation_with_non_type
+  error • The method 'CircularProgressIndicator' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:794:56 • undefined_method
+  error • The name 'Center' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:795:44 • creation_with_non_type
+  error • The method 'Text' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:795:58 • undefined_method
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:800:19 • creation_with_non_type
+  error • The method 'Row' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:801:13 • undefined_method
+  error • The method 'OutlinedButton' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:803:17 • undefined_method
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:803:96 • creation_with_non_type
+  error • The name 'SizedBox' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:804:23 • creation_with_non_type
+  error • The method 'Expanded' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:805:17 • undefined_method
+  error • The method 'ElevatedButton' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:806:26 • undefined_method
+  error • Undefined name 'ElevatedButton' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:807:28 • undefined_identifier
+  error • Undefined name 'EdgeInsets' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:807:97 • undefined_identifier
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:807:142 • undefined_identifier
+  error • The name 'Text' isn't a class • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:809:34 • creation_with_non_type
+  error • The method 'TextStyle' isn't defined for the type '_ReferralSelectionSheetContentState' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:809:71 • undefined_method
+  error • Undefined name 'Colors' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:809:88 • undefined_identifier
+  error • Undefined name 'FontWeight' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:809:114 • undefined_identifier
+  error • Classes can only extend other classes • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:821:37 • extends_non_class
+  error • Undefined class 'TabBar' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:822:9 • undefined_class
+warning • The getter doesn't override an inherited getter • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:825:24 • override_on_non_overriding_member
+warning • The getter doesn't override an inherited getter • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:826:24 • override_on_non_overriding_member
+  error • Undefined class 'Widget' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:828:13 • undefined_class
+warning • The method doesn't override an inherited method • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:828:20 • override_on_non_overriding_member
+  error • Undefined class 'BuildContext' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:828:26 • undefined_class
+  error • The method 'Container' isn't defined for the type '_StickyTabBarDelegate' • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:828:100 • undefined_method
+warning • The method doesn't override an inherited method • lib/features/home/presentation/widgets/dashboards/doctor_dashboard.dart:829:18 • override_on_non_overriding_member
+warning • Unused import: 'package:app/features/appointments/data/models/appointment_model.dart' • lib/features/home/presentation/widgets/dashboards/hospital_dashboard.dart:6:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/widgets/dashboards/hospital_dashboard.dart:81:88 • deprecated_member_use
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/home/presentation/widgets/dashboards/lab_dashboard.dart:418:28 • deprecated_member_use
+warning • Duplicate import • lib/features/home/presentation/widgets/dashboards/patient_dashboard.dart:16:8 • duplicate_import
+   info • Unnecessary use of multiple underscores • lib/features/home/presentation/widgets/dashboards/patient_dashboard.dart:53:24 • unnecessary_underscores
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/widgets/dashboards/patient_dashboard.dart:173:28 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/widgets/dashboards/patient_dashboard.dart:243:52 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/widgets/dashboards/patient_dashboard.dart:263:41 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/widgets/dashboards/patient_dashboard.dart:272:44 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/widgets/dashboards/patient_dashboard.dart:272:75 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/widgets/dashboards/patient_dashboard.dart:373:36 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/widgets/dashboards/patient_dashboard.dart:414:46 • deprecated_member_use
+warning • Unused import: 'package:intl/intl.dart' • lib/features/home/presentation/widgets/dashboards/pharmacy_dashboard.dart:3:8 • unused_import
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/home/presentation/widgets/dashboards/pharmacy_dashboard.dart:356:81 • deprecated_member_use
+   info • 'activeColor' is deprecated and shouldn't be used. Use activeThumbColor instead. This feature was deprecated after v3.31.0-2.0.pre • lib/features/home/presentation/widgets/dashboards/pharmacy_dashboard.dart:545:28 • deprecated_member_use
+   info • Unnecessary use of multiple underscores • lib/features/notifications/presentation/pages/notification_page.dart:37:35 • unnecessary_underscores
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/notifications/presentation/pages/notification_page.dart:58:69 • deprecated_member_use
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/notifications/presentation/pages/notification_page.dart:70:48 • deprecated_member_use
+   info • The local variable '_extractNodes' starts with an underscore • lib/features/offers/data/models/product_model.dart:83:19 • no_leading_underscores_for_local_identifiers
+   info • The local variable '_extractNodes' starts with an underscore • lib/features/offers/data/models/product_model.dart:120:19 • no_leading_underscores_for_local_identifiers
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/offers/data/repositories/marketplace_repository.dart:132:9 • use_null_aware_elements
+   info • Use the null-aware marker '?' rather than a null check via an 'if' • lib/features/offers/data/repositories/marketplace_repository.dart:133:9 • use_null_aware_elements
+   info • Parameter 'key' could be a super parameter • lib/features/offers/presentation/pages/brands_page.dart:8:9 • use_super_parameters
+   info • Unnecessary use of multiple underscores • lib/features/offers/presentation/pages/brands_page.dart:58:52 • unnecessary_underscores
+   info • Unnecessary use of multiple underscores • lib/features/offers/presentation/pages/brands_page.dart:58:56 • unnecessary_underscores
+   info • Parameter 'key' could be a super parameter • lib/features/offers/presentation/pages/compare_page.dart:8:9 • use_super_parameters
+   info • Missing type annotation • lib/features/offers/presentation/pages/compare_page.dart:87:30 • strict_top_level_inference
+warning • Unused import: 'package:app/features/offers/data/models/product_model.dart' • lib/features/offers/presentation/pages/offers_page.dart:4:8 • unused_import
+warning • Unused import: 'package:app/features/profile/data/repositories/settings_repository.dart' • lib/features/offers/presentation/pages/offers_page.dart:6:8 • unused_import
+   info • Unnecessary use of multiple underscores • lib/features/offers/presentation/pages/offers_page.dart:35:24 • unnecessary_underscores
+   info • Unnecessary use of multiple underscores • lib/features/offers/presentation/pages/offers_page.dart:64:102 • unnecessary_underscores
+   info • Unnecessary use of multiple underscores • lib/features/offers/presentation/pages/offers_page.dart:64:106 • unnecessary_underscores
+   info • Unnecessary use of multiple underscores • lib/features/offers/presentation/pages/offers_page.dart:86:24 • unnecessary_underscores
+   info • 'withOpacity' is deprecated and shouldn't be used. Use .withValues() to avoid precision loss • lib/features/profile/presentation/pages/wishlist_page.dart:40:80 • deprecated_member_use
+
+723 issues found. (ran in 0.9s)
