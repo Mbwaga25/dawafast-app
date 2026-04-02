@@ -71,11 +71,15 @@ class HealthcareRepository {
           description
           formattedAddress
           children {
-            id
-            name
-            slug
-            storeType
-            city
+            edges {
+              node {
+                id
+                name
+                slug
+                storeType
+                city
+              }
+            }
           }
           doctors {
             id

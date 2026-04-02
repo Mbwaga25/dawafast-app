@@ -9,6 +9,7 @@ import 'package:app/features/healthcare/presentation/pages/telemedicine_page.dar
 import 'package:app/features/healthcare/presentation/pages/healthcare_page.dart';
 import 'package:app/features/appointments/data/models/appointment_model.dart';
 import 'package:app/features/orders/data/models/order_model.dart';
+import 'package:app/features/healthcare/presentation/widgets/instant_call_button.dart';
 
 class PatientDashboard extends ConsumerWidget {
   final User user;
@@ -76,7 +77,7 @@ class PatientDashboard extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Hello, ${user.firstName ?? user.username ?? 'Guest'} 👋',
+            'Hello, ${user.firstName ?? user.username} 👋',
             style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 4),
@@ -272,14 +273,16 @@ class PatientDashboard extends ConsumerWidget {
             ),
           ),
           if (!isPast)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: AppTheme.primaryBlue,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: const Text('Join', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
-            ),
+            isVideo 
+              ? InstantCallButton(appointmentId: a.id)
+              : Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: AppTheme.primaryBlue,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: const Text('Join', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                ),
         ],
       ),
     );

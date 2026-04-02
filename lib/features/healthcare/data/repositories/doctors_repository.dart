@@ -85,7 +85,7 @@ class DoctorsRepository {
   ''';
 
   static const String _availableSlotsQuery = r'''
-    query GetAvailableSlots($doctorId: ID!, $date: String!) {
+    query GetAvailableSlots($doctorId: ID!, $date: Date!) {
       appointments {
         availableSlots(doctorId: $doctorId, date: $date) {
           id

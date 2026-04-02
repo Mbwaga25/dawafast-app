@@ -6,6 +6,7 @@ import 'package:app/features/healthcare/data/models/doctor_model.dart';
 import 'package:app/features/healthcare/presentation/pages/doctor_detail_page.dart';
 import 'package:app/features/healthcare/presentation/pages/meeting_page.dart';
 import 'package:app/features/profile/data/repositories/settings_repository.dart';
+import 'package:app/features/auth/data/repositories/user_repository.dart';
 
 class TelemedicinePage extends ConsumerStatefulWidget {
   const TelemedicinePage({super.key});
@@ -124,13 +125,16 @@ class _TelemedicinePageState extends ConsumerState<TelemedicinePage> {
   }
 }
 
-class _TeleDoctorCard extends StatelessWidget {
+class _TeleDoctorCard extends ConsumerWidget {
   final Doctor doctor;
 
   const _TeleDoctorCard({required this.doctor});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final userAsync = ref.watch(currentUserProvider);
+    final user = userAsync.value;
+    final isGuest = user?.role?.toUpperCase() == 'GUEST';
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 2,
@@ -189,15 +193,15 @@ class _TeleDoctorCard extends StatelessWidget {
                 Row(
                   children: [
                     ElevatedButton.icon(
-                      onPressed: () {
+                      onPressed: isGuest ? null : () {
                         Navigator.push(context, MaterialPageRoute(
                           builder: (_) => MeetingPage(doctor: doctor)
                         ));
                       },
                       icon: const Icon(Icons.videocam, size: 18),
-                      label: const Text('Start Call'),
+                      label: Text(isGuest ? 'Login to Call' : 'Start Call'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF1E3A8A),
+                        backgroundColor: isGuest ? Colors.grey : const Color(0xFF1E3A8A),
                         padding: const EdgeInsets.symmetric(horizontal: 16),
                       ),
                     ),
