@@ -264,7 +264,7 @@ class _DoctorDashboardState extends ConsumerState<DoctorDashboard> with SingleTi
               icon: Icons.video_call, color: Colors.teal,
               onTap: () {
                 final dummyDoctor = Doctor(id: widget.user.id, specialty: widget.user.doctorProfile?.specialty ?? 'General', user: UserShort(id: widget.user.id, firstName: widget.user.firstName, lastName: widget.user.lastName, username: widget.user.username));
-                Navigator.push(context, MaterialPageRoute(builder: (_) => MeetingPage(doctor: dummyDoctor)));
+                Navigator.push(context, MaterialPageRoute(builder: (_) => MeetingPage(doctor: dummyDoctor, appointmentId: 'instant_meeting')));
               },
             ),
           ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app/core/theme.dart';
 import 'package:app/features/healthcare/data/models/doctor_model.dart';
+import 'package:app/features/healthcare/data/repositories/doctors_repository.dart';
 import 'package:app/features/healthcare/presentation/pages/telemedicine_page.dart';
 import 'dart:async';
 
@@ -377,5 +379,4 @@ class _BlinkingDotState extends State<_BlinkingDot> with SingleTickerProviderSta
   Widget build(BuildContext context) {
     return FadeTransition(opacity: _controller, child: Container(width: 8, height: 8, decoration: const BoxDecoration(color: Colors.redAccent, shape: BoxShape.circle)));
   }
-}
 }
