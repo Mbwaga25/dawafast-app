@@ -99,17 +99,17 @@ class ReferralAttachment {
 class PatientHistoryRecord {
   final String id;
   final DateTime date;
-  final String symptoms;
-  final String diagnosis;
-  final String treatmentPlan;
+  final String issue;
+  final String consultationNotes;
+  final String prescription;
   final String doctorName;
 
   PatientHistoryRecord({
     required this.id,
     required this.date,
-    required this.symptoms,
-    required this.diagnosis,
-    required this.treatmentPlan,
+    required this.issue,
+    required this.consultationNotes,
+    required this.prescription,
     required this.doctorName,
   });
 
@@ -118,9 +118,9 @@ class PatientHistoryRecord {
     return PatientHistoryRecord(
       id: json['id'],
       date: json['createdAt'] != null ? DateTime.parse(json['createdAt']) : DateTime.now(),
-      symptoms: json['symptoms'] ?? '',
-      diagnosis: json['diagnosis'] ?? '',
-      treatmentPlan: json['treatmentPlan'] ?? '',
+      issue: json['issue'] ?? '',
+      consultationNotes: json['consultationNotes'] ?? '',
+      prescription: json['prescription'] ?? '',
       doctorName: 'Dr. ${doctorUser['lastName'] ?? 'Specialist'}',
     );
   }

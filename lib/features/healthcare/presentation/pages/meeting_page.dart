@@ -5,12 +5,13 @@ import 'package:app/features/healthcare/data/models/doctor_model.dart';
 import 'package:app/features/healthcare/data/repositories/doctors_repository.dart';
 import 'package:app/features/healthcare/presentation/pages/telemedicine_page.dart';
 import 'dart:async';
+import 'package:flutter/services.dart';
 
 class MeetingPage extends ConsumerStatefulWidget {
-  final Doctor doctor;
+  final Doctor? doctor; // Made optional for shared links
   final String appointmentId;
 
-  const MeetingPage({super.key, required this.doctor, required this.appointmentId});
+  const MeetingPage({super.key, this.doctor, required this.appointmentId});
 
   @override
   ConsumerState<MeetingPage> createState() => _MeetingPageState();
@@ -22,12 +23,14 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
   bool _isMuted = false;
   bool _isVideoOff = false;
   Map<String, dynamic>? _session;
+  Doctor? _doctor;
   bool _isLoading = true;
   String? _error;
 
   @override
   void initState() {
     super.initState();
+    _doctor = widget.doctor;
     _fetchSession();
   }
 
@@ -35,6 +38,16 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
     try {
       final repo = ref.read(doctorsRepositoryProvider);
       
+      // If doctor is missing (joined via link), fetch it
+      if (_doctor == null) {
+        try {
+          final doc = await repo.fetchDoctorByAppointmentId(widget.appointmentId);
+          if (mounted) setState(() => _doctor = doc);
+        } catch (e) {
+          debugPrint("Could not fetch doctor details: $e");
+        }
+      }
+
       // Initial fetch or wait loop for doctor to start session
       int attempts = 0;
       while (attempts < 5) {
@@ -194,7 +207,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                     ),
                     const SizedBox(height: 24),
                     Text(
-                      'Dr. ${widget.doctor.fullName}',
+                      _doctor != null ? 'Dr. ${_doctor!.fullName}' : 'Practitioner',
                       style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold, letterSpacing: 0.5),
                     ),
                     const SizedBox(height: 8),
@@ -205,7 +218,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        widget.doctor.specialty ?? 'General Physician',
+                        _doctor?.specialty ?? 'Medical Consultation',
                         style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 13),
                       ),
                     ),
@@ -307,6 +320,13 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                     activeColor: Colors.white12,
                     inactiveColor: Colors.redAccent.withOpacity(0.8),
                   ),
+                  _buildControlButton(
+                    onPressed: _shareMeetingLink,
+                    icon: Icons.ios_share,
+                    isActive: true,
+                    activeColor: Colors.white12,
+                    size: 52,
+                  ),
                 ],
               ),
             ),
@@ -314,6 +334,21 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
         ],
       ),
     );
+  }
+
+  void _shareMeetingLink() {
+    final String url = "https://dawafast.app/meeting/${widget.appointmentId}";
+    
+    Clipboard.setData(ClipboardData(text: url)).then((_) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Meeting link copied to clipboard!'),
+            backgroundColor: AppTheme.primaryBlue,
+          ),
+        );
+      }
+    });
   }
 
   Widget _buildControlButton({

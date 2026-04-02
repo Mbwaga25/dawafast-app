@@ -10,9 +10,9 @@ class Appointment {
   final String status;
   final String type;
   final String? imageUrl;
-  final String? symptoms;
-  final String? diagnosis;
-  final String? treatmentPlan;
+  final String? issue; // Changed from symptoms
+  final String? consultationNotes; // Changed from diagnosis
+  final String? prescription; // Changed from treatmentPlan
   final List<String> notes;
 
   Appointment({
@@ -27,26 +27,28 @@ class Appointment {
     required this.status,
     required this.type,
     this.imageUrl,
-    this.symptoms,
-    this.diagnosis,
-    this.treatmentPlan,
+    this.issue,
+    this.consultationNotes,
+    this.prescription,
     this.notes = const [],
   });
 
   factory Appointment.fromJson(Map<String, dynamic> json) {
     return Appointment(
       id: json['id'],
-      doctorName: json['doctorName'] ?? 'Unknown Doctor',
-      patientName: json['patientName'],
-      patientId: json['patientId']?.toString(),
+      doctorName: json['doctor'] != null ? "${json['doctor']['user']['firstName']} ${json['doctor']['user']['lastName']}" : (json['doctorName'] ?? 'Unknown Doctor'),
+      patientName: json['patientName'] ?? (json['patient'] != null ? "${json['patient']['user']['firstName']} ${json['patient']['user']['lastName']}" : null),
+      patientId: json['patient']?['user']?['id']?.toString() ?? json['patientId']?.toString(),
       isTransferred: json['isTransferred'] ?? false,
       transferredFrom: json['transferredFrom'],
-      specialization: json['specialization'] ?? 'General',
-      date: DateTime.parse(json['date']),
+      specialization: json['doctor']?['specialty'] ?? json['specialization'] ?? 'General',
+      date: DateTime.parse(json['scheduledTime'] ?? json['date'] ?? DateTime.now().toIso8601String()),
       status: json['status'] ?? 'pending',
-      type: json['type'] ?? 'in-person',
+      type: json['appointmentType'] ?? json['type'] ?? 'in-person',
       imageUrl: json['imageUrl'],
-      symptoms: json['consultationNotes'] != null ? json['consultationNotes'] : null,
+      issue: json['issue'],
+      consultationNotes: json['consultationNotes'],
+      prescription: json['prescription'],
       notes: (json['notes'] as List? ?? []).map((e) => e.toString()).toList(),
     );
   }

@@ -155,7 +155,7 @@ class DoctorsRepository {
   static const String _getCallSessionQuery = r'''
     query GetCallSession($appointmentId: ID!) {
       appointments {
-        getCallSession(appointmentId: $appointmentId) {
+        callSessionByAppointmentId(appointmentId: $appointmentId) {
           id
           roomId
           status
@@ -214,13 +214,51 @@ class DoctorsRepository {
       patientHistory(patientId: $patientId) {
         id
         createdAt
-        symptoms
-        diagnosis
-        treatmentPlan
+        issue
+        consultationNotes
+        prescription
         doctor {
           id
           user {
             lastName
+          }
+        }
+      }
+    }
+  ''';
+
+  static const String _doctorByAppointmentQuery = r'''
+    query GetDoctorByAppointment($appointmentId: ID!) {
+      appointmentById(id: $appointmentId) {
+        doctor {
+          id
+          specialty
+          isVerified
+          licenseNumber
+          experience
+          consultationFee
+          languages
+          rating
+          reviewCount
+          availability
+          hospital {
+            id
+            name
+            slug
+            city
+            addressLine1
+          }
+          user {
+            id
+            firstName
+            lastName
+            email
+            username
+            profile {
+              bio
+              avatar
+              phoneNumber
+            }
           }
         }
       }
@@ -432,7 +470,7 @@ class DoctorsRepository {
 
     final QueryResult result = await ApiClient.client.value.query(options);
     if (result.hasException) throw result.exception!;
-    return result.data?['appointments']?['getCallSession'];
+    return result.data?['appointments']?['callSessionByAppointmentId'];
   }
 
   Future<bool> rejectAppointment(String appointmentId, {String? reason}) async {
@@ -495,6 +533,22 @@ class DoctorsRepository {
     final QueryResult result = await ApiClient.client.value.mutate(options);
     if (result.hasException) throw result.exception!;
     return result.data?['referPatient']?['success'] ?? false;
+  }
+
+  Future<Doctor?> fetchDoctorByAppointmentId(String appointmentId) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(_doctorByAppointmentQuery),
+      variables: {'appointmentId': appointmentId},
+      fetchPolicy: FetchPolicy.networkOnly,
+    );
+
+    final QueryResult result = await ApiClient.client.value.query(options);
+    if (result.hasException) throw result.exception!;
+    
+    final doctorData = result.data?['appointmentById']?['doctor'];
+    if (doctorData == null) return null;
+    
+    return Doctor.fromJson(doctorData);
   }
 }
 

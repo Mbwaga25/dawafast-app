@@ -150,13 +150,12 @@ class _DoctorDashboardState extends ConsumerState<DoctorDashboard> with SingleTi
     return Scaffold(
       backgroundColor: AppTheme.backgroundWhite,
       appBar: AppBar(
-        title: const Text('Doctor Portal', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
+        title: const Text('My Dashboard', style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
         backgroundColor: AppTheme.primaryBlue,
         elevation: 0,
         actions: [
           ref.watch(unreadNotificationsCountProvider).when(
             data: (count) => Stack(
-              alignment: Alignment.center,
               children: [
                 IconButton(
                   icon: const Icon(Icons.notifications_none, color: Colors.white),
@@ -164,15 +163,15 @@ class _DoctorDashboardState extends ConsumerState<DoctorDashboard> with SingleTi
                 ),
                 if (count > 0)
                   Positioned(
-                    right: 10,
-                    top: 10,
+                    right: 8,
+                    top: 8,
                     child: Container(
                       padding: const EdgeInsets.all(2),
-                      decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle),
+                      decoration: BoxDecoration(color: Colors.red, borderRadius: BorderRadius.circular(10)),
                       constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
                       child: Text(count.toString(), style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
                     ),
-                  )
+                  ),
               ],
             ),
             loading: () => IconButton(icon: const Icon(Icons.notifications_none, color: Colors.white), onPressed: () {}),
@@ -441,21 +440,33 @@ class _DoctorDashboardState extends ConsumerState<DoctorDashboard> with SingleTi
                 children: [
                   Text(dateFormat.format(a.date), style: const TextStyle(color: AppTheme.primaryBlue, fontWeight: FontWeight.bold, fontSize: 12)),
                   if (a.status.toLowerCase() == 'confirmed' && widget.user.doctorProfile != null)
-                    InkWell(
-                      onTap: () {
-                        final doc = Doctor(
-                          id: widget.user.id,
-                          specialty: widget.user.doctorProfile?.specialty,
-                          user: UserShort(
-                            id: widget.user.id,
-                            firstName: widget.user.firstName,
-                            lastName: widget.user.lastName,
-                            username: widget.user.username,
-                          ),
-                        );
-                        Navigator.push(context, MaterialPageRoute(builder: (_) => MeetingPage(doctor: doc, appointmentId: a.id)));
-                      },
-                      child: Container(margin: const EdgeInsets.only(top: 8), padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4), decoration: BoxDecoration(color: AppTheme.primaryBlue, borderRadius: BorderRadius.circular(12)), child: const Text('Start', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold))),
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        IconButton(
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                          icon: const Icon(Icons.chat_outlined, color: AppTheme.primaryBlue, size: 20),
+                          onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ChatPage(appointmentId: a.id))),
+                        ),
+                        const SizedBox(width: 8),
+                        InkWell(
+                          onTap: () {
+                            final doc = Doctor(
+                              id: widget.user.id,
+                              specialty: widget.user.doctorProfile?.specialty,
+                              user: UserShort(
+                                id: widget.user.id,
+                                firstName: widget.user.firstName,
+                                lastName: widget.user.lastName,
+                                username: widget.user.username,
+                              ),
+                            );
+                            Navigator.push(context, MaterialPageRoute(builder: (_) => MeetingPage(doctor: doc, appointmentId: a.id)));
+                          },
+                          child: Container(margin: const EdgeInsets.only(top: 8), padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4), decoration: BoxDecoration(color: AppTheme.primaryBlue, borderRadius: BorderRadius.circular(12)), child: const Text('Start', style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold))),
+                        ),
+                      ],
                     ),
                 ],
               ),

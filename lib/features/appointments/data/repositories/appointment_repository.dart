@@ -49,9 +49,9 @@ class AppointmentRepository {
   ''';
 
   static const String _sendMessageMutation = r'''
-    mutation SendAppointmentMessage($appointmentId: ID!, $content: String!) {
+    mutation SendAppointmentMessage($appointment_id: ID!, $content: String!) {
       appointments {
-        sendAppointmentMessage(appointmentId: $appointmentId, content: $content) {
+        sendAppointmentMessage(appointmentId: $appointment_id, content: $content) {
           success
           chatMessage {
             id
@@ -111,7 +111,7 @@ class AppointmentRepository {
     final MutationOptions options = MutationOptions(
       document: gql(_sendMessageMutation),
       variables: {
-        'appointmentId': appointmentId,
+        'appointment_id': appointmentId,
         'content': content,
       },
     );
@@ -180,15 +180,15 @@ class DoctorAppointmentsNotifier extends StateNotifier<AsyncValue<List<Appointme
             status: newStatus,
             type: a.type,
             imageUrl: a.imageUrl,
-            symptoms: a.symptoms,
-            diagnosis: a.diagnosis,
-            treatmentPlan: a.treatmentPlan,
+            issue: a.issue,
+            consultationNotes: a.consultationNotes,
+            prescription: a.prescription,
             notes: a.notes,
           );
         }
         return a;
       }).toList();
-      state = AsyncValue.data(updatedList);
+      state = AsyncValue.data(List<Appointment>.from(updatedList));
     }
   }
 }
@@ -200,8 +200,8 @@ final doctorAppointmentsProvider = StateNotifierProvider<DoctorAppointmentsNotif
 final myPatientsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) async {
   await Future.delayed(const Duration(milliseconds: 500));
   return [
-    {'id': 'P01', 'name': 'John Doe', 'condition': 'Hypertension', 'lastVisit': '2023-11-01', 'status': 'Assigned'},
-    {'id': 'P02', 'name': 'Sarah Connor', 'condition': 'Routine Checkup', 'lastVisit': '2023-10-15', 'status': 'Attended'},
+    {'id': '101', 'name': 'John Doe', 'condition': 'Hypertension', 'lastVisit': '2023-11-01', 'status': 'Assigned'},
+    {'id': '102', 'name': 'Sarah Connor', 'condition': 'Routine Checkup', 'lastVisit': '2023-10-15', 'status': 'Attended'},
   ];
 });
 
@@ -209,7 +209,7 @@ final transferredPatientsProvider = FutureProvider<List<Appointment>>((ref) asyn
   await Future.delayed(const Duration(milliseconds: 700));
   return [
     Appointment(
-      id: 'T001',
+      id: '201',
       doctorName: 'Me',
       isTransferred: true,
       transferredFrom: 'Dr. Emily Chen',
