@@ -124,6 +124,23 @@ class PharmacyRepository {
     }
   ''';
 
+  static const String _cloneProductMutation = r'''
+    mutation CloneProduct($input: StoreProductInput!) {
+      stores {
+        addOrUpdateStoreProduct(input: $input) {
+          success
+          storeProduct {
+            id
+            price
+            quantity
+          }
+          errors
+          warning
+        }
+      }
+    }
+  ''';
+
   static const String _allCategoriesQuery = r'''
     query GetAllCategories {
       products {
@@ -242,10 +259,54 @@ class PharmacyRepository {
   ''';
 
   static const String _referPatientMutation = r'''
-    mutation ReferPatient($patientId: ID!, $providerType: String!, $providerId: ID!, $reason: String!, $notes: String) {
-      referPatient(patientId: $patientId, providerType: $providerType, providerId: $providerId, reason: $reason, notes: $notes) {
+    mutation ReferPatient($patientId: ID!, $providerType: String!, $providerId: ID!, $reason: String!, $notes: String, $labTestIds: [ID], $productIds: [ID]) {
+      referPatient(patientId: $patientId, providerType: $providerType, providerId: $providerId, reason: $reason, notes: $notes, labTestIds: $labTestIds, productIds: $productIds) {
         success
         errors
+      }
+    }
+  ''';
+
+  static const String _registerPatientMutation = r'''
+    mutation RegisterPatient($input: RegisterUserInput!) {
+      registerUser(input: $input) {
+        success
+        errors
+        user {
+          id
+          firstName
+          lastName
+        }
+      }
+    }
+  ''';
+
+  static const String _searchPatientsQuery = r'''
+    query SearchPatients($search: String) {
+      users {
+        allUsers(role: "PATIENT", search_icontains: $search) {
+          edges {
+            node {
+              id
+              firstName
+              lastName
+              email
+            }
+          }
+        }
+      }
+    }
+  ''';
+
+  static const String _searchStoresQuery = r'''
+    query SearchStores($type: String, $city: String) {
+      stores {
+        allStores(storeType: $type, city: $city, isActive: true) {
+          id
+          name
+          city
+          address
+        }
       }
     }
   ''';
@@ -505,6 +566,15 @@ class PharmacyRepository {
     return result.data?['consultations']?['myPharmacyPrescriptions'] ?? [];
   }
 
+  Future<List<dynamic>> getSentReferrals() async {
+    final options = QueryOptions(
+      document: gql(_sentReferralsQuery),
+    );
+    final result = await ApiClient.client.value.query(options);
+    if (result.hasException) throw result.exception!;
+    return result.data?['appointments']?['sentReferrals'] ?? [];
+  }
+
   Future<MutationResult> dispensePrescription(String id, String notes) async {
     final options = MutationOptions(
       document: gql(_dispensePrescriptionMutation),
@@ -529,20 +599,25 @@ class PharmacyRepository {
     return result.data?['users']?['allUsers']?['edges'] ?? [];
   }
 
-  Future<bool> referToDoctor({
+  Future<bool> referPatient({
     required String patientId,
-    required String doctorId,
+    required String providerType,
+    required String providerId,
     required String reason,
     String? notes,
+    List<String>? labTestIds,
+    List<String>? productIds,
   }) async {
     final options = MutationOptions(
       document: gql(_referPatientMutation),
       variables: {
         'patientId': patientId,
-        'providerType': 'doctor',
-        'providerId': doctorId,
+        'providerType': providerType,
+        'providerId': providerId,
         'reason': reason,
         'notes': notes,
+        'labTestIds': labTestIds,
+        'productIds': productIds,
       },
     );
     final result = await ApiClient.client.value.mutate(options);
@@ -550,7 +625,58 @@ class PharmacyRepository {
     return result.data?['referPatient']?['success'] ?? false;
   }
 
-  Future<Map<String, List<dynamic>>> getPatientHistory(String patientId) async {
+  Future<List<dynamic>> searchPatients(String query) async {
+    final options = QueryOptions(
+      document: gql(_searchPatientsQuery),
+      variables: {'search': query},
+    );
+    final result = await ApiClient.client.value.query(options);
+    if (result.hasException) throw result.exception!;
+    return result.data?['users']?['allUsers']?['edges'] ?? [];
+  }
+
+  Future<List<dynamic>> searchStores(String type, {String? city}) async {
+    final options = QueryOptions(
+      document: gql(_searchStoresQuery),
+      variables: {'type': type, 'city': city},
+    );
+    final result = await ApiClient.client.value.query(options);
+    if (result.hasException) throw result.exception!;
+    return result.data?['stores']?['allStores'] ?? [];
+  }
+
+  Future<MutationResult> registerPatient({
+    required String firstName,
+    required String lastName,
+    required String email,
+    required String password,
+    String? phone,
+  }) async {
+    final options = MutationOptions(
+      document: gql(_registerPatientMutation),
+      variables: {
+        'input': {
+          'username': email,
+          'email': email,
+          'password': password,
+          'firstName': firstName,
+          'lastName': lastName,
+          'role': 'PATIENT',
+          if (phone != null) 'address': {'phoneNumber': phone},
+        }
+      },
+    );
+    final result = await ApiClient.client.value.mutate(options);
+    if (result.hasException) throw result.exception!;
+    final data = result.data?['registerUser'];
+    return MutationResult(
+      success: data?['success'] ?? false,
+      message: (data?['errors'] as List?)?.join(', '),
+      data: data?['user'],
+    );
+  }
+
+  Future<bool> referToDoctor({
     final options = QueryOptions(
       document: gql(_patientHistoryQuery),
       variables: {'patientId': patientId},

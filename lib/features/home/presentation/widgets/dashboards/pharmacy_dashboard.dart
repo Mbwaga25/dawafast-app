@@ -14,11 +14,15 @@ import 'dart:io' as io;
 // --- Local State Notifiers for UI Refresh ---
 
 final pharmacyOrdersProvider = FutureProvider.family<List<Order>, String>((ref, storeId) async {
-  return ref.watch(orderRepositoryProvider).fetchMyOrders(); // Adjust backend to allow filtering by storeId if needed
+  return ref.watch(orderRepositoryProvider).fetchMyOrders(); 
 });
 
 final pharmacyReferralsProvider = FutureProvider.family<List<dynamic>, String>((ref, storeId) async {
   return ref.watch(pharmacyRepositoryProvider).getPrescriptions(storeId);
+});
+
+final pharmacySentReferralsProvider = FutureProvider.family<List<dynamic>, String>((ref, userId) async {
+  return ref.watch(pharmacyRepositoryProvider).getSentReferrals();
 });
 
 final pharmacyInventoryProvider = FutureProvider.family<List<dynamic>, String>((ref, storeId) async {
@@ -134,8 +138,12 @@ class _OverviewTab extends ConsumerWidget {
   }
 
   void _showReferralDialog(BuildContext context) {
-    // This could just switch to the Orders tab or open a specific dialog
-    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Please select a patient from an order or search below')));
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => _ReferralWizardSheet(),
+    );
   }
 
   Widget _buildHeader(User user) {
@@ -243,84 +251,126 @@ class _OrdersTab extends ConsumerWidget {
   }
 }
 
-class _DirectOrdersView extends ConsumerWidget {
+class _DirectOrdersView extends ConsumerStatefulWidget {
   final User user;
   const _DirectOrdersView({required this.user});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final ordersAsync = ref.watch(pharmacyOrdersProvider(user.id.toString()));
-    return RefreshIndicator(
-      onRefresh: () => ref.refresh(pharmacyOrdersProvider(user.id.toString()).future),
-      child: ordersAsync.when(
-        data: (orders) => orders.isEmpty 
-          ? const Center(child: Text('No active orders'))
-          : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: orders.length,
-              itemBuilder: (ctx, i) {
-                final order = orders[i];
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  child: ExpansionTile(
-                    title: Text('Order #${order.id}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text('${order.clientName} • ${DateFormat('HH:mm').format(order.orderDate)}'),
-                    trailing: _buildStatusBadge(order.status),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          children: [
-                            ...order.items.map((item) => ListTile(
-                              title: Text(item.productName),
-                              trailing: Text('x${item.quantity}'),
-                            )),
-                            const Divider(),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
-                                    if (order.clientName.contains('Ref')) // Check if it's a doctor referral
-                                      ElevatedButton.icon(
-                                        onPressed: () => _showReferralToDoctorDialog(context, order.id), // Simplified for order context
-                                        icon: const Icon(Icons.medical_services, size: 16),
-                                        label: const Text('Refer to Doctor'),
-                                        style: ElevatedButton.styleFrom(backgroundColor: Colors.blue.shade700),
-                                      ),
-                                    const SizedBox(width: 8),
-                                    TextButton.icon(
-                                      onPressed: () => _showReportDialog(ref, context, order.id),
-                                      icon: const Icon(Icons.note_add_rounded, size: 16),
-                                      label: const Text('Add Report'),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    TextButton(
-                                      onPressed: () => _updateStatus(ref, context, order.id, 'cancelled'),
-                                      child: const Text('Reject', style: TextStyle(color: Colors.red)),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    ElevatedButton(
-                                      onPressed: () => _updateStatus(ref, context, order.id, (order.status == 'Pending' ? 'processing' : 'delivered')),
-                                      child: Text(order.status == 'Pending' ? 'Confirm' : 'Mark Delivered'),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    IconButton(
-                                      onPressed: () => _showPatientHistoryDialog(ref, context, order.patientId),
-                                      icon: const Icon(Icons.history_edu_rounded, color: AppTheme.primaryTeal),
-                                      tooltip: 'View Patient History',
-                                    ),
-                                  ],
-                                )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                );
-              },
+  ConsumerState<_DirectOrdersView> createState() => _DirectOrdersViewState();
+}
+
+class _DirectOrdersViewState extends ConsumerState<_DirectOrdersView> {
+  String _selectedStatus = 'PENDING';
+
+  @override
+  Widget build(BuildContext context) {
+    final ordersAsync = ref.watch(pharmacyOrdersProvider(widget.user.id.toString()));
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                _StatusChip(
+                  label: 'Pending',
+                  isSelected: _selectedStatus == 'PENDING',
+                  onTap: () => setState(() => _selectedStatus = 'PENDING'),
+                ),
+                const SizedBox(width: 8),
+                _StatusChip(
+                  label: 'Confirmed',
+                  isSelected: _selectedStatus == 'CONFIRMED',
+                  onTap: () => setState(() => _selectedStatus = 'CONFIRMED'),
+                ),
+                const SizedBox(width: 8),
+                _StatusChip(
+                  label: 'History',
+                  isSelected: _selectedStatus == 'DELIVERED',
+                  onTap: () => setState(() => _selectedStatus = 'DELIVERED'),
+                ),
+                const SizedBox(width: 8),
+                _StatusChip(
+                  label: 'Rejected',
+                  isSelected: _selectedStatus == 'CANCELLED',
+                  onTap: () => setState(() => _selectedStatus = 'CANCELLED'),
+                ),
+              ],
             ),
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, s) => Center(child: Text('Error: $e')),
-      ),
+          ),
+        ),
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: () => ref.refresh(pharmacyOrdersProvider(widget.user.id.toString()).future),
+            child: ordersAsync.when(
+              data: (orders) {
+                final filtered = orders.where((o) {
+                  final status = o.status.toUpperCase();
+                  if (_selectedStatus == 'CONFIRMED') {
+                    return status == 'CONFIRMED' || status == 'PROCESSING';
+                  }
+                  return status == _selectedStatus;
+                }).toList();
+                return filtered.isEmpty 
+                  ? const Center(child: Text('No orders found'))
+                  : ListView.builder(
+                      padding: const EdgeInsets.all(16),
+                      itemCount: filtered.length,
+                      itemBuilder: (ctx, i) {
+                        final order = filtered[i];
+                        return Card(
+                          margin: const EdgeInsets.only(bottom: 12),
+                          child: ExpansionTile(
+                            title: Text('Order #${order.id}', style: const TextStyle(fontWeight: FontWeight.bold)),
+                            subtitle: Text('${order.clientName} • ${DateFormat('HH:mm').format(order.orderDate)}'),
+                            trailing: _buildStatusBadge(order.status),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(16),
+                                child: Column(
+                                  children: [
+                                    ...order.items.map((item) => ListTile(
+                                      title: Text(item.productName),
+                                      trailing: Text('x${item.quantity}'),
+                                    )),
+                                    const Divider(),
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.end,
+                                          children: [
+                                            TextButton.icon(
+                                              onPressed: () => _showReportDialog(ref, context, order.id),
+                                              icon: const Icon(Icons.note_add_rounded, size: 16),
+                                              label: const Text('Add Report'),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            TextButton(
+                                              onPressed: () => _updateStatus(ref, context, order.id, 'cancelled'),
+                                              child: const Text('Reject', style: TextStyle(color: Colors.red)),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            ElevatedButton(
+                                              onPressed: () => _updateStatus(ref, context, order.id, (order.status == 'Pending' ? 'processing' : 'delivered')),
+                                              child: Text(order.status == 'Pending' ? 'Confirm' : 'Mark Delivered'),
+                                            ),
+                                          ],
+                                        )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
+                        );
+                      },
+                    );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, s) => Center(child: Text('Error: $e')),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -337,7 +387,7 @@ class _DirectOrdersView extends ConsumerWidget {
     try {
       final success = await ref.read(orderRepositoryProvider).updateOrderStatus(id, status);
       if (success) {
-        ref.refresh(pharmacyOrdersProvider(user.id.toString()));
+        ref.refresh(pharmacyOrdersProvider(widget.user.id.toString()));
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Order status updated to $status')));
       }
     } catch (e) {
@@ -346,103 +396,335 @@ class _DirectOrdersView extends ConsumerWidget {
     }
   }
 
-  void _showReferralToDoctorDialog(BuildContext context, String patientName) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (ctx) => _ReferToDoctorSheet(patientId: patientName),
-    );
-  }
+  void _showReportDialog(WidgetRef ref, BuildContext context, String orderId) {}
+}
 
-  void _showReportDialog(WidgetRef ref, BuildContext context, String orderId) {
-    // ... code already there
-  }
+class _StatusChip extends StatelessWidget {
+  final String label;
+  final bool isSelected;
+  final VoidCallback onTap;
+  const _StatusChip({required this.label, required this.isSelected, required this.onTap});
 
-  void _showPatientHistoryDialog(WidgetRef ref, BuildContext context, String patientId) {
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text('Patient Clinical History'),
-        content: SizedBox(
-          width: double.maxFinite,
-          height: 300,
-          child: FutureBuilder<Map<String, List<dynamic>>>(
-            future: ref.read(pharmacyRepositoryProvider).getPatientHistory(patientId),
-            builder: (ctx, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) return const Center(child: CircularProgressIndicator());
-              if (snapshot.hasError) return Text('Error: ${snapshot.error}');
-              final appts = snapshot.data?['appointments'] ?? [];
-              final refs = snapshot.data?['referrals'] ?? [];
-              return ListView(
-                children: [
-                   const Text('Past Consultations', style: TextStyle(fontWeight: FontWeight.bold)),
-                   ...appts.map((a) => ListTile(title: Text(a['specialization'] ?? 'General'), subtitle: Text(a['scheduledTime'] ?? ''))),
-                   const Divider(),
-                   const Text('Previous Referrals', style: TextStyle(fontWeight: FontWeight.bold)),
-                   ...refs.map((r) => ListTile(title: Text(r['reason'] ?? 'Routine'), subtitle: Text(r['status'] ?? ''))),
-                ],
-              );
-            },
-          ),
-        ),
-        actions: [TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Close'))],
+  @override
+  Widget build(BuildContext context) {
+    return FilterChip(
+      label: Text(label),
+      selected: isSelected,
+      onSelected: (_) => onTap(),
+      backgroundColor: Colors.grey[100],
+      selectedColor: AppTheme.primaryTeal.withOpacity(0.1),
+      checkmarkColor: AppTheme.primaryTeal,
+      labelStyle: TextStyle(
+        color: isSelected ? AppTheme.primaryTeal : Colors.black87,
+        fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
       ),
     );
   }
 }
 
-class _ReferralsView extends ConsumerWidget {
+class _ReferralWizardSheet extends ConsumerStatefulWidget {
+  @override
+  _ReferralWizardSheetState createState() => _ReferralWizardSheetState();
+}
+
+class _ReferralWizardSheetState extends ConsumerState<_ReferralWizardSheet> {
+  int _currentStep = 0;
+  dynamic _selectedPatient;
+  List<dynamic> _patientSearchResults = [];
+  bool _isSearchingPatient = false;
+  final TextEditingController _patientSearchController = TextEditingController();
+  bool _isRegistrationMode = false;
+  final _regFirstName = TextEditingController();
+  final _regLastName = TextEditingController();
+  final _regEmail = TextEditingController();
+  final _regPhone = TextEditingController();
+  String _providerType = 'doctor';
+  dynamic _selectedProvider;
+  List<dynamic> _providerSearchResults = [];
+  bool _isSearchingProvider = false;
+  final TextEditingController _providerSearchController = TextEditingController();
+  final _reasonController = TextEditingController();
+  final _notesController = TextEditingController();
+  bool _isSubmitting = false;
+
+  void _searchPatients(String query) async {
+    if (query.length < 2) return;
+    setState(() => _isSearchingPatient = true);
+    try {
+      final results = await ref.read(pharmacyRepositoryProvider).searchPatients(query);
+      setState(() => _patientSearchResults = results);
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Search failed: $e')));
+    } finally {
+      setState(() => _isSearchingPatient = false);
+    }
+  }
+
+  void _searchProviders(String query) async {
+    setState(() => _isSearchingProvider = true);
+    try {
+      final repo = ref.read(pharmacyRepositoryProvider);
+      if (_providerType == 'doctor') {
+        final results = await repo.searchDoctors(query);
+        setState(() => _providerSearchResults = results);
+      } else {
+        final results = await repo.searchStores(_providerType, city: null);
+        setState(() => _providerSearchResults = results.where((s) => s['name'].toString().toLowerCase().contains(query.toLowerCase())).toList());
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Search failed: $e')));
+    } finally {
+      setState(() => _isSearchingProvider = false);
+    }
+  }
+
+  Future<void> _submitReferral() async {
+    if (_selectedPatient == null && !_isRegistrationMode) return;
+    if (_selectedProvider == null) return;
+    if (_reasonController.text.isEmpty) return;
+
+    setState(() => _isSubmitting = true);
+    try {
+      final repo = ref.read(pharmacyRepositoryProvider);
+      String patientId = _isRegistrationMode ? (await repo.registerPatient(firstName: _regFirstName.text, lastName: _regLastName.text, email: _regEmail.text, password: 'Password123!', phone: _regPhone.text)).data['id'] : _selectedPatient['id'];
+      String providerId = _providerType == 'doctor' ? (_selectedProvider['node']?['doctorProfile']?['id'] ?? _selectedProvider['node']?['id']) : _selectedProvider['id'];
+
+      final success = await repo.referPatient(patientId: patientId, providerType: _providerType, providerId: providerId, reason: _reasonController.text, notes: _notesController.text);
+      if (success) {
+        Navigator.pop(context);
+        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Referral submitted successfully'), backgroundColor: Colors.green));
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red));
+    } finally {
+      setState(() => _isSubmitting = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.85,
+      decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.vertical(top: Radius.circular(24))),
+      child: Column(
+        children: [
+          Container(margin: const EdgeInsets.only(top: 12, bottom: 8), width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2))),
+          Expanded(
+            child: Stepper(
+              type: StepperType.horizontal,
+              currentStep: _currentStep,
+              onStepContinue: () => _currentStep < 2 ? setState(() => _currentStep++) : _submitReferral(),
+              onStepCancel: () => _currentStep > 0 ? setState(() => _currentStep--) : Navigator.pop(context),
+              steps: [
+                Step(title: const Text('Patient'), content: _buildPatientStep()),
+                Step(title: const Text('Provider'), content: _buildProviderStep()),
+                Step(title: const Text('Reason'), content: _buildReasonStep()),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPatientStep() => Column(children: [
+    TextField(controller: _patientSearchController, onChanged: _searchPatients, decoration: const InputDecoration(labelText: 'Search Patient')),
+    SizedBox(height: 200, child: ListView.builder(itemCount: _patientSearchResults.length, itemBuilder: (ctx, i) => ListTile(title: Text(_patientSearchResults[i]['node']['firstName']), onTap: () => setState(() => _selectedPatient = _patientSearchResults[i]))))
+  ]);
+
+  Widget _buildProviderStep() => Column(children: [
+    TextField(controller: _providerSearchController, onChanged: _searchProviders, decoration: const InputDecoration(labelText: 'Search Provider')),
+    SizedBox(height: 200, child: ListView.builder(itemCount: _providerSearchResults.length, itemBuilder: (ctx, i) => ListTile(title: Text(_providerSearchResults[i]['name'] ?? 'Doctor'), onTap: () => setState(() => _selectedProvider = _providerSearchResults[i]))))
+  ]);
+
+  Widget _buildReasonStep() => Column(children: [TextField(controller: _reasonController, decoration: const InputDecoration(labelText: 'Reason')), TextField(controller: _notesController, decoration: const InputDecoration(labelText: 'Notes'))]);
+}
+
+class _ReferralsView extends ConsumerStatefulWidget {
   final User user;
   const _ReferralsView({required this.user});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final referralsAsync = ref.watch(pharmacyReferralsProvider(user.id.toString()));
-    return RefreshIndicator(
-      onRefresh: () => ref.refresh(pharmacyReferralsProvider(user.id.toString()).future),
-      child: referralsAsync.when(
-        data: (prescriptions) => prescriptions.isEmpty 
-          ? const Center(child: Text('No active prescriptions from doctors'))
-          : ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: prescriptions.length,
-              itemBuilder: (ctx, i) {
-                final presc = prescriptions[i];
-                final consultation = presc['consultation'];
-                final patient = consultation['patient'];
-                final doctor = consultation['doctor']['user'];
-                final items = (presc['items'] as List<dynamic>);
+  ConsumerState<_ReferralsView> createState() => _ReferralsViewState();
+}
 
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 12),
-                  child: ExpansionTile(
-                    title: Text('${patient['firstName']} ${patient['lastName']}', style: const TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text('ID: #${presc['id']} • From: Dr. ${doctor['firstName']}'),
-                    leading: const CircleAvatar(child: Icon(Icons.person)),
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (presc['notes'] != null) ...[
-                              const Text('Doctor Notes:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-                              Text(presc['notes'], style: const TextStyle(color: Colors.grey, fontSize: 13)),
-                              const SizedBox(height: 12),
-                            ],
-                            const Text('Prescribed Medicines:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
-                            ...items.map((m) => ListTile(
-                              dense: true,
-                              title: Text(m['medicineName'], style: const TextStyle(fontWeight: FontWeight.bold)),
-                              subtitle: Text('${m['dosage']} - ${m['duration']}\n${m['instructions'] ?? ""}'),
-                            )),
-                            const SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                TextButton.icon(
-                                  onPressed: () {}, // Future chat implementation
-                                  icon: const Icon(Icons.chat_bubble_outline, size: 18),
+class _ReferralsViewState extends ConsumerState<_ReferralsView> {
+  String _selectedSection = 'RECEIVED';
+
+  @override
+  Widget build(BuildContext context) {
+    final referralsAsync = _selectedSection == 'RECEIVED' 
+        ? ref.watch(pharmacyReferralsProvider(widget.user.id.toString()))
+        : ref.watch(pharmacySentReferralsProvider(widget.user.id.toString()));
+
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: SegmentedButton<String>(
+            segments: const [
+              ButtonSegment(value: 'RECEIVED', label: Text('Incoming'), icon: Icon(Icons.download_rounded)),
+              ButtonSegment(value: 'SENT', label: Text('Sent'), icon: Icon(Icons.upload_rounded)),
+            ],
+            selected: {_selectedSection},
+            onSelectionChanged: (set) => setState(() => _selectedSection = set.first),
+            showSelectedIcon: false,
+            style: SegmentedButton.styleFrom(
+              selectedBackgroundColor: AppTheme.primaryTeal.withOpacity(0.1),
+              selectedForegroundColor: AppTheme.primaryTeal,
+              side: BorderSide(color: Colors.grey.shade200),
+            ),
+          ),
+        ),
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: () async {
+               if (_selectedSection == 'RECEIVED') ref.refresh(pharmacyReferralsProvider(widget.user.id.toString()).future);
+               else ref.refresh(pharmacySentReferralsProvider(widget.user.id.toString()).future);
+            },
+            child: referralsAsync.when(
+              data: (list) {
+                if (list.isEmpty) {
+                  return Center(child: Text(_selectedSection == 'RECEIVED' ? 'No incoming prescriptions' : 'No clinical transfers sent'));
+                }
+                return ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  itemCount: list.length,
+                  itemBuilder: (ctx, i) {
+                    final item = list[i];
+                    if (_selectedSection == 'RECEIVED') return _buildIncomingCard(item);
+                    return _buildOutgoingCard(item);
+                  },
+                );
+              },
+              loading: () => const Center(child: CircularProgressIndicator()),
+              error: (e, s) => Center(child: Text('Error: $e')),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildIncomingCard(dynamic presc) {
+    final consultation = presc['consultation'];
+    final patient = consultation['patient'];
+    final doctor = consultation['doctor']['user'];
+    final items = (presc['items'] as List<dynamic>);
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: ExpansionTile(
+        title: Text('${patient['firstName']} ${patient['lastName']}', style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text('ID: #${presc['id']} • From: Dr. ${doctor['firstName']}'),
+        leading: CircleAvatar(backgroundColor: Colors.blue.withOpacity(0.1), child: const Icon(Icons.person, color: Colors.blue)),
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (presc['notes'] != null) ...[
+                  const Text('Doctor Notes:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                  Text(presc['notes'], style: const TextStyle(color: Colors.grey, fontSize: 13)),
+                  const SizedBox(height: 12),
+                ],
+                const Text('Prescribed Medicines:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                ...items.map((m) => ListTile(
+                  dense: true,
+                  title: Text(m['medicineName'], style: const TextStyle(fontWeight: FontWeight.bold)),
+                  subtitle: Text('${m['dosage']} - ${m['duration']}'),
+                )),
+                const SizedBox(height: 16),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: () => _showDispenseDialog(context, presc),
+                      child: const Text('Dispense'),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _buildOutgoingCard(dynamic referral) {
+    final patient = referral['patient']['user'];
+    final providerType = referral['providerType'];
+    String targetName = '';
+    if (providerType == 'doctor') {
+      targetName = 'Dr. ${referral['targetDoctor']['user']['firstName']}';
+    } else {
+      targetName = referral['targetStore']?['name'] ?? 'Provider';
+    }
+
+    return Card(
+      margin: const EdgeInsets.only(bottom: 12),
+      child: ListTile(
+        leading: CircleAvatar(backgroundColor: Colors.orange.withOpacity(0.1), child: const Icon(Icons.outbox, color: Colors.orange)),
+        title: Text('${patient['firstName']} ${patient['lastName']}', style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text('To: $targetName • ${referral['reason']}'),
+        trailing: _buildStatusChip(referral['status']),
+        isThreeLine: true,
+      ),
+    );
+  }
+
+  Widget _buildStatusChip(String status) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(color: Colors.green.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+      child: Text(status, style: const TextStyle(color: Colors.green, fontSize: 10, fontWeight: FontWeight.bold)),
+    );
+  }
+
+  void _showDispenseDialog(BuildContext context, dynamic presc) {
+    final notesController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Dispense Prescription'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Marking prescription #${presc['id']} as filled.'),
+            const SizedBox(height: 16),
+            TextField(
+              controller: notesController,
+              maxLines: 3,
+              decoration: const InputDecoration(labelText: 'Dispensing Notes', border: OutlineInputBorder()),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          ElevatedButton(
+            onPressed: () async {
+              try {
+                final result = await ref.read(pharmacyRepositoryProvider).dispensePrescription(presc['id'], notesController.text);
+                if (result.success) {
+                  Navigator.pop(ctx);
+                  ref.refresh(pharmacyReferralsProvider(widget.user.id.toString()));
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Prescription filled successfully'), backgroundColor: Colors.green));
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: ${result.message}'), backgroundColor: Colors.red));
+                }
+              } catch (e) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed: $e'), backgroundColor: Colors.red));
+              }
+            },
+            child: const Text('Mark as Filled'),
+          ),
+        ],
+      ),
+    );
+  }
+}
                                   label: const Text('Chat'),
                                 ),
                                 const SizedBox(width: 8),
@@ -769,17 +1051,19 @@ class _InventoryTabState extends ConsumerState<_InventoryTab> {
                 width: double.infinity,
                 child: ElevatedButton(
                   onPressed: () async {
-                    final success = await ref.read(pharmacyRepositoryProvider).cloneProduct(
+                    final result = await ref.read(pharmacyRepositoryProvider).cloneProduct(
                       storeId: widget.user.id.toString(),
                       productId: product['id'],
                       variantId: selectedVariantId,
                       price: double.parse(priceController.text),
                       stock: int.parse(stockController.text),
                     );
-                    if (success) {
+                    if (result.success) {
                       Navigator.pop(ctx);
                       ref.invalidate(pharmacyInventoryProvider(widget.user.id.toString()));
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Product added to inventory')));
+                    } else if (result.message != null) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result.message!), backgroundColor: Colors.red));
                     }
                   },
                   child: const Text('Clone to Store'),
@@ -815,6 +1099,7 @@ class _SubmitProductSheetState extends ConsumerState<_SubmitProductSheet> {
   final _nameController = TextEditingController();
   final _descController = TextEditingController();
   final _priceController = TextEditingController();
+  final _skuController = TextEditingController();
   
   String? _categoryId;
   String? _brandId;
@@ -1213,14 +1498,16 @@ class _ProfileTabState extends ConsumerState<_ProfileTab> {
           const SizedBox(height: 32),
           ElevatedButton(
             onPressed: () async {
-              final success = await ref.read(pharmacyRepositoryProvider).updateProfile(
+              final result = await ref.read(pharmacyRepositoryProvider).updateProfile(
                 widget.user.id.toString(),
                 description: _bioController.text,
                 isSmart: _isSmart,
                 imageBase64: _imageBase64,
               );
-              if (success) {
+              if (result.success) {
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Profile updated successfully')));
+              } else if (result.message != null) {
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(result.message!), backgroundColor: Colors.red));
               }
             },
             style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 50)),
