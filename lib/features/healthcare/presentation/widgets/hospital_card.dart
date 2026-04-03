@@ -100,11 +100,11 @@ class _HospitalCardState extends ConsumerState<HospitalCard> {
                           const SizedBox(height: 4),
                           Row(
                             children: [
-                              const Icon(Icons.near_me, size: 14, color: AppTheme.accentBlue),
+                              const Icon(Icons.near_me, size: 14, color: AppTheme.accentTeal),
                               const SizedBox(width: 4),
                               Text(
                                 '$distanceStr • $timeStr',
-                                style: const TextStyle(fontSize: 12, color: AppTheme.primaryBlue, fontWeight: FontWeight.w600),
+                                style: const TextStyle(fontSize: 12, color: AppTheme.primaryTeal, fontWeight: FontWeight.w600),
                               ),
                             ],
                           ),
@@ -113,14 +113,14 @@ class _HospitalCardState extends ConsumerState<HospitalCard> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: AppTheme.primaryBlue.withOpacity(0.1),
+                            color: AppTheme.primaryTeal.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(4),
                           ),
                           child: const Text(
                             'Open 24/7',
                             style: TextStyle(
                               fontSize: 10,
-                              color: AppTheme.primaryBlue,
+                              color: AppTheme.primaryTeal,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
@@ -146,7 +146,7 @@ class _HospitalCardState extends ConsumerState<HospitalCard> {
                   TextButton(
                     onPressed: () {},
                     style: TextButton.styleFrom(
-                      foregroundColor: AppTheme.primaryBlue,
+                      foregroundColor: AppTheme.primaryTeal,
                       padding: EdgeInsets.zero,
                       minimumSize: const Size(0, 0),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,

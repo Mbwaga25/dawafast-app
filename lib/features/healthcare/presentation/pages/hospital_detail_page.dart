@@ -107,12 +107,12 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
                 const SizedBox(height: 4),
                 Row(
                   children: [
-                    const Icon(Icons.location_on, color: AppTheme.accentBlue, size: 12),
+                    const Icon(Icons.location_on, color: AppTheme.accentTeal, size: 12),
                     const SizedBox(width: 4),
                     Text(hospital.city ?? 'Unknown', style: const TextStyle(color: Colors.white70, fontSize: 10)),
                     if (distanceStr != null) ...[
                       const SizedBox(width: 8),
-                      const Icon(Icons.directions_car, color: AppTheme.accentBlue, size: 12),
+                      const Icon(Icons.directions_car, color: AppTheme.accentTeal, size: 12),
                       const SizedBox(width: 4),
                       Text(timeStr!, style: const TextStyle(color: Colors.white70, fontSize: 10)),
                     ],
@@ -126,9 +126,9 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
           delegate: _SliverAppBarDelegate(
             TabBar(
               controller: tabController,
-              labelColor: AppTheme.primaryBlue,
+              labelColor: AppTheme.primaryTeal,
               unselectedLabelColor: AppTheme.textSecondary,
-              indicatorColor: AppTheme.primaryBlue,
+              indicatorColor: AppTheme.primaryTeal,
               tabs: tabs,
             ),
           ),
@@ -159,14 +159,14 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppTheme.accentBlue.withOpacity(0.1),
+                color: AppTheme.accentTeal.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
                 children: [
-                  const Icon(Icons.near_me, color: AppTheme.accentBlue),
+                  const Icon(Icons.near_me, color: AppTheme.accentTeal),
                   const SizedBox(width: 12),
-                  Text(distanceStr, style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
+                  Text(distanceStr, style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.primaryTeal)),
                 ],
               ),
             ),
@@ -242,7 +242,7 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
                    crossAxisAlignment: CrossAxisAlignment.start,
                    children: [
                      Text(p.name, style: TextStyle(fontWeight: FontWeight.bold), maxLines: 1),
-                     Text('Tsh ${p.price}', style: TextStyle(color: AppTheme.primaryBlue)),
+                     Text('Tsh ${p.price}', style: TextStyle(color: AppTheme.primaryTeal)),
                      IconButton(icon: Icon(Icons.add_shopping_cart, size: 18), onPressed: () {
                          ref.read(cartProvider.notifier).addItem(CartItem(productId: p.id, name: p.name, price: p.price, image: p.images.isNotEmpty ? p.images.first : null));
                      })
@@ -269,7 +269,7 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
           child: ListTile(
             title: Text(t.name, style: TextStyle(fontWeight: FontWeight.bold)),
             subtitle: Text(t.sampleType ?? 'Sample required'),
-            trailing: Text('Tsh ${t.price}', style: TextStyle(color: AppTheme.primaryBlue, fontWeight: FontWeight.bold)),
+            trailing: Text('Tsh ${t.price}', style: TextStyle(color: AppTheme.primaryTeal, fontWeight: FontWeight.bold)),
           ),
         );
       },
@@ -318,8 +318,8 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: const BorderSide(color: AppTheme.borderColor)),
           child: ListTile(
             leading: CircleAvatar(
-              backgroundColor: AppTheme.primaryBlue.withOpacity(0.1),
-              child: const Icon(Icons.person, color: AppTheme.primaryBlue),
+              backgroundColor: AppTheme.primaryTeal.withOpacity(0.1),
+              child: const Icon(Icons.person, color: AppTheme.primaryTeal),
             ),
             title: Text(doctor.fullName, style: const TextStyle(fontWeight: FontWeight.bold)),
             subtitle: Text(doctor.specialty),
@@ -358,10 +358,10 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
           child: ListTile(
             leading: Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: AppTheme.accentBlue.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: AppTheme.accentTeal.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
               child: Icon(
                 unit.storeType == 'LAB' ? Icons.biotech : Icons.local_pharmacy,
-                color: AppTheme.accentBlue,
+                color: AppTheme.accentTeal,
               ),
             ),
             title: Text(unit.name, style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -387,7 +387,7 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
               color: AppTheme.backgroundWhite,
               borderRadius: BorderRadius.circular(8),
             ),
-            child: Icon(icon, size: 20, color: AppTheme.primaryBlue),
+            child: Icon(icon, size: 20, color: AppTheme.primaryTeal),
           ),
           const SizedBox(width: 16),
           Text(text ?? 'N/A', style: const TextStyle(fontSize: 16)),

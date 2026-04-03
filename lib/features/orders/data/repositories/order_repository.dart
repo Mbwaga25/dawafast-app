@@ -49,6 +49,38 @@ class OrderRepository {
 
     return data.map((json) => Order.fromJson(json)).toList();
   }
+
+  static const String _updateOrderStatusMutation = r'''
+    mutation UpdateOrderStatus($orderId: ID!, $status: String!) {
+      orders {
+        updateOrderStatus(orderId: $orderId, status: $status) {
+          success
+          order {
+            id
+            status
+          }
+        }
+      }
+    }
+  ''';
+
+  Future<bool> updateOrderStatus(String orderId, String status) async {
+    final MutationOptions options = MutationOptions(
+      document: gql(_updateOrderStatusMutation),
+      variables: {
+        'orderId': orderId,
+        'status': status.toLowerCase(),
+      },
+    );
+
+    final QueryResult result = await ApiClient.client.value.mutate(options);
+
+    if (result.hasException) {
+      throw Exception(result.exception.toString());
+    }
+
+    return result.data?['orders']?['updateOrderStatus']?['success'] ?? false;
+  }
 }
 
 final myOrdersProvider = FutureProvider.family<List<Order>, String?>((ref, status) async {

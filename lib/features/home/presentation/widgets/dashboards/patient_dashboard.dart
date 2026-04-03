@@ -26,7 +26,7 @@ class PatientDashboard extends ConsumerWidget {
       // Minimal app bar for the Dashboard specifically
       appBar: AppBar(
         title: Text('My Dashboard', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-        backgroundColor: AppTheme.primaryBlue,
+        backgroundColor: AppTheme.primaryTeal,
         elevation: 0,
         actions: [
           ref.watch(unreadNotificationsCountProvider).when(
@@ -90,7 +90,7 @@ class PatientDashboard extends ConsumerWidget {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
       decoration: const BoxDecoration(
-        color: AppTheme.primaryBlue,
+        color: AppTheme.primaryTeal,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(24),
           bottomRight: Radius.circular(24),
@@ -194,7 +194,7 @@ class PatientDashboard extends ConsumerWidget {
           const Text('My Appointments', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
           const SizedBox(height: 12),
           
-          const Text('Upcoming', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
+          const Text('Upcoming', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppTheme.primaryTeal)),
           const SizedBox(height: 8),
           upcomingAsync.when(
             data: (appts) {
@@ -293,9 +293,9 @@ class PatientDashboard extends ConsumerWidget {
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    const Icon(Icons.access_time, size: 14, color: AppTheme.primaryBlue),
+                    const Icon(Icons.access_time, size: 14, color: AppTheme.primaryTeal),
                     const SizedBox(width: 4),
-                    Text(dateFormat.format(a.date), style: const TextStyle(color: AppTheme.primaryBlue, fontSize: 12, fontWeight: FontWeight.w600)),
+                    Text(dateFormat.format(a.date), style: const TextStyle(color: AppTheme.primaryTeal, fontSize: 12, fontWeight: FontWeight.w600)),
                   ],
                 ),
               ],
@@ -307,7 +307,7 @@ class PatientDashboard extends ConsumerWidget {
               InstantCallButton(appointmentId: a.id)
             else if (a.status.toLowerCase() == 'confirmed')
               IconButton(
-                icon: const Icon(Icons.chat_outlined, color: AppTheme.primaryBlue),
+                icon: const Icon(Icons.chat_outlined, color: AppTheme.primaryTeal),
                 onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ChatPage(appointmentId: a.id))),
               ),
           ],
@@ -328,7 +328,7 @@ class PatientDashboard extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Recent Orders', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
-              TextButton(onPressed: () {}, child: const Text('View All', style: TextStyle(color: AppTheme.primaryBlue))),
+              TextButton(onPressed: () {}, child: const Text('View All', style: TextStyle(color: AppTheme.primaryTeal))),
             ],
           ),
           ordersAsync.when(

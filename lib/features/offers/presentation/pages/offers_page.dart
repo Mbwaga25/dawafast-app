@@ -72,7 +72,7 @@ class OffersPage extends ConsumerWidget {
                             children: [
                               Text(p.name, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
                               const SizedBox(height: 4),
-                              Text('Tsh ${p.price.toStringAsFixed(0)}', style: const TextStyle(color: AppTheme.primaryBlue, fontWeight: FontWeight.bold)),
+                              Text('Tsh ${p.price.toStringAsFixed(0)}', style: const TextStyle(color: AppTheme.primaryTeal, fontWeight: FontWeight.bold)),
                             ],
                           ),
                         ),

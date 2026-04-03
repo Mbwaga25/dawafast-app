@@ -1,5 +1,6 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:flutter/foundation.dart';
 
 class LocationService {
   static final LocationService _instance = LocationService._internal();
@@ -21,7 +22,16 @@ class LocationService {
 
     if (permission == LocationPermission.deniedForever) return null;
 
-    return await Geolocator.getCurrentPosition();
+    try {
+      return await Geolocator.getCurrentPosition();
+    } catch (e) {
+      final errorMsg = e.toString();
+      // Silencing the 'Position update is unavailable' error which spams logs on Chrome/Web
+      if (!errorMsg.contains("Position update is unavailable")) {
+        debugPrint("Location update failed: $e");
+      }
+      return null;
+    }
   }
 
   double calculateDistance(double startLat, double startLng, double endLat, double endLng) {

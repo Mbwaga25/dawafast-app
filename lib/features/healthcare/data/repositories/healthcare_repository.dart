@@ -120,18 +120,15 @@ class HealthcareRepository {
     ''';
 
     final isNumericId = RegExp(r'^\d+$').hasMatch(idOrSlug);
+    // If it's a global ID (Base64), it will be passed as 'id'. 
+    // If it's a slug (alphanumeric/hyphenated), it will be passed as 'slug'.
+    // If it's a numeric ID, it will be passed as 'id'.
+    final isGlobalId = !isNumericId && idOrSlug.length > 8 && idOrSlug.contains(RegExp(r'[A-Z]'));
+
     final QueryOptions options = QueryOptions(
       document: gql(hospitalDetailQuery),
-      variables: isNumericId ? {'id': idOrSlug} : {'slug': idOrSlug},
+      variables: (isNumericId || isGlobalId) ? {'id': idOrSlug} : {'slug': idOrSlug},
     );
-
-    // If it's a global ID (Base64), it will be passed as 'slug' initially by the above check,
-    // which might fail. However, global IDs often contain characters that fail isNumericId.
-    // Let's explicitly check for Base64-like strings or just try to be more flexible.
-    if (!isNumericId && idOrSlug.length > 10 && idOrSlug.contains(RegExp(r'[A-Z]'))) {
-       options.variables['id'] = idOrSlug;
-       options.variables.remove('slug');
-    }
 
     final QueryResult result = await ApiClient.client.value.query(options);
 

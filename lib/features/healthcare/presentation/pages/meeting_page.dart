@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app/core/theme.dart';
+import 'package:app/features/auth/data/repositories/user_repository.dart';
 import 'package:app/features/healthcare/data/models/doctor_model.dart';
 import 'package:app/features/healthcare/data/repositories/doctors_repository.dart';
 import 'package:app/features/healthcare/presentation/pages/telemedicine_page.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:camera/camera.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MeetingPage extends ConsumerStatefulWidget {
   final Doctor? doctor; // Made optional for shared links
@@ -26,12 +29,33 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
   Doctor? _doctor;
   bool _isLoading = true;
   String? _error;
+  
+  CameraController? _cameraController;
+  List<CameraDescription>? _cameras;
+  bool _isCameraReady = false;
 
   @override
   void initState() {
     super.initState();
     _doctor = widget.doctor;
     _fetchSession();
+    _initCamera();
+  }
+
+  Future<void> _initCamera() async {
+    try {
+      final status = await Permission.camera.request();
+      if (status.isGranted) {
+        _cameras = await availableCameras();
+        if (_cameras != null && _cameras!.isNotEmpty) {
+          _cameraController = CameraController(_cameras![1], ResolutionPreset.medium, enableAudio: false);
+          await _cameraController!.initialize();
+          if (mounted) setState(() => _isCameraReady = true);
+        }
+      }
+    } catch (e) {
+      debugPrint("Camera Error: $e");
+    }
   }
 
   Future<void> _fetchSession() async {
@@ -50,7 +74,19 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
 
       // Initial fetch or wait loop for doctor to start session
       int attempts = 0;
-      while (attempts < 5) {
+      final user = ref.read(currentUserProvider).value;
+      bool isDoctor = user?.role?.toUpperCase() == 'DOCTOR';
+
+      if (isDoctor) {
+        try {
+           final started = await repo.startCallSession(widget.appointmentId);
+           if (mounted) setState(() => _session = started);
+        } catch (e) {
+           debugPrint("Error starting session as doctor: $e");
+        }
+      }
+
+      while (attempts < 10) {
         final session = await repo.getCallSession(widget.appointmentId);
         if (session != null && (session['status']?.toString().toUpperCase() == 'ACTIVE' || session['status']?.toString().toUpperCase() == 'CREATED')) {
           if (mounted) {
@@ -85,6 +121,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
   @override
   void dispose() {
     _timer?.cancel();
+    _cameraController?.dispose();
     super.dispose();
   }
 
@@ -113,7 +150,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const CircularProgressIndicator(color: AppTheme.primaryBlue),
+              const CircularProgressIndicator(color: AppTheme.primaryTeal),
               const SizedBox(height: 24),
               Text(
                 'Initializing Secure Connection...',
@@ -244,16 +281,32 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
                 child: Stack(
+                  fit: StackFit.expand,
                   children: [
-                    if (_isVideoOff)
-                      const Center(child: Icon(Icons.videocam_off, color: Colors.white24, size: 30))
+                    if (_isCameraReady && _cameraController != null && !_isVideoOff)
+                      CameraPreview(_cameraController!)
                     else
-                      const Center(child: Icon(Icons.person, color: Colors.white12, size: 40)),
+                      Container(
+                        color: Colors.black54,
+                        child: Center(
+                          child: Icon(_isVideoOff ? Icons.videocam_off : Icons.person, color: Colors.white24, size: 40),
+                        ),
+                      ),
                     Positioned(
                       bottom: 8,
                       left: 8,
-                      child: Text('You', style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 10)),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                        decoration: BoxDecoration(color: Colors.black45, borderRadius: BorderRadius.circular(4)),
+                        child: Text('You', style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 10)),
+                      ),
                     ),
+                    if (_isMuted)
+                      const Positioned(
+                        top: 8,
+                        right: 8,
+                        child: Icon(Icons.mic_off, color: Colors.redAccent, size: 14),
+                      ),
                   ],
                 ),
               ),
@@ -344,7 +397,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Meeting link copied to clipboard!'),
-            backgroundColor: AppTheme.primaryBlue,
+            backgroundColor: AppTheme.primaryTeal,
           ),
         );
       }

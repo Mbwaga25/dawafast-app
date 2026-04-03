@@ -3,9 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
   // Slate/Blue theme inspired by Dawafast Web Frontend (globals.css OKLCH colors)
-  static const Color primaryBlue = Color(0xFF1E293B); // Slate 800
-  static const Color accentBlue = Color(0xFF334155); // Slate 700
-  static const Color backgroundWhite = Color(0xFFFFFFFF); // Pure White
+  static const Color primaryTeal = Color(0xFF0D837C); // Dawafast Brand Teal
+  static const Color accentTeal = Color(0xFF14B8A6); // Brighter teal for highlights
+  static const Color backgroundWhite = Color(0xFFF8FAFC); // Slate 50 (Off-white)
   static const Color surfaceWhite = Color(0xFFFFFFFF);
   static const Color textPrimary = Color(0xFF0F172A); // Slate 900
   static const Color textSecondary = Color(0xFF64748B); // Slate 500
@@ -20,7 +20,7 @@ class AppTheme {
   static ThemeData get lightTheme {
     return ThemeData(
       useMaterial3: true,
-      primaryColor: primaryBlue,
+      primaryColor: primaryTeal,
       textTheme: GoogleFonts.interTextTheme().copyWith(
         headlineLarge: GoogleFonts.inter(
           color: textPrimary,
@@ -51,9 +51,9 @@ class AppTheme {
         ),
       ),
       colorScheme: ColorScheme.fromSeed(
-        seedColor: primaryBlue,
-        primary: primaryBlue,
-        secondary: accentBlue,
+        seedColor: primaryTeal,
+        primary: primaryTeal,
+        secondary: accentTeal,
         surface: surfaceWhite,
         background: backgroundWhite,
         onSurface: textPrimary,
@@ -81,7 +81,7 @@ class AppTheme {
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           elevation: 0,
-          backgroundColor: primaryBlue,
+          backgroundColor: primaryTeal,
           foregroundColor: Colors.white,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 24),

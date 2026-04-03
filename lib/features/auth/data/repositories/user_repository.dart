@@ -102,6 +102,35 @@ class UserRepository {
 
     return result.data?['updateProfile']?['success'] ?? false;
   }
+  Future<List<User>> searchUsers(String query) async {
+    const String searchUsersQuery = r'''
+      query SearchUsers($query: String!) {
+        users {
+          allUsers(search: $query) {
+            id
+            username
+            email
+            firstName
+            lastName
+            role
+            doctorProfile { specialty }
+          }
+        }
+      }
+    ''';
+
+    final QueryOptions options = QueryOptions(
+      document: gql(searchUsersQuery),
+      variables: {'query': query},
+      fetchPolicy: FetchPolicy.noCache,
+    );
+
+    final QueryResult result = await ApiClient.client.value.query(options);
+    if (result.hasException) throw result.exception!;
+
+    final List usersData = result.data?['users']?['allUsers'] ?? [];
+    return usersData.map((u) => User.fromJson(u)).toList();
+  }
 }
 
 final currentUserProvider = FutureProvider<User?>((ref) async {

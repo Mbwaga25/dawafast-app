@@ -69,7 +69,7 @@ class DoctorDetailPage extends ConsumerWidget {
                     const SizedBox(height: 8),
                     Text(
                       doctor.specialty ?? 'General Physician',
-                      style: const TextStyle(color: AppTheme.primaryBlue, fontWeight: FontWeight.w600, fontSize: 16),
+                      style: const TextStyle(color: AppTheme.primaryTeal, fontWeight: FontWeight.w600, fontSize: 16),
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -129,7 +129,7 @@ class DoctorDetailPage extends ConsumerWidget {
             const SizedBox(height: 12),
             Card(
               child: ListTile(
-                leading: const Icon(Icons.local_hospital, color: AppTheme.primaryBlue),
+                leading: const Icon(Icons.local_hospital, color: AppTheme.primaryTeal),
                 title: Text(doctor.hospital!.name, style: const TextStyle(fontWeight: FontWeight.bold)),
                 subtitle: Text('${doctor.hospital!.addressLine1 ?? ''}, ${doctor.hospital!.city ?? ''}'),
                 trailing: const Icon(Icons.map_outlined),
@@ -148,7 +148,7 @@ class DoctorDetailPage extends ConsumerWidget {
       children: [
         Text(
           value,
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryTeal),
         ),
         const SizedBox(height: 4),
         Text(
@@ -182,7 +182,7 @@ class DoctorDetailPage extends ConsumerWidget {
               ),
               child: IconButton(
                 onPressed: () {},
-                icon: const Icon(Icons.chat_bubble_outline, color: AppTheme.primaryBlue),
+                icon: const Icon(Icons.chat_bubble_outline, color: AppTheme.primaryTeal),
               ),
             ),
             const SizedBox(width: 16),
@@ -271,7 +271,7 @@ class _BookingBottomSheetState extends ConsumerState<BookingBottomSheet> {
                     width: 70,
                     margin: const EdgeInsets.only(right: 12),
                     decoration: BoxDecoration(
-                      color: isSelected ? AppTheme.primaryBlue : AppTheme.backgroundWhite,
+                      color: isSelected ? AppTheme.primaryTeal : AppTheme.backgroundWhite,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Column(
@@ -320,7 +320,7 @@ class _BookingBottomSheetState extends ConsumerState<BookingBottomSheet> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                       decoration: BoxDecoration(
-                        color: isSelected ? AppTheme.primaryBlue : (isBooked ? AppTheme.backgroundWhite.withOpacity(0.5) : AppTheme.backgroundWhite),
+                        color: isSelected ? AppTheme.primaryTeal : (isBooked ? AppTheme.backgroundWhite.withOpacity(0.5) : AppTheme.backgroundWhite),
                         borderRadius: BorderRadius.circular(10),
                         border: isSelected ? null : Border.all(color: AppTheme.borderColor),
                       ),
@@ -364,15 +364,15 @@ class _BookingBottomSheetState extends ConsumerState<BookingBottomSheet> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryBlue.withOpacity(0.1) : Colors.transparent,
+          color: isSelected ? AppTheme.primaryTeal.withOpacity(0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: isSelected ? AppTheme.primaryBlue : AppTheme.borderColor),
+          border: Border.all(color: isSelected ? AppTheme.primaryTeal : AppTheme.borderColor),
         ),
         child: Row(
           children: [
-            Icon(icon, size: 18, color: isSelected ? AppTheme.primaryBlue : AppTheme.textSecondary),
+            Icon(icon, size: 18, color: isSelected ? AppTheme.primaryTeal : AppTheme.textSecondary),
             const SizedBox(width: 8),
-            Text(value.replaceAll('_', ' '), style: TextStyle(color: isSelected ? AppTheme.primaryBlue : AppTheme.textSecondary, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
+            Text(value.replaceAll('_', ' '), style: TextStyle(color: isSelected ? AppTheme.primaryTeal : AppTheme.textSecondary, fontWeight: isSelected ? FontWeight.bold : FontWeight.normal)),
           ],
         ),
       ),
@@ -400,7 +400,7 @@ class _BookingBottomSheetState extends ConsumerState<BookingBottomSheet> {
       _showSuccessDialog(result);
     } catch (e) {
       Navigator.pop(context); // Pop loading
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Booking failed: $e'), backgroundColor: AppTheme.accentBlue));
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Booking failed: $e'), backgroundColor: AppTheme.accentTeal));
     }
   }
 

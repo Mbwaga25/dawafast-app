@@ -54,7 +54,7 @@ class ProductImage extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.medication_outlined, size: (height ?? 80) * 0.35, color: AppTheme.primaryBlue.withOpacity(0.3)),
+            Icon(Icons.medication_outlined, size: (height ?? 80) * 0.35, color: AppTheme.primaryTeal.withOpacity(0.3)),
           ],
         ),
       ),

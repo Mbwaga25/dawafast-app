@@ -15,7 +15,7 @@ class NotificationPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Notifications', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-        backgroundColor: AppTheme.primaryBlue,
+        backgroundColor: AppTheme.primaryTeal,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: notificationsAsync.when(

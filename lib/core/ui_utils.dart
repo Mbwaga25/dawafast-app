@@ -14,10 +14,10 @@ class UIUtils {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: AppTheme.primaryBlue.withOpacity(0.1),
+                color: AppTheme.primaryTeal.withOpacity(0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.lock_person_outlined, color: AppTheme.primaryBlue, size: 24),
+              child: const Icon(Icons.lock_person_outlined, color: AppTheme.primaryTeal, size: 24),
             ),
             const SizedBox(width: 12),
             const Text('Auth Required', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -39,7 +39,7 @@ class UIUtils {
                   },
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14),
-                    side: const BorderSide(color: AppTheme.primaryBlue),
+                    side: const BorderSide(color: AppTheme.primaryTeal),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                   ),
                   child: const Text('Register', style: TextStyle(fontWeight: FontWeight.bold)),

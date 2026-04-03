@@ -14,6 +14,9 @@ import 'package:app/features/auth/data/repositories/auth_repository.dart';
 import 'package:app/features/home/presentation/pages/product_detail_page.dart';
 import 'package:app/features/home/presentation/widgets/dashboards/patient_dashboard.dart';
 import 'package:app/features/home/presentation/widgets/dashboards/doctor_dashboard.dart';
+import 'package:app/features/home/presentation/widgets/dashboards/doctor_schedule_tab.dart';
+import 'package:app/features/home/presentation/widgets/dashboards/doctor_patients_tab.dart';
+import 'package:app/features/home/presentation/widgets/dashboards/doctor_chat_tab.dart';
 import 'package:app/features/home/presentation/widgets/dashboards/lab_dashboard.dart';
 import 'package:app/features/home/presentation/widgets/dashboards/pharmacy_dashboard.dart';
 import 'package:app/features/home/presentation/widgets/dashboards/admin_dashboard.dart';
@@ -27,6 +30,7 @@ import 'package:app/features/healthcare/presentation/pages/telemedicine_page.dar
 import 'package:app/features/offers/presentation/pages/brands_page.dart';
 import 'package:app/features/profile/presentation/pages/settings_page.dart';
 import 'package:app/features/profile/presentation/pages/profile_page.dart';
+import 'package:app/features/profile/presentation/pages/doctor_profile_page.dart';
 import 'package:app/features/auth/presentation/pages/login_page.dart';
 import 'package:app/core/widgets/product_image.dart';
 
@@ -57,14 +61,14 @@ class HomePage extends ConsumerWidget {
 
   // ─── Role-based dashboards (pharmacist, doctor etc.) ─────────────────────
   Widget _buildRoleDashboard(BuildContext context, WidgetRef ref, User user) {
+    if (user.role?.toUpperCase() == 'DOCTOR') {
+      return _buildDoctorShell(context, ref, user);
+    }
+
     Widget dashboard;
     String title = 'Dashboard';
 
     switch (user.role?.toUpperCase()) {
-      case 'DOCTOR':
-        dashboard = DoctorDashboard(user: user);
-        title = 'Doctor Panel';
-        break;
       case 'LAB_TECHNICIAN':
       case 'LAB':
         dashboard = LabDashboard(user: user);
@@ -87,25 +91,51 @@ class HomePage extends ConsumerWidget {
         title = 'Admin Panel';
         break;
       default:
-        // Fallback for unknown roles
         return _buildMainShell(context, ref, ref.read(_tabIndexProvider));
     }
 
+    return dashboard;
+  }
+
+  Widget _buildDoctorShell(BuildContext context, WidgetRef ref, User user) {
+    final tabIndex = ref.watch(_tabIndexProvider);
+    final tabs = [
+      DoctorDashboard(user: user),
+      _buildDoctorScheduleTab(user),
+      _buildDoctorPatientsTab(user),
+      _buildDoctorChatTab(user),
+      DoctorProfilePage(user: user),
+    ];
+
     return Scaffold(
-      appBar: AppBar(
-        title: Text(title),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.logout),
-            onPressed: () async {
-              await ref.read(authRepositoryProvider).logout();
-              ref.invalidate(currentUserProvider);
-            },
-          ),
+      body: IndexedStack(index: tabIndex, children: tabs),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: tabIndex,
+        onTap: (i) => ref.read(_tabIndexProvider.notifier).state = i,
+        selectedItemColor: AppTheme.primaryTeal,
+        unselectedItemColor: Colors.grey,
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(icon: Icon(Icons.dashboard_outlined), activeIcon: Icon(Icons.dashboard), label: 'Dashboard'),
+          BottomNavigationBarItem(icon: Icon(Icons.calendar_today_outlined), activeIcon: Icon(Icons.calendar_today), label: 'Schedule'),
+          BottomNavigationBarItem(icon: Icon(Icons.people_outline), activeIcon: Icon(Icons.people), label: 'Patients'),
+          BottomNavigationBarItem(icon: Icon(Icons.chat_bubble_outline), activeIcon: Icon(Icons.chat_bubble), label: 'Chat'),
+          BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
         ],
       ),
-      body: dashboard,
     );
+  }
+
+  Widget _buildDoctorScheduleTab(User user) {
+    return DoctorScheduleTab(user: user);
+  }
+
+  Widget _buildDoctorPatientsTab(User user) {
+    return DoctorPatientsTab(user: user);
+  }
+
+  Widget _buildDoctorChatTab(User user) {
+    return const DoctorChatTab();
   }
 
   // ─── Main shell with 5-tab bottom nav ────────────────────────────────────
@@ -139,7 +169,7 @@ class HomePage extends ConsumerWidget {
           children: [
             Row(
               children: [
-                const Icon(Icons.location_on, color: AppTheme.primaryBlue, size: 14),
+                const Icon(Icons.location_on, color: AppTheme.primaryTeal, size: 14),
                 const SizedBox(width: 3),
                 const Text('Deliver to', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
               ],
@@ -147,7 +177,7 @@ class HomePage extends ConsumerWidget {
             Row(
               children: [
                 Flexible(child: Text(location, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppTheme.textPrimary), overflow: TextOverflow.ellipsis)),
-                const Icon(Icons.keyboard_arrow_down, size: 16, color: AppTheme.primaryBlue),
+                const Icon(Icons.keyboard_arrow_down, size: 16, color: AppTheme.primaryTeal),
               ],
             ),
           ],
@@ -168,7 +198,7 @@ class HomePage extends ConsumerWidget {
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                       ),
                       onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginPage())),
-                      child: const Text('Login', style: TextStyle(color: AppTheme.primaryBlue, fontWeight: FontWeight.bold, fontSize: 13)),
+                      child: const Text('Login', style: TextStyle(color: AppTheme.primaryTeal, fontWeight: FontWeight.bold, fontSize: 13)),
                     ),
                   );
                 }
@@ -185,7 +215,7 @@ class HomePage extends ConsumerWidget {
               children: [
                 IconButton(
                   onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CartPage())),
-                  icon: const Icon(Icons.shopping_cart_outlined, color: AppTheme.primaryBlue),
+                  icon: const Icon(Icons.shopping_cart_outlined, color: AppTheme.primaryTeal),
                 ),
                 if (cartCount > 0)
                   Positioned(
@@ -209,7 +239,7 @@ class HomePage extends ConsumerWidget {
     return BottomNavigationBar(
       currentIndex: index,
       onTap: (i) => ref.read(_tabIndexProvider.notifier).state = i,
-      selectedItemColor: AppTheme.primaryBlue,
+      selectedItemColor: AppTheme.primaryTeal,
       unselectedItemColor: AppTheme.textSecondary,
       type: BottomNavigationBarType.fixed,
       selectedFontSize: 11,
@@ -347,7 +377,7 @@ class HomePage extends ConsumerWidget {
           if (onViewAll != null)
             GestureDetector(
               onTap: onViewAll,
-              child: const Text('View All', style: TextStyle(fontSize: 13, color: AppTheme.primaryBlue, fontWeight: FontWeight.w600)),
+              child: const Text('View All', style: TextStyle(fontSize: 13, color: AppTheme.primaryTeal, fontWeight: FontWeight.w600)),
             ),
         ],
       ),
@@ -457,12 +487,12 @@ class HomePage extends ConsumerWidget {
                     width: 64,
                     height: 64,
                     decoration: BoxDecoration(
-                      color: AppTheme.primaryBlue.withOpacity(0.07),
+                      color: AppTheme.primaryTeal.withOpacity(0.07),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: cat.image != null
-                        ? ClipRRect(borderRadius: BorderRadius.circular(16), child: Image.network(cat.image!, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.category_outlined, color: AppTheme.primaryBlue, size: 28)))
-                        : const Icon(Icons.category_outlined, color: AppTheme.primaryBlue, size: 28),
+                        ? ClipRRect(borderRadius: BorderRadius.circular(16), child: Image.network(cat.image!, fit: BoxFit.cover, errorBuilder: (_, __, ___) => const Icon(Icons.category_outlined, color: AppTheme.primaryTeal, size: 28)))
+                        : const Icon(Icons.category_outlined, color: AppTheme.primaryTeal, size: 28),
                   ),
                   const SizedBox(height: 6),
                   Text(cat.name, maxLines: 2, textAlign: TextAlign.center, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w500)),
@@ -574,7 +604,7 @@ class HomePage extends ConsumerWidget {
                 children: [
                   Text(product.name, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, height: 1.3)),
                   const SizedBox(height: 4),
-                  Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppTheme.primaryBlue)),
+                  Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppTheme.primaryTeal)),
                   if (product.originalPrice != null && product.originalPrice! > product.price)
                     Text('$symbol ${product.originalPrice!.toStringAsFixed(0)}',
                         style: const TextStyle(fontSize: 11, decoration: TextDecoration.lineThrough, color: AppTheme.textSecondary)),
@@ -590,9 +620,9 @@ class HomePage extends ConsumerWidget {
                         return Container(
                           height: 28,
                           decoration: BoxDecoration(
-                            color: AppTheme.primaryBlue.withOpacity(0.1),
+                            color: AppTheme.primaryTeal.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(8),
-                            border: Border.all(color: AppTheme.primaryBlue.withOpacity(0.3)),
+                            border: Border.all(color: AppTheme.primaryTeal.withOpacity(0.3)),
                           ),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -600,7 +630,7 @@ class HomePage extends ConsumerWidget {
                               IconButton(
                                 padding: EdgeInsets.zero,
                                 constraints: const BoxConstraints(minWidth: 32),
-                                icon: const Icon(Icons.remove, size: 16, color: AppTheme.primaryBlue),
+                                icon: const Icon(Icons.remove, size: 16, color: AppTheme.primaryTeal),
                                 onPressed: () {
                                   if (existingItem.quantity > 1) {
                                     ref.read(cartProvider.notifier).updateQuantity(existingItem.productId, existingItem.quantity - 1);
@@ -612,11 +642,11 @@ class HomePage extends ConsumerWidget {
                                   }
                                 },
                               ),
-                              Text('${existingItem.quantity}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.primaryBlue)),
+                              Text('${existingItem.quantity}', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: AppTheme.primaryTeal)),
                               IconButton(
                                 padding: EdgeInsets.zero,
                                 constraints: const BoxConstraints(minWidth: 32),
-                                icon: const Icon(Icons.add, size: 16, color: AppTheme.primaryBlue),
+                                icon: const Icon(Icons.add, size: 16, color: AppTheme.primaryTeal),
                                 onPressed: () {
                                   ref.read(cartProvider.notifier).updateQuantity(existingItem.productId, existingItem.quantity + 1);
                                 },
@@ -687,7 +717,7 @@ class HomePage extends ConsumerWidget {
                       ? ClipRRect(
                           borderRadius: BorderRadius.circular(8),
                           child: ProductImage(url: brand.logo, height: 40, width: 80, fit: BoxFit.contain))
-                      : Icon(Icons.business_outlined, size: 30, color: AppTheme.primaryBlue.withOpacity(0.5)),
+                      : Icon(Icons.business_outlined, size: 30, color: AppTheme.primaryTeal.withOpacity(0.5)),
                   const SizedBox(height: 6),
                   Text(brand.name, maxLines: 1, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
                 ],
@@ -815,7 +845,7 @@ class _PromoBannerCarouselState extends State<_PromoBannerCarousel> {
             height: 6,
             margin: const EdgeInsets.symmetric(horizontal: 3),
             decoration: BoxDecoration(
-              color: _current == i ? AppTheme.primaryBlue : AppTheme.borderColor,
+              color: _current == i ? AppTheme.primaryTeal : AppTheme.borderColor,
               borderRadius: BorderRadius.circular(3),
             ),
           )),

@@ -371,7 +371,7 @@ class _LabDashboardState extends ConsumerState<LabDashboard> with SingleTickerPr
               ],
             ),
           ),
-          Text(status, style: TextStyle(color: status == 'Processing' ? Colors.orange : AppTheme.primaryBlue, fontSize: 12, fontWeight: FontWeight.bold)),
+          Text(status, style: TextStyle(color: status == 'Processing' ? Colors.orange : AppTheme.primaryTeal, fontSize: 12, fontWeight: FontWeight.bold)),
         ],
       ),
     );

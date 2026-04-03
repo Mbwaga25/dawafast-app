@@ -209,6 +209,61 @@ class DoctorsRepository {
     }
   ''';
 
+  static const String _sentReferralsQuery = r'''
+    query GetSentReferrals($status: String) {
+      sentReferrals(status: $status) {
+        id
+        status
+        reason
+        notes
+        createdAt
+        patient {
+          id
+          user {
+            firstName
+            lastName
+            email
+          }
+        }
+        targetDoctor {
+          id
+          user {
+            firstName
+            lastName
+          }
+        }
+        targetStore {
+          id
+          name
+          storeType
+        }
+        attachments {
+          id
+          fileName
+          fileType
+          fileUrl
+        }
+      }
+    }
+  ''';
+  static const String _appointmentByIdQuery = r'''
+    query GetAppointmentById($id: ID!) {
+      appointmentById(id: $id) {
+        id
+        status
+        doctor {
+          id
+          specialty
+          user {
+            firstName
+            lastName
+            profilePicture
+          }
+        }
+      }
+    }
+  ''';
+
   static const String _patientHistoryQuery = r'''
     query GetPatientHistory($patientId: ID!) {
       patientHistory(patientId: $patientId) {
@@ -496,6 +551,32 @@ class DoctorsRepository {
     return List<Map<String, dynamic>>.from(result.data?['receivedReferrals'] ?? []);
   }
 
+  Future<List<Map<String, dynamic>>> fetchSentReferrals({String? status}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(_sentReferralsQuery),
+      variables: {'status': status},
+      fetchPolicy: FetchPolicy.noCache,
+    );
+
+    final QueryResult result = await ApiClient.client.value.query(options);
+    if (result.hasException) throw result.exception!;
+    return List<Map<String, dynamic>>.from(result.data?['sentReferrals'] ?? []);
+  }
+
+  Future<Doctor?> fetchDoctorByAppointmentId(String id) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(_doctorByAppointmentQuery),
+      variables: {'appointmentId': id},
+      fetchPolicy: FetchPolicy.noCache,
+    );
+
+    final QueryResult result = await ApiClient.client.value.query(options);
+    if (result.hasException) throw result.exception!;
+    final doctorData = result.data?['appointmentById']?['doctor'];
+    if (doctorData == null) return null;
+    return Doctor.fromJson(doctorData);
+  }
+
   Future<List<Map<String, dynamic>>> fetchPatientHistory(String patientId) async {
     final QueryOptions options = QueryOptions(
       document: gql(_patientHistoryQuery),
@@ -534,22 +615,6 @@ class DoctorsRepository {
     if (result.hasException) throw result.exception!;
     return result.data?['referPatient']?['success'] ?? false;
   }
-
-  Future<Doctor?> fetchDoctorByAppointmentId(String appointmentId) async {
-    final QueryOptions options = QueryOptions(
-      document: gql(_doctorByAppointmentQuery),
-      variables: {'appointmentId': appointmentId},
-      fetchPolicy: FetchPolicy.networkOnly,
-    );
-
-    final QueryResult result = await ApiClient.client.value.query(options);
-    if (result.hasException) throw result.exception!;
-    
-    final doctorData = result.data?['appointmentById']?['doctor'];
-    if (doctorData == null) return null;
-    
-    return Doctor.fromJson(doctorData);
-  }
 }
 
 final doctorsProvider = FutureProvider.family<List<Doctor>, ({String? specialty, String? search})>((ref, args) async {
@@ -583,6 +648,12 @@ final myAppointmentsProvider = FutureProvider<List<Map<String, dynamic>>>((ref) 
 final receivedReferralsProvider = FutureProvider.family<List<Referral>, String?>((ref, status) async {
   final repository = ref.watch(doctorsRepositoryProvider);
   final data = await repository.fetchReceivedReferrals(status: status);
+  return data.map((json) => Referral.fromJson(json)).toList();
+});
+
+final sentReferralsProvider = FutureProvider.family<List<Referral>, String?>((ref, status) async {
+  final repository = ref.watch(doctorsRepositoryProvider);
+  final data = await repository.fetchSentReferrals(status: status);
   return data.map((json) => Referral.fromJson(json)).toList();
 });
 

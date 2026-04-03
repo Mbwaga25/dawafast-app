@@ -28,7 +28,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Consultation Chat', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
-        backgroundColor: AppTheme.primaryBlue,
+        backgroundColor: AppTheme.primaryTeal,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
@@ -98,7 +98,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             _isSending
                 ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
                 : IconButton(
-                    icon: const Icon(Icons.send, color: AppTheme.primaryBlue),
+                    icon: const Icon(Icons.send, color: AppTheme.primaryTeal),
                     onPressed: _sendMessage,
                   ),
           ],
@@ -151,7 +151,7 @@ class _MessageBubble extends StatelessWidget {
           margin: const EdgeInsets.symmetric(vertical: 4),
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
           decoration: BoxDecoration(
-            color: isMe ? AppTheme.primaryBlue : Colors.grey.shade200,
+            color: isMe ? AppTheme.primaryTeal : Colors.grey.shade200,
             borderRadius: BorderRadius.only(
               topLeft: const Radius.circular(16),
               topRight: const Radius.circular(16),

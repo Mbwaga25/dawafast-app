@@ -52,7 +52,7 @@ class CategoryPage extends ConsumerWidget {
                               shape: BoxShape.circle,
                               border: Border.all(color: AppTheme.borderColor),
                             ),
-                            child: const Icon(Icons.category_outlined, color: AppTheme.primaryBlue),
+                            child: const Icon(Icons.category_outlined, color: AppTheme.primaryTeal),
                           ),
                           const SizedBox(height: 8),
                           Text(
@@ -137,7 +137,7 @@ class CategoryPage extends ConsumerWidget {
                 children: [
                   Text(product.name, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis),
                   const SizedBox(height: 4),
-                  Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 14, color: AppTheme.primaryBlue, fontWeight: FontWeight.bold)),
+                  Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 14, color: AppTheme.primaryTeal, fontWeight: FontWeight.bold)),
                 ],
               ),
             ),

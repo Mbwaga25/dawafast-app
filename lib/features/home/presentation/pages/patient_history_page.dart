@@ -5,6 +5,8 @@ import 'package:app/core/theme.dart';
 import 'package:app/features/healthcare/data/repositories/doctors_repository.dart';
 import 'package:app/features/healthcare/data/models/referral_model.dart';
 
+import 'package:app/features/healthcare/presentation/widgets/referral_wizard.dart';
+
 class PatientHistoryPage extends ConsumerWidget {
   final String patientId;
   final String patientName;
@@ -15,6 +17,23 @@ class PatientHistoryPage extends ConsumerWidget {
     required this.patientName,
   });
 
+  void _showTransferSheet(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.9,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        builder: (context, scrollController) => ReferralWizard(
+          patientId: patientId,
+          patientName: patientName,
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final historyAsync = ref.watch(patientHistoryProvider(patientId));
@@ -23,13 +42,20 @@ class PatientHistoryPage extends ConsumerWidget {
       backgroundColor: AppTheme.backgroundWhite,
       appBar: AppBar(
         title: Text('$patientName - Clinical File', style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-        backgroundColor: AppTheme.primaryBlue,
+        backgroundColor: AppTheme.primaryTeal,
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.send_rounded, color: Colors.white),
+            onPressed: () => _showTransferSheet(context),
+            tooltip: 'Transfer Patient',
+          ),
+        ],
       ),
       body: CustomScrollView(
         slivers: [
-          SliverToBoxAdapter(child: _buildPatientHeader()),
+          SliverToBoxAdapter(child: _buildPatientHeader(context)),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(16),
@@ -45,7 +71,7 @@ class PatientHistoryPage extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
-                    (context, index) => _buildHistoryCard(records[index]),
+                    (context, index) => _buildHistoryCard(context, records[index]),
                     childCount: records.length,
                   ),
                 ),
@@ -59,11 +85,11 @@ class PatientHistoryPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildPatientHeader() {
+  Widget _buildPatientHeader(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: const BoxDecoration(
-        color: AppTheme.primaryBlue,
+        color: AppTheme.primaryTeal,
         borderRadius: BorderRadius.only(bottomLeft: Radius.circular(24), bottomRight: Radius.circular(24)),
       ),
       child: Column(
@@ -81,6 +107,16 @@ class PatientHistoryPage extends ConsumerWidget {
                     const SizedBox(height: 4),
                     const Text('Patient ID: DAP-X921', style: TextStyle(color: Colors.white70, fontSize: 13)),
                   ],
+                ),
+              ),
+              ElevatedButton.icon(
+                onPressed: () => _showTransferSheet(context),
+                icon: const Icon(Icons.send_rounded, size: 16),
+                label: const Text('Transfer'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.white,
+                  foregroundColor: AppTheme.primaryTeal,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                 ),
               ),
             ],
@@ -113,7 +149,7 @@ class PatientHistoryPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildHistoryCard(PatientHistoryRecord record) {
+  Widget _buildHistoryCard(BuildContext context, PatientHistoryRecord record) {
     final dateFormat = DateFormat('MMM d, yyyy');
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -129,7 +165,7 @@ class PatientHistoryPage extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(dateFormat.format(record.date), style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
+              Text(dateFormat.format(record.date), style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.primaryTeal)),
               Text(record.doctorName, style: const TextStyle(color: AppTheme.textSecondary, fontSize: 12)),
             ],
           ),
@@ -138,7 +174,22 @@ class PatientHistoryPage extends ConsumerWidget {
           const SizedBox(height: 12),
           _buildRecordItem('Diagnosis', record.consultationNotes),
           const SizedBox(height: 12),
-          _buildRecordItem('Treatment', record.prescription, isLast: true),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Expanded(child: _buildRecordItem('Treatment', record.prescription, isLast: true)),
+              TextButton.icon(
+                onPressed: () => _showTransferSheet(context),
+                icon: const Icon(Icons.send_rounded, size: 14),
+                label: const Text('Transfer Patient', style: TextStyle(fontSize: 12)),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppTheme.primaryTeal,
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

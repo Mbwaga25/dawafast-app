@@ -38,7 +38,7 @@ class InstantCallButton extends StatelessWidget {
         final loading = result?.isLoading ?? false;
         return ElevatedButton.icon(
           style: ElevatedButton.styleFrom(
-            backgroundColor: AppTheme.primaryBlue, // matching theme
+            backgroundColor: AppTheme.primaryTeal, // matching theme
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           ),

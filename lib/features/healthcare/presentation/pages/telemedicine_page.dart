@@ -122,7 +122,7 @@ class _TelemedicinePageState extends ConsumerState<TelemedicinePage> {
   Widget _buildStat(String value, String label) {
     return Column(
       children: [
-        Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
+        Text(value, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryTeal)),
         Text(label, style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
       ],
     );
@@ -133,15 +133,15 @@ class _TelemedicinePageState extends ConsumerState<TelemedicinePage> {
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.accentBlue.withOpacity(0.05),
+        color: AppTheme.accentTeal.withOpacity(0.05),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.accentBlue.withOpacity(0.2)),
+        border: Border.all(color: AppTheme.accentTeal.withOpacity(0.2)),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(12),
-            decoration: const BoxDecoration(color: AppTheme.accentBlue, shape: BoxShape.circle),
+            decoration: const BoxDecoration(color: AppTheme.accentTeal, shape: BoxShape.circle),
             child: const Icon(Icons.add_business, color: Colors.white),
           ),
           const SizedBox(width: 16),
@@ -337,7 +337,7 @@ class _TeleDoctorCardState extends ConsumerState<_TeleDoctorCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('Video Fee', style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
-                    const Text('Tsh 30,000', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
+                    const Text('Tsh 30,000', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryTeal)),
                   ],
                 ),
                 Row(

@@ -123,6 +123,36 @@ class AppointmentRepository {
     if (chatJson == null) return null;
     return ChatMessage.fromJson(chatJson);
   }
+
+  static const String _startDirectChatMutation = r'''
+    mutation StartDirectChat($target_user_id: ID!) {
+      appointments {
+        startDirectChat(targetUserId: $target_user_id) {
+          success
+          errors
+          appointment {
+            id
+          }
+        }
+      }
+    }
+  ''';
+
+  Future<String?> startDirectChat(String targetUserId) async {
+    final MutationOptions options = MutationOptions(
+      document: gql(_startDirectChatMutation),
+      variables: {'target_user_id': targetUserId},
+    );
+
+    final QueryResult result = await ApiClient.client.value.mutate(options);
+    if (result.hasException) throw result.exception!;
+
+    final data = result.data?['appointments']?['startDirectChat'];
+    if (data?['success'] == true) {
+      return data['appointment']?['id'];
+    }
+    throw data?['errors']?.join(', ') ?? 'Failed to start chat';
+  }
 }
 
 // Providers

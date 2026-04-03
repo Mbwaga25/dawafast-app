@@ -36,7 +36,7 @@ class ProductDetailPage extends ConsumerWidget {
                     ref.read(wishlistProvider.notifier).toggle(product);
                   }
                 },
-                icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, color: AppTheme.accentBlue),
+                icon: Icon(isFav ? Icons.favorite : Icons.favorite_border, color: AppTheme.accentTeal),
               );
             },
           ),
@@ -55,7 +55,7 @@ class ProductDetailPage extends ConsumerWidget {
               if (compareCount > 0) {
                  return IconButton(
                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const ComparePage())),
-                   icon: const Icon(Icons.layers_outlined, color: AppTheme.primaryBlue),
+                   icon: const Icon(Icons.layers_outlined, color: AppTheme.primaryTeal),
                  );
               }
               return const SizedBox();
@@ -78,7 +78,7 @@ class ProductDetailPage extends ConsumerWidget {
                       child: Container(
                         padding: const EdgeInsets.all(2),
                         decoration: BoxDecoration(
-                          color: AppTheme.accentBlue,
+                          color: AppTheme.accentTeal,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         constraints: const BoxConstraints(minWidth: 16, minHeight: 16),
@@ -145,12 +145,12 @@ class ProductDetailPage extends ConsumerWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: AppTheme.primaryBlue.withOpacity(0.1),
+                    color: AppTheme.primaryTeal.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   child: Text(
                     product.categoryName ?? 'Health',
-                    style: const TextStyle(color: AppTheme.primaryBlue, fontSize: 12, fontWeight: FontWeight.bold),
+                    style: const TextStyle(color: AppTheme.primaryTeal, fontSize: 12, fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(height: 12),
@@ -162,7 +162,7 @@ class ProductDetailPage extends ConsumerWidget {
                   children: [
                     Text(
                       '$symbol ${product.price.toStringAsFixed(0)}',
-                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue),
+                      style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppTheme.primaryTeal),
                     ),
                     const SizedBox(width: 12),
                     if ((product.rating ?? 0) > 0) ...[
@@ -206,7 +206,7 @@ class ProductDetailPage extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: 12.0),
       child: Row(
         children: [
-          Icon(icon, size: 20, color: AppTheme.primaryBlue),
+          Icon(icon, size: 20, color: AppTheme.primaryTeal),
           const SizedBox(width: 12),
           Text(text, style: const TextStyle(color: AppTheme.textSecondary)),
         ],
@@ -258,7 +258,7 @@ class ProductDetailPage extends ConsumerWidget {
                   ),
                   child: IconButton(
                     onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CartPage())),
-                    icon: const Icon(Icons.shopping_cart_outlined, color: AppTheme.primaryBlue),
+                    icon: const Icon(Icons.shopping_cart_outlined, color: AppTheme.primaryTeal),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -371,7 +371,7 @@ class ProductDetailPage extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 4),
-                    Text('Tsh ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.primaryBlue)),
+                    Text('Tsh ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.primaryTeal)),
                   ],
                 ),
               ),

@@ -77,9 +77,9 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
         ),
         bottom: TabBar(
           controller: _tabController,
-          labelColor: AppTheme.primaryBlue,
+          labelColor: AppTheme.primaryTeal,
           unselectedLabelColor: AppTheme.textSecondary,
-          indicatorColor: AppTheme.primaryBlue,
+          indicatorColor: AppTheme.primaryTeal,
           tabs: const [
             Tab(text: 'Products'),
             Tab(text: 'Healthcare'),
@@ -162,7 +162,7 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
                   label: Text(cat, style: TextStyle(fontSize: 12, color: isSelected ? Colors.white : AppTheme.textPrimary)),
                   selected: isSelected,
                   onSelected: (val) => setState(() => _selectedCategory = cat),
-                  selectedColor: AppTheme.primaryBlue,
+                  selectedColor: AppTheme.primaryTeal,
                   backgroundColor: AppTheme.backgroundWhite,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
@@ -210,8 +210,8 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: 10, crossAxisSpacing: 10, childAspectRatio: 2.5),
       itemCount: categories.length,
       itemBuilder: (context, i) => Container(
-        decoration: BoxDecoration(color: AppTheme.primaryBlue.withOpacity(0.05), borderRadius: BorderRadius.circular(12), border: Border.all(color: AppTheme.primaryBlue.withOpacity(0.1))),
-        child: Center(child: Text(categories[i], style: const TextStyle(fontWeight: FontWeight.w600, color: AppTheme.primaryBlue))),
+        decoration: BoxDecoration(color: AppTheme.primaryTeal.withOpacity(0.05), borderRadius: BorderRadius.circular(12), border: Border.all(color: AppTheme.primaryTeal.withOpacity(0.1))),
+        child: Center(child: Text(categories[i], style: const TextStyle(fontWeight: FontWeight.w600, color: AppTheme.primaryTeal))),
       ),
     );
   }
@@ -264,11 +264,11 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(color: AppTheme.primaryBlue, fontWeight: FontWeight.w700, fontSize: 14)),
+                      Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(color: AppTheme.primaryTeal, fontWeight: FontWeight.w700, fontSize: 14)),
                       IconButton(
                         visualDensity: VisualDensity.compact,
                         padding: EdgeInsets.zero,
-                        icon: const Icon(Icons.add_circle, color: AppTheme.primaryBlue),
+                        icon: const Icon(Icons.add_circle, color: AppTheme.primaryTeal),
                         onPressed: () {
                           ref.read(cartProvider.notifier).addItem(CartItem(productId: product.id, name: product.name, price: product.price, image: product.images.isNotEmpty ? product.images.first : null));
                           ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Added to cart'), duration: Duration(seconds: 1)));
@@ -331,7 +331,7 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
           itemBuilder: (context, index) {
             final d = filtered[index];
             return ListTile(
-              leading: CircleAvatar(backgroundColor: AppTheme.primaryBlue.withOpacity(0.1), child: const Icon(Icons.person, color: AppTheme.primaryBlue)),
+              leading: CircleAvatar(backgroundColor: AppTheme.primaryTeal.withOpacity(0.1), child: const Icon(Icons.person, color: AppTheme.primaryTeal)),
               title: Text('Dr. ${d.fullName}'),
               subtitle: Text(d.specialty ?? 'General Physician'),
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DoctorDetailPage(doctorId: d.id))),

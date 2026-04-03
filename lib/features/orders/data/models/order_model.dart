@@ -5,6 +5,7 @@ class Order {
   final double totalAmount;
   final DateTime orderDate;
   final List<OrderItem> items;
+  final String patientId;
 
   Order({
     required this.id,
@@ -13,6 +14,7 @@ class Order {
     required this.totalAmount,
     required this.orderDate,
     required this.items,
+    required this.patientId,
   });
 
   factory Order.fromJson(Map<String, dynamic> json) {
@@ -27,6 +29,7 @@ class Order {
       totalAmount: double.parse(json['totalAmount'].toString()),
       orderDate: DateTime.parse(json['orderDate']),
       items: (json['items'] as List?)?.map((i) => OrderItem.fromJson(i)).toList() ?? [],
+      patientId: json['user']?['id']?.toString() ?? 'unknown',
     );
   }
 }
