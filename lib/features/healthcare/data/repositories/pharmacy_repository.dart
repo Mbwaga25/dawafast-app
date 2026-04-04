@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:app/core/api_client.dart';
-import '../models/hospital_model.dart';
 
 class MutationResult {
   final bool success;
@@ -56,7 +55,6 @@ class CurrencySettings {
   CurrencySettings({required this.code, required this.symbol});
 
   factory CurrencySettings.fromJson(Map<String, dynamic> json) {
-    // Map code to symbol if not provided by backend
     final code = json['baseCurrency'] ?? 'TZS';
     final symbols = {'TZS': '/=', 'USD': '\$', 'KES': 'KSh', 'UGX': 'USh', 'EUR': '€', 'GBP': '£'};
     return CurrencySettings(
@@ -92,31 +90,9 @@ class PharmacyRepository {
   ''';
 
   static const String _submitProductMutation = r'''
-    mutation SubmitProductForReview($name: String!, $categoryId: ID, $description: String, $basePrice: Decimal) {
+    mutation SubmitProductForReview($name: String!, $categoryId: ID, $description: String, $basePrice: Decimal, $image: String) {
       stores {
-        submitProductForReview(name: $name, categoryId: $categoryId, description: $description, basePrice: $basePrice) {
-          success
-          message
-        }
-      }
-    }
-  ''';
-
-  static const String _toggleStoreProductAvailabilityMutation = r'''
-    mutation ToggleAvailability($id: ID!, $available: Boolean!) {
-      stores {
-        toggleStoreProductAvailability(storeProductId: $id, isAvailable: $available) {
-          success
-          message
-        }
-      }
-    }
-  ''';
-
-  static const String _updateStoreProfileMutation = r'''
-    mutation UpdateProfile($id: ID!, $description: String, $image: String, $isSmart: Boolean) {
-      stores {
-        updateStoreProfile(id: $id, description: $description, image: $image, isSmart: $isSmart) {
+        submitProductForReview(name: $name, categoryId: $categoryId, description: $description, basePrice: $basePrice, imageBase64: $image) {
           success
           message
         }
@@ -276,6 +252,9 @@ class PharmacyRepository {
           id
           firstName
           lastName
+          patientProfile {
+            id
+          }
         }
       }
     }
@@ -284,13 +263,16 @@ class PharmacyRepository {
   static const String _searchPatientsQuery = r'''
     query SearchPatients($search: String) {
       users {
-        allUsers(role: "PATIENT", search_icontains: $search) {
+        allUsers(role: "PATIENT", usernameIcontains: $search) {
           edges {
             node {
               id
               firstName
               lastName
               email
+              patientProfile {
+                id
+              }
             }
           }
         }
@@ -305,7 +287,7 @@ class PharmacyRepository {
           id
           name
           city
-          address
+          formattedAddress
         }
       }
     }
@@ -313,19 +295,14 @@ class PharmacyRepository {
 
   static const String _searchDoctorsQuery = r'''
     query SearchDoctors($search: String) {
-      users {
-        allUsers(role: "DOCTOR", search: $search) {
-          edges {
-            node {
-              id
-              username
-              doctorProfile {
-                id
-                specialization
-                user { firstName lastName }
-              }
-            }
-          }
+      allDoctors(search: $search) {
+        id
+        specialty
+        user {
+          id
+          firstName
+          lastName
+          username
         }
       }
     }
@@ -385,6 +362,23 @@ class PharmacyRepository {
       updateReferralStatus(referralId: $id, status: $status, responseNotes: $notes) {
         success
         errors
+      }
+    }
+  ''';
+
+  static const String _sentReferralsQuery = r'''
+    query GetSentReferrals {
+      appointments {
+        sentReferrals {
+          id
+          patient { id user { firstName lastName } }
+          targetDoctor { id user { firstName lastName } }
+          targetStore { id name }
+          reason
+          status
+          createdAt
+          providerType
+        }
       }
     }
   ''';
@@ -484,23 +478,29 @@ class PharmacyRepository {
     String? categoryId,
     String? description,
     double? price,
+    String? imageBase64,
   }) async {
-    final options = MutationOptions(
-      document: gql(_submitProductMutation),
-      variables: {
-        'name': name,
-        'categoryId': categoryId,
-        'description': description,
-        'basePrice': price,
-      },
-    );
-    final result = await ApiClient.client.value.mutate(options);
-    if (result.hasException) throw result.exception!;
-    final data = result.data?['stores']?['submitProductForReview'];
-    return MutationResult(
-      success: data?['success'] ?? false,
-      message: data?['message'],
-    );
+    try {
+      final options = MutationOptions(
+        document: gql(_submitProductMutation),
+        variables: {
+          'name': name,
+          'categoryId': categoryId,
+          'description': description,
+          'basePrice': price,
+          'image': imageBase64,
+        },
+      );
+      final result = await ApiClient.client.value.mutate(options);
+      if (result.hasException) throw result.exception!;
+      final data = result.data?['stores']?['submitProductForReview'];
+      return MutationResult(
+        success: data?['success'] ?? false,
+        message: data?['message'],
+      );
+    } catch (e) {
+      return MutationResult(success: false, message: e.toString());
+    }
   }
 
   Future<List<dynamic>> getStoreProducts(String storeId) async {
@@ -596,17 +596,17 @@ class PharmacyRepository {
     );
     final result = await ApiClient.client.value.query(options);
     if (result.hasException) throw result.exception!;
-    return result.data?['users']?['allUsers']?['edges'] ?? [];
+    return result.data?['allDoctors'] ?? [];
   }
 
-  Future<bool> referPatient({
+  Future<Map<String, dynamic>> referPatient({
     required String patientId,
     required String providerType,
     required String providerId,
     required String reason,
     String? notes,
-    List<String>? labTestIds,
-    List<String>? productIds,
+    List<String>? labTestIds = const [],
+    List<String>? productIds = const [],
   }) async {
     final options = MutationOptions(
       document: gql(_referPatientMutation),
@@ -622,7 +622,12 @@ class PharmacyRepository {
     );
     final result = await ApiClient.client.value.mutate(options);
     if (result.hasException) throw result.exception!;
-    return result.data?['referPatient']?['success'] ?? false;
+    
+    final data = result.data?['referPatient'];
+    return {
+      'success': data?['success'] ?? false,
+      'errors': (data?['errors'] as List?)?.join(', ') ?? 'Unknown error',
+    };
   }
 
   Future<List<dynamic>> searchPatients(String query) async {
@@ -676,7 +681,7 @@ class PharmacyRepository {
     );
   }
 
-  Future<bool> referToDoctor({
+  Future<Map<String, dynamic>> getPatientHistory(String patientId) async {
     final options = QueryOptions(
       document: gql(_patientHistoryQuery),
       variables: {'patientId': patientId},

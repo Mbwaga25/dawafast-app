@@ -35,7 +35,7 @@ import 'package:app/features/auth/presentation/pages/login_page.dart';
 import 'package:app/core/widgets/product_image.dart';
 
 // ─── Bottom Nav Index Provider ────────────────────────────────────────────────
-final _tabIndexProvider = StateProvider<int>((ref) => 0);
+final tabIndexProvider = StateProvider<int>((ref) => 0);
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -43,7 +43,7 @@ class HomePage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userAsync = ref.watch(currentUserProvider);
-    final tabIndex = ref.watch(_tabIndexProvider);
+    final tabIndex = ref.watch(tabIndexProvider);
 
     return userAsync.when(
       data: (user) {
@@ -91,14 +91,14 @@ class HomePage extends ConsumerWidget {
         title = 'Admin Panel';
         break;
       default:
-        return _buildMainShell(context, ref, ref.read(_tabIndexProvider));
+        return _buildMainShell(context, ref, ref.read(tabIndexProvider));
     }
 
     return dashboard;
   }
 
   Widget _buildDoctorShell(BuildContext context, WidgetRef ref, User user) {
-    final tabIndex = ref.watch(_tabIndexProvider);
+    final tabIndex = ref.watch(tabIndexProvider);
     final tabs = [
       DoctorDashboard(user: user),
       _buildDoctorScheduleTab(user),
@@ -111,7 +111,7 @@ class HomePage extends ConsumerWidget {
       body: IndexedStack(index: tabIndex, children: tabs),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: tabIndex,
-        onTap: (i) => ref.read(_tabIndexProvider.notifier).state = i,
+        onTap: (i) => ref.read(tabIndexProvider.notifier).state = i,
         selectedItemColor: AppTheme.primaryTeal,
         unselectedItemColor: Colors.grey,
         type: BottomNavigationBarType.fixed,
@@ -238,7 +238,7 @@ class HomePage extends ConsumerWidget {
   Widget _buildBottomNav(BuildContext context, WidgetRef ref, int index) {
     return BottomNavigationBar(
       currentIndex: index,
-      onTap: (i) => ref.read(_tabIndexProvider.notifier).state = i,
+      onTap: (i) => ref.read(tabIndexProvider.notifier).state = i,
       selectedItemColor: AppTheme.primaryTeal,
       unselectedItemColor: AppTheme.textSecondary,
       type: BottomNavigationBarType.fixed,

@@ -14,6 +14,7 @@ class Appointment {
   final String? consultationNotes; // Changed from diagnosis
   final String? prescription; // Changed from treatmentPlan
   final List<String> notes;
+  final String? doctorUserId; // New field for ratings
 
   Appointment({
     required this.id,
@@ -31,6 +32,7 @@ class Appointment {
     this.consultationNotes,
     this.prescription,
     this.notes = const [],
+    this.doctorUserId,
   });
 
   factory Appointment.fromJson(Map<String, dynamic> json) {
@@ -50,6 +52,7 @@ class Appointment {
       consultationNotes: json['consultationNotes'],
       prescription: json['prescription'],
       notes: (json['notes'] as List? ?? []).map((e) => e.toString()).toList(),
+      doctorUserId: json['doctor']?['user']?['id']?.toString(),
     );
   }
 }

@@ -3,10 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app/core/theme.dart';
 import 'package:intl/intl.dart';
 import 'package:app/features/auth/data/models/user_model.dart';
-import 'package:app/features/appointments/data/models/appointment_model.dart';
 import 'package:app/features/appointments/data/repositories/appointment_repository.dart';
-import 'package:app/features/home/presentation/widgets/dashboards/pharmacy_dashboard.dart';
-import 'package:app/features/home/presentation/widgets/dashboards/lab_dashboard.dart';
+import 'package:app/features/home/presentation/widgets/dashboards/pharmacy_dashboard.dart' as pharmacy;
+import 'package:app/features/home/presentation/widgets/dashboards/lab_dashboard.dart' as lab;
 
 class HospitalDashboard extends ConsumerStatefulWidget {
   final User user;
@@ -92,7 +91,7 @@ class _HospitalDashboardState extends ConsumerState<HospitalDashboard> with Sing
                 children: [
                   Text('Hospital Administration', style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14)),
                   const SizedBox(height: 4),
-                  Text(widget.user.fullName ?? 'Hospital Panel', style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
+                  Text(widget.user.fullName, style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
                 ],
               ),
               const CircleAvatar(radius: 28, backgroundColor: Colors.white24, child: Icon(Icons.apartment_rounded, color: Colors.white, size: 32))
@@ -164,7 +163,7 @@ class _HospitalDashboardState extends ConsumerState<HospitalDashboard> with Sing
   }
 
   Widget _buildPharmacyWingTab() {
-      final ordersAsync = ref.watch(pharmacyOrdersProvider(widget.user.id.toString()));
+      final ordersAsync = ref.watch(pharmacy.pharmacyOrdersProvider(widget.user.id.toString()));
       return ordersAsync.when(
         data: (orders) => ListView.builder(
           padding: const EdgeInsets.all(20),
@@ -199,7 +198,7 @@ class _HospitalDashboardState extends ConsumerState<HospitalDashboard> with Sing
   }
 
   Widget _buildLabWingTab() {
-      final refs = ref.watch(labReferralsProvider);
+      final refs = ref.watch(lab.labReferralsProvider);
       return ListView.builder(
         padding: const EdgeInsets.all(20),
         itemCount: refs.length,

@@ -104,9 +104,9 @@ class UserRepository {
   }
   Future<List<User>> searchUsers(String query) async {
     const String searchUsersQuery = r'''
-      query SearchUsers($query: String!) {
+      query SearchUsers($search: String!) {
         users {
-          allUsers(search: $query) {
+          searchUsers(search: $search) {
             id
             username
             email
@@ -121,14 +121,14 @@ class UserRepository {
 
     final QueryOptions options = QueryOptions(
       document: gql(searchUsersQuery),
-      variables: {'query': query},
+      variables: {'search': query},
       fetchPolicy: FetchPolicy.noCache,
     );
 
     final QueryResult result = await ApiClient.client.value.query(options);
     if (result.hasException) throw result.exception!;
 
-    final List usersData = result.data?['users']?['allUsers'] ?? [];
+    final List usersData = result.data?['users']?['searchUsers'] ?? [];
     return usersData.map((u) => User.fromJson(u)).toList();
   }
 }

@@ -13,7 +13,17 @@ import 'package:app/features/healthcare/presentation/widgets/instant_call_button
 import 'package:app/features/notifications/data/repositories/notification_repository.dart';
 import 'package:app/features/notifications/presentation/pages/notification_page.dart';
 import 'package:app/features/appointments/presentation/pages/chat_page.dart';
+import 'package:app/features/home/presentation/pages/patient_appointments_page.dart';
+import 'package:app/features/home/presentation/pages/patient_orders_page.dart';
+import 'package:app/features/home/presentation/pages/patient_referrals_page.dart';
 import 'package:app/features/appointments/data/repositories/appointment_repository.dart';
+import 'package:app/features/healthcare/data/repositories/doctors_repository.dart';
+import 'package:app/features/home/presentation/pages/home_page.dart';
+import 'package:app/features/healthcare/presentation/pages/pharmacies_page.dart';
+import 'package:app/features/profile/presentation/pages/profile_page.dart';
+import 'package:app/features/profile/presentation/pages/settings_page.dart';
+import 'package:app/features/auth/data/repositories/auth_repository.dart';
+import 'package:app/features/auth/data/repositories/user_repository.dart';
 
 class PatientDashboard extends ConsumerWidget {
   final User user;
@@ -52,6 +62,54 @@ class PatientDashboard extends ConsumerWidget {
             loading: () => IconButton(icon: const Icon(Icons.notifications_none, color: Colors.white), onPressed: () {}),
             error: (_, __) => const SizedBox.shrink(),
           ),
+          PopupMenuButton<String>(
+            icon: const Icon(Icons.account_circle_outlined, color: Colors.white),
+            onSelected: (value) async {
+              switch (value) {
+                case 'profile':
+                  ref.read(tabIndexProvider.notifier).state = 4;
+                  break;
+                case 'appointments':
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const PatientAppointmentsPage()));
+                  break;
+                case 'orders':
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const PatientOrdersPage()));
+                  break;
+                case 'referrals':
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const PatientReferralsPage()));
+                  break;
+                case 'settings':
+                  Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsPage()));
+                  break;
+                case 'logout':
+                  final confirmed = await showDialog<bool>(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Logout'),
+                      content: const Text('Are you sure you want to log out?'),
+                      actions: [
+                        TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+                        TextButton(onPressed: () => Navigator.pop(context, true), child: const Text('Logout', style: TextStyle(color: Colors.red))),
+                      ],
+                    ),
+                  );
+                  if (confirmed == true) {
+                    await ref.read(authRepositoryProvider).logout();
+                    ref.invalidate(currentUserProvider);
+                  }
+                  break;
+              }
+            },
+            itemBuilder: (context) => [
+              const PopupMenuItem(value: 'profile', child: Row(children: [Icon(Icons.person_outline, size: 20), SizedBox(width: 8), Text('My Profile')])),
+              const PopupMenuItem(value: 'appointments', child: Row(children: [Icon(Icons.calendar_today_outlined, size: 20), SizedBox(width: 8), Text('Appointments')])),
+              const PopupMenuItem(value: 'orders', child: Row(children: [Icon(Icons.shopping_bag_outlined, size: 20), SizedBox(width: 8), Text('My Orders')])),
+              const PopupMenuItem(value: 'referrals', child: Row(children: [Icon(Icons.assignment_outlined, size: 20), SizedBox(width: 8), Text('Referrals')])),
+              const PopupMenuDivider(),
+              const PopupMenuItem(value: 'settings', child: Row(children: [Icon(Icons.settings_outlined, size: 20), SizedBox(width: 8), Text('Settings')])),
+              const PopupMenuItem(value: 'logout', child: Row(children: [Icon(Icons.logout, size: 20, color: Colors.red), SizedBox(width: 8), Text('Logout', style: TextStyle(color: Colors.red))])),
+            ],
+          ),
         ],
       ),
       body: CustomScrollView(
@@ -63,7 +121,7 @@ class PatientDashboard extends ConsumerWidget {
             child: const SizedBox(height: 20),
           ),
           SliverToBoxAdapter(
-            child: _buildFindServicesStrip(context),
+            child: _buildFindServicesStrip(context, ref),
           ),
           SliverToBoxAdapter(
             child: const SizedBox(height: 24),
@@ -113,7 +171,7 @@ class PatientDashboard extends ConsumerWidget {
     );
   }
 
-  Widget _buildFindServicesStrip(BuildContext context) {
+  Widget _buildFindServicesStrip(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -140,18 +198,21 @@ class PatientDashboard extends ConsumerWidget {
                 title: 'Pharmacy', 
                 icon: Icons.local_pharmacy_outlined, 
                 color: Colors.purple,
-                onTap: () {
-                  // Direct to default tab navigator for Shopping
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Select "Offers" tab for Pharmacy')));
-                },
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PharmaciesPage())),
               ),
               _buildServiceButton(context, 
                 title: 'Medicines', 
                 icon: Icons.health_and_safety_outlined, 
                 color: Colors.redAccent,
                 onTap: () {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Use the core Search bar below to find products')));
+                  ref.read(tabIndexProvider.notifier).state = 1;
                 },
+              ),
+              _buildServiceButton(context, 
+                title: 'Referrals', 
+                icon: Icons.assignment_outlined, 
+                color: Colors.blueGrey,
+                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PatientReferralsPage())),
               ),
             ],
           ),
@@ -191,7 +252,16 @@ class PatientDashboard extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('My Appointments', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('My Appointments', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
+              TextButton(
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PatientAppointmentsPage())),
+                child: const Text('View All', style: TextStyle(color: AppTheme.primaryTeal)),
+              ),
+            ],
+          ),
           const SizedBox(height: 12),
           
           const Text('Upcoming', style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppTheme.primaryTeal)),
@@ -328,7 +398,10 @@ class PatientDashboard extends ConsumerWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               const Text('Recent Orders', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
-              TextButton(onPressed: () {}, child: const Text('View All', style: TextStyle(color: AppTheme.primaryTeal))),
+              TextButton(
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PatientOrdersPage())),
+                child: const Text('View All', style: TextStyle(color: AppTheme.primaryTeal)),
+              ),
             ],
           ),
           ordersAsync.when(

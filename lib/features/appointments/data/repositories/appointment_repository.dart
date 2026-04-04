@@ -138,13 +138,24 @@ class AppointmentRepository {
     }
   ''';
 
+  static const String _createReviewMutation = r'''
+    mutation CreateReview($target_user_id: ID!, $rating: Int!, $comment: String!) {
+      users {
+        createReview(targetUserId: $target_user_id, rating: $rating, comment: $comment) {
+          success
+          errors
+        }
+      }
+    }
+  ''';
+
   Future<String?> startDirectChat(String targetUserId) async {
     final MutationOptions options = MutationOptions(
       document: gql(_startDirectChatMutation),
       variables: {'target_user_id': targetUserId},
     );
 
-    final QueryResult result = await ApiClient.client.value.mutate(options);
+    final result = await ApiClient.client.value.mutate(options);
     if (result.hasException) throw result.exception!;
 
     final data = result.data?['appointments']?['startDirectChat'];
@@ -152,6 +163,22 @@ class AppointmentRepository {
       return data['appointment']?['id'];
     }
     throw data?['errors']?.join(', ') ?? 'Failed to start chat';
+  }
+
+  Future<bool> createReview(String targetUserId, int rating, String comment) async {
+    final MutationOptions options = MutationOptions(
+      document: gql(_createReviewMutation),
+      variables: {
+        'target_user_id': targetUserId,
+        'rating': rating,
+        'comment': comment,
+      },
+    );
+
+    final QueryResult result = await ApiClient.client.value.mutate(options);
+    if (result.hasException) throw result.exception!;
+
+    return result.data?['users']?['createReview']?['success'] ?? false;
   }
 }
 

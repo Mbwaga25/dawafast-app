@@ -4,7 +4,8 @@ class Referral {
   final String id;
   final String patientId;
   final String patientName;
-  final String referringDoctorName;
+  final String? referringDoctorName;
+  final String? referringStoreName; 
   final String? targetDoctorName;
   final String? targetStoreName;
   final String providerType; // 'DOCTOR', 'LAB', 'PHARMACY'
@@ -19,7 +20,8 @@ class Referral {
     required this.id,
     required this.patientId,
     required this.patientName,
-    required this.referringDoctorName,
+    this.referringDoctorName,
+    this.referringStoreName,
     this.targetDoctorName,
     this.targetStoreName,
     required this.providerType,
@@ -34,6 +36,7 @@ class Referral {
   factory Referral.fromJson(Map<String, dynamic> json) {
     final patientUser = json['patient']?['user'] ?? {};
     final referringUser = json['referringDoctor']?['user'] ?? {};
+    final referringStore = json['referringStore'] ?? {};
     final targetDoctorUser = json['targetDoctor']?['user'] ?? {};
     final targetStore = json['targetStore'] ?? {};
     
@@ -41,7 +44,8 @@ class Referral {
       id: json['id'],
       patientId: json['patient']?['id'] ?? '',
       patientName: '${patientUser['firstName'] ?? ''} ${patientUser['lastName'] ?? ''}'.trim(),
-      referringDoctorName: '${referringUser['firstName'] ?? ''} ${referringUser['lastName'] ?? ''}'.trim(),
+      referringDoctorName: referringUser.isNotEmpty ? '${referringUser['firstName'] ?? ''} ${referringUser['lastName'] ?? ''}'.trim() : null,
+      referringStoreName: referringStore['name'],
       targetDoctorName: targetDoctorUser.isNotEmpty ? '${targetDoctorUser['firstName'] ?? ''} ${targetDoctorUser['lastName'] ?? ''}'.trim() : null,
       targetStoreName: targetStore['name'],
       providerType: json['providerType'] ?? 'DOCTOR',

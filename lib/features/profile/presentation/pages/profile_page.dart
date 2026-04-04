@@ -4,8 +4,11 @@ import '../../../../core/theme.dart';
 import '../../../auth/data/repositories/user_repository.dart';
 import '../../../auth/data/repositories/auth_repository.dart';
 import '../../../auth/presentation/pages/login_page.dart';
-import 'settings_page.dart';
-import 'wishlist_page.dart';
+import 'package:app/features/profile/presentation/pages/settings_page.dart';
+import 'package:app/features/profile/presentation/pages/wishlist_page.dart';
+import 'package:app/features/home/presentation/pages/patient_appointments_page.dart';
+import 'package:app/features/home/presentation/pages/patient_orders_page.dart';
+import 'package:app/features/home/presentation/pages/patient_referrals_page.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
@@ -96,9 +99,11 @@ class ProfilePage extends ConsumerWidget {
           // Menu Sections
           _buildSection(context, 'My Records', [
             _buildOption(Icons.receipt_long_outlined, 'My Orders', 'View and track orders', 
-              () => _showPlaceholder(context, 'My Orders')),
+              () => Navigator.push(context, MaterialPageRoute(builder: (_) => PatientOrdersPage()))),
             _buildOption(Icons.medical_services_outlined, 'My Consultations', 'History and upcoming',
-              () => _showPlaceholder(context, 'My Consultations')),
+              () => Navigator.push(context, MaterialPageRoute(builder: (_) => PatientAppointmentsPage()))),
+            _buildOption(Icons.assignment_outlined, 'My Referrals', 'Professional referrals',
+              () => Navigator.push(context, MaterialPageRoute(builder: (_) => PatientReferralsPage()))),
             _buildOption(Icons.biotech_outlined, 'Lab Reports', 'Download your results',
               () => _showPlaceholder(context, 'Lab Reports')),
           ]),

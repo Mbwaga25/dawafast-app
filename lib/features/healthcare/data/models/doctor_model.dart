@@ -31,10 +31,10 @@ class Doctor {
 
   factory Doctor.fromJson(Map<String, dynamic> json) {
     return Doctor(
-      id: json['id'],
+      id: json['id']?.toString() ?? '',
       specialty: json['specialty'],
       isVerified: json['isVerified'] ?? false,
-      licenseNumber: json['licenseNumber'],
+      licenseNumber: json['licenseNumber']?.toString(),
       experience: json['experience'],
       consultationFee: json['consultationFee'] != null 
           ? (json['consultationFee'] as num).toDouble() 
@@ -72,9 +72,9 @@ class HospitalShort {
 
   factory HospitalShort.fromJson(Map<String, dynamic> json) {
     return HospitalShort(
-      id: json['id'],
-      name: json['name'],
-      slug: json['slug'],
+      id: json['id']?.toString() ?? '',
+      name: json['name'] ?? 'Unnamed Facility',
+      slug: json['slug'] ?? '',
       city: json['city'],
       addressLine1: json['addressLine1'],
     );
@@ -100,7 +100,7 @@ class UserShort {
 
   factory UserShort.fromJson(Map<String, dynamic> json) {
     return UserShort(
-      id: json['id'],
+      id: json['id']?.toString() ?? '',
       firstName: json['firstName'],
       lastName: json['lastName'],
       email: json['email'],

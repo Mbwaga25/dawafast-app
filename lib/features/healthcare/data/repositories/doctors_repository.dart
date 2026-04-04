@@ -246,6 +246,45 @@ class DoctorsRepository {
       }
     }
   ''';
+
+  static const String _myReferralsQuery = r'''
+    query GetMyReferrals($status: String) {
+      appointments {
+        myReferrals(status: $status) {
+          id
+          status
+          reason
+          notes
+          createdAt
+          referringDoctor {
+            id
+            user {
+              firstName
+              lastName
+            }
+          }
+          referringStore {
+            id
+            name
+            storeType
+          }
+          targetDoctor {
+            id
+            user {
+              firstName
+              lastName
+            }
+          }
+          targetStore {
+            id
+            name
+            storeType
+          }
+        }
+      }
+    }
+  ''';
+
   static const String _appointmentByIdQuery = r'''
     query GetAppointmentById($id: ID!) {
       appointmentById(id: $id) {
@@ -563,6 +602,20 @@ class DoctorsRepository {
     return List<Map<String, dynamic>>.from(result.data?['sentReferrals'] ?? []);
   }
 
+  Future<List<Referral>> fetchMyReferrals({String? status}) async {
+    final QueryOptions options = QueryOptions(
+      document: gql(_myReferralsQuery),
+      variables: status != null ? {'status': status} : {},
+      fetchPolicy: FetchPolicy.networkOnly,
+    );
+
+    final QueryResult result = await ApiClient.client.value.query(options);
+    if (result.hasException) throw result.exception!;
+
+    final List data = result.data?['appointments']?['myReferrals'] ?? [];
+    return data.map((json) => Referral.fromJson(json)).toList();
+  }
+
   Future<Doctor?> fetchDoctorByAppointmentId(String id) async {
     final QueryOptions options = QueryOptions(
       document: gql(_doctorByAppointmentQuery),
@@ -617,6 +670,7 @@ class DoctorsRepository {
   }
 }
 
+
 final doctorsProvider = FutureProvider.family<List<Doctor>, ({String? specialty, String? search})>((ref, args) async {
   final repository = ref.watch(doctorsRepositoryProvider);
   return repository.fetchDoctors(specialty: args.specialty, search: args.search);
@@ -661,4 +715,9 @@ final patientHistoryProvider = FutureProvider.family<List<PatientHistoryRecord>,
   final repository = ref.watch(doctorsRepositoryProvider);
   final data = await repository.fetchPatientHistory(patientId);
   return data.map((json) => PatientHistoryRecord.fromJson(json)).toList();
+});
+
+final myReferralsProvider = FutureProvider.family<List<Referral>, String?>((ref, status) async {
+  final repository = ref.watch(doctorsRepositoryProvider);
+  return repository.fetchMyReferrals(status: status);
 });
