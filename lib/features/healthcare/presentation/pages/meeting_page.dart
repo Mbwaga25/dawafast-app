@@ -7,6 +7,7 @@ import 'package:app/features/healthcare/data/repositories/doctors_repository.dar
 import 'package:app/features/healthcare/presentation/pages/telemedicine_page.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:app/features/appointments/data/repositories/appointment_repository.dart';
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -33,6 +34,11 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
   CameraController? _cameraController;
   List<CameraDescription>? _cameras;
   bool _isCameraReady = false;
+  bool _isChatOpen = false;
+  bool _isScreenSharing = false;
+  final TextEditingController _messageController = TextEditingController();
+  final ScrollController _chatScrollController = ScrollController();
+  bool _isSending = false;
 
   @override
   void initState() {
@@ -122,6 +128,8 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
   void dispose() {
     _timer?.cancel();
     _cameraController?.dispose();
+    _messageController.dispose();
+    _chatScrollController.dispose();
     super.dispose();
   }
 
@@ -351,6 +359,10 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
             ),
           ),
 
+          // Chat Overlay (Draggable Scrollable Sheet)
+          if (_isChatOpen)
+            _buildChatOverlay(),
+
           // Bottom Controls (Glassmorphism)
           Positioned(
             bottom: 40,
@@ -374,6 +386,18 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                     inactiveColor: Colors.redAccent.withOpacity(0.8),
                   ),
                   _buildControlButton(
+                    onPressed: () => setState(() {
+                       _isVideoOff = !_isVideoOff;
+                       if (!_isVideoOff) {
+                         _initCamera(); // Force re-init if needed
+                       }
+                    }),
+                    icon: _isVideoOff ? Icons.videocam_off : Icons.videocam,
+                    isActive: !_isVideoOff,
+                    activeColor: Colors.white12,
+                    inactiveColor: Colors.redAccent.withOpacity(0.8),
+                  ),
+                  _buildControlButton(
                     onPressed: () => Navigator.pop(context),
                     icon: Icons.call_end,
                     isActive: true,
@@ -381,11 +405,18 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                     size: 64,
                   ),
                   _buildControlButton(
-                    onPressed: () => setState(() => _isVideoOff = !_isVideoOff),
-                    icon: _isVideoOff ? Icons.videocam_off : Icons.videocam,
-                    isActive: !_isVideoOff,
+                    onPressed: () => setState(() => _isScreenSharing = !_isScreenSharing),
+                    icon: _isScreenSharing ? Icons.stop_screen_share : Icons.screen_share,
+                    isActive: !_isScreenSharing,
                     activeColor: Colors.white12,
-                    inactiveColor: Colors.redAccent.withOpacity(0.8),
+                    inactiveColor: Colors.blueAccent.withOpacity(0.8),
+                  ),
+                  _buildControlButton(
+                    onPressed: () => setState(() => _isChatOpen = !_isChatOpen),
+                    icon: Icons.chat_bubble_outline,
+                    isActive: !_isChatOpen,
+                    activeColor: Colors.white12,
+                    inactiveColor: AppTheme.primaryTeal.withOpacity(0.8),
                   ),
                   _buildControlButton(
                     onPressed: _shareMeetingLink,
@@ -398,9 +429,130 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
               ),
             ),
           ),
+          
+          // Screen Share Indicator
+          if (_isScreenSharing)
+             Positioned(
+               top: 120,
+               left: 0,
+               right: 0,
+               child: Center(
+                 child: Container(
+                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                   decoration: BoxDecoration(color: Colors.blueAccent, borderRadius: BorderRadius.circular(20)),
+                   child: const Row(
+                     mainAxisSize: MainAxisSize.min,
+                     children: [
+                       Icon(Icons.screen_share, color: Colors.white, size: 16),
+                       SizedBox(width: 8),
+                       Text('You are sharing your screen', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
+                     ],
+                   ),
+                 ),
+               ),
+             ),
         ],
       ),
     );
+  }
+
+  Widget _buildChatOverlay() {
+    final messagesAsync = ref.watch(chatMessagesProvider(widget.appointmentId));
+    
+    return Positioned.fill(
+      child: GestureDetector(
+        onTap: () => setState(() => _isChatOpen = false),
+        child: Container(
+          color: Colors.black54,
+          alignment: Alignment.bottomCenter,
+          child: GestureDetector(
+            onTap: () {}, // Prevent click-through
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.6,
+              width: double.infinity,
+              decoration: const BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+              ),
+              child: Column(
+                children: [
+                   Container(
+                     height: 4, width: 40,
+                     margin: const EdgeInsets.symmetric(vertical: 12),
+                     decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)),
+                   ),
+                   const Padding(
+                     padding: EdgeInsets.all(16.0),
+                     child: Text('Consultation Chat', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                   ),
+                   Expanded(
+                     child: messagesAsync.when(
+                       data: (messages) {
+                         WidgetsBinding.instance.addPostFrameCallback((_) {
+                           if (_chatScrollController.hasClients) {
+                             _chatScrollController.jumpTo(_chatScrollController.position.maxScrollExtent);
+                           }
+                         });
+                         return ListView.builder(
+                           controller: _chatScrollController,
+                           padding: const EdgeInsets.all(16),
+                           itemCount: messages.length,
+                           itemBuilder: (context, index) => _MessageBubbleTile(message: messages[index]),
+                         );
+                       },
+                       loading: () => const Center(child: CircularProgressIndicator()),
+                       error: (e, _) => Center(child: Text('Error: $e')),
+                     ),
+                   ),
+                   _buildChatInput(),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildChatInput() {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(color: Colors.white, border: Border(top: BorderSide(color: Colors.grey[200]!))),
+      child: SafeArea(
+        top: false,
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _messageController,
+                decoration: const InputDecoration(hintText: 'Type a message...', border: InputBorder.none),
+              ),
+            ),
+            _isSending 
+              ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
+              : IconButton(
+                  icon: const Icon(Icons.send, color: AppTheme.primaryTeal),
+                  onPressed: _sendChatMessage,
+                ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _sendChatMessage() async {
+    final text = _messageController.text.trim();
+    if (text.isEmpty) return;
+    setState(() => _isSending = true);
+    try {
+      await ref.read(appointmentRepositoryProvider).sendMessage(widget.appointmentId, text);
+      _messageController.clear();
+      ref.invalidate(chatMessagesProvider(widget.appointmentId));
+    } catch (e) {
+       debugPrint("Chat Error: $e");
+    } finally {
+      if (mounted) setState(() => _isSending = false);
+    }
   }
 
   void _shareMeetingLink() {
@@ -480,5 +632,31 @@ class _BlinkingDotState extends State<_BlinkingDot> with SingleTickerProviderSta
   @override
   Widget build(BuildContext context) {
     return FadeTransition(opacity: _controller, child: Container(width: 8, height: 8, decoration: const BoxDecoration(color: Colors.redAccent, shape: BoxShape.circle)));
+  }
+}
+class _MessageBubbleTile extends StatelessWidget {
+  final dynamic message;
+  const _MessageBubbleTile({required this.message});
+
+  @override
+  Widget build(BuildContext context) {
+    bool isMe = false;
+    try { isMe = message.sender.id == "current"; } catch(_) {} // Local check fallback
+    
+    return Align(
+      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+      child: Container(
+        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+        decoration: BoxDecoration(
+          color: isMe ? AppTheme.primaryTeal : Colors.grey[200],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          message.message, 
+          style: TextStyle(color: isMe ? Colors.white : Colors.black87)
+        ),
+      ),
+    );
   }
 }
