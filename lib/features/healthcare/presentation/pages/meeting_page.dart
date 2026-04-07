@@ -8,6 +8,7 @@ import 'package:app/features/healthcare/presentation/pages/telemedicine_page.dar
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:app/features/appointments/data/repositories/appointment_repository.dart';
+import 'package:app/features/appointments/data/models/chat_model.dart';
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
 
