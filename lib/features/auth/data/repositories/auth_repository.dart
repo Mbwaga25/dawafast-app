@@ -53,7 +53,7 @@ class AuthRepository {
       },
     );
 
-    final QueryResult result = await ApiClient.client.value.mutate(options);
+    final QueryResult result = await ApiClient.publicClient.value.mutate(options);
 
     if (result.hasException) {
       throw result.exception!;
@@ -86,7 +86,7 @@ class AuthRepository {
       },
     );
 
-    final QueryResult result = await ApiClient.client.value.mutate(options);
+    final QueryResult result = await ApiClient.publicClient.value.mutate(options);
 
     if (result.hasException) {
       await logout();
@@ -118,7 +118,7 @@ class AuthRepository {
       },
     );
 
-    final QueryResult result = await ApiClient.client.value.mutate(options);
+    final QueryResult result = await ApiClient.publicClient.value.mutate(options);
 
     if (result.hasException) {
       throw result.exception!;
