@@ -32,6 +32,16 @@ class AuthRepository {
     }
   ''';
 
+  static const String _refreshTokenMutation = r'''
+    mutation RefreshToken($refreshToken: String!) {
+      refreshToken(refreshToken: $refreshToken) {
+        token
+        refreshToken
+        payload
+      }
+    }
+  ''';
+
   Future<String?> login(String usernameOrEmail, String password) async {
     final MutationOptions options = MutationOptions(
       document: gql(_loginMutation),
@@ -50,12 +60,50 @@ class AuthRepository {
     }
 
     final String? token = result.data?['login']?['token'];
+    final String? refreshToken = result.data?['login']?['refreshToken'];
+    
     if (token != null) {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString('auth_token', token);
-      // We might need to notify ApiClient to update its headers
+      if (refreshToken != null) {
+        await prefs.setString('refresh_token', refreshToken);
+      }
+      ApiClient.resetClient();
     }
     return token;
+  }
+
+  Future<String?> refreshToken() async {
+    final prefs = await SharedPreferences.getInstance();
+    final currentRefreshToken = prefs.getString('refresh_token');
+    
+    if (currentRefreshToken == null) return null;
+
+    final MutationOptions options = MutationOptions(
+      document: gql(_refreshTokenMutation),
+      variables: {
+        'refreshToken': currentRefreshToken,
+      },
+    );
+
+    final QueryResult result = await ApiClient.client.value.mutate(options);
+
+    if (result.hasException) {
+      await logout();
+      return null;
+    }
+
+    final String? newToken = result.data?['refreshToken']?['token'];
+    final String? newRefreshToken = result.data?['refreshToken']?['refreshToken'];
+
+    if (newToken != null) {
+      await prefs.setString('auth_token', newToken);
+      if (newRefreshToken != null) {
+        await prefs.setString('refresh_token', newRefreshToken);
+      }
+      ApiClient.resetClient();
+    }
+    return newToken;
   }
 
   Future<bool> register(String username, String email, String password) async {
@@ -82,6 +130,8 @@ class AuthRepository {
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.remove('auth_token');
+    await prefs.remove('refresh_token');
+    ApiClient.resetClient();
   }
 
   Future<String?> getToken() async {

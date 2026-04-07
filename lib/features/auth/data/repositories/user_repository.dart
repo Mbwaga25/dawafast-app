@@ -50,8 +50,9 @@ class UserRepository {
     final QueryResult result = await ApiClient.client.value.query(options);
 
     if (result.hasException) {
-      // If unauthorized, return null
-      if (result.exception!.graphqlErrors.any((e) => e.message.contains('Unauthorized'))) {
+      // If unauthorized or signature expired, return null
+      final errors = result.exception!.graphqlErrors;
+      if (errors.any((e) => e.message.contains('Unauthorized') || e.message.contains('Signature has expired'))) {
         return null;
       }
       throw result.exception!;
