@@ -32,15 +32,23 @@ class Product {
     
     // Handle 'image' field (single)
     if (json['image'] != null) {
-      imageUrls.add(json['image']['imageUrl'] as String);
+      if (json['image'] is String) {
+        imageUrls.add(json['image']);
+      } else if (json['image'] is Map && json['image']['imageUrl'] != null) {
+        imageUrls.add(json['image']['imageUrl'].toString());
+      }
     }
     
     // Handle 'images' field (list)
     var imagesList = json['images'] as List? ?? [];
     for (var img in imagesList) {
-      final url = img['imageUrl'] as String;
-      if (!imageUrls.contains(url)) {
-        imageUrls.add(url);
+      if (img != null) {
+        if (img is String) {
+          if (!imageUrls.contains(img)) imageUrls.add(img);
+        } else if (img is Map && img['imageUrl'] != null) {
+          final url = img['imageUrl'].toString();
+          if (!imageUrls.contains(url)) imageUrls.add(url);
+        }
       }
     }
 
