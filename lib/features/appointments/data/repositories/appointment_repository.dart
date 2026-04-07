@@ -94,6 +94,8 @@ class AppointmentRepository {
   }
 
   Future<List<ChatMessage>> fetchChatMessages(String appointmentId) async {
+    if (appointmentId == 'instant_meeting') return [];
+    
     final QueryOptions options = QueryOptions(
       document: gql(_appointmentMessagesQuery),
       variables: {'id': appointmentId},
@@ -108,6 +110,8 @@ class AppointmentRepository {
   }
 
   Future<ChatMessage?> sendMessage(String appointmentId, String content) async {
+    if (appointmentId == 'instant_meeting') return null;
+    
     final MutationOptions options = MutationOptions(
       document: gql(_sendMessageMutation),
       variables: {

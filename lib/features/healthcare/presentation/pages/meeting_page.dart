@@ -4,13 +4,13 @@ import 'package:app/core/theme.dart';
 import 'package:app/features/auth/data/repositories/user_repository.dart';
 import 'package:app/features/healthcare/data/models/doctor_model.dart';
 import 'package:app/features/healthcare/data/repositories/doctors_repository.dart';
-import 'package:app/features/healthcare/presentation/pages/telemedicine_page.dart';
-import 'dart:async';
-import 'package:flutter/services.dart';
+import 'package:app/features/auth/data/models/user_model.dart';
 import 'package:app/features/appointments/data/repositories/appointment_repository.dart';
 import 'package:app/features/appointments/data/models/chat_model.dart';
 import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'dart:async';
+import 'package:flutter/services.dart';
 
 class MeetingPage extends ConsumerStatefulWidget {
   final Doctor? doctor; // Made optional for shared links
@@ -36,10 +36,10 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
   List<CameraDescription>? _cameras;
   bool _isCameraReady = false;
   bool _isChatOpen = false;
+  bool _isSending = false;
   bool _isScreenSharing = false;
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _chatScrollController = ScrollController();
-  bool _isSending = false;
 
   @override
   void initState() {
@@ -452,6 +452,8 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                  ),
                ),
              ),
+          
+          if (_isChatOpen) _buildChatOverlay(),
         ],
       ),
     );
@@ -459,86 +461,107 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
 
   Widget _buildChatOverlay() {
     final messagesAsync = ref.watch(chatMessagesProvider(widget.appointmentId));
-    final userId = ref.watch(currentUserProvider).value?.id ?? '';
-    
-    return Positioned.fill(
-      child: GestureDetector(
-        onTap: () => setState(() => _isChatOpen = false),
-        child: Container(
-          color: Colors.black54,
-          alignment: Alignment.bottomCenter,
-          child: GestureDetector(
-            onTap: () {}, // Prevent click-through
-            child: Container(
-              height: MediaQuery.of(context).size.height * 0.6,
-              width: double.infinity,
-              decoration: const BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
-              ),
-              child: Column(
-                children: [
-                   Container(
-                     height: 4, width: 40,
-                     margin: const EdgeInsets.symmetric(vertical: 12),
-                     decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)),
-                   ),
-                   const Padding(
-                     padding: EdgeInsets.all(16.0),
-                     child: Text('Consultation Chat', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                   ),
-                   Expanded(
-                     child: messagesAsync.when(
-                       data: (messages) {
-                         WidgetsBinding.instance.addPostFrameCallback((_) {
-                           if (_chatScrollController.hasClients) {
-                             _chatScrollController.jumpTo(_chatScrollController.position.maxScrollExtent);
-                           }
-                         });
-                         return ListView.builder(
-                           controller: _chatScrollController,
-                           padding: const EdgeInsets.all(16),
-                           itemCount: messages.length,
-                           itemBuilder: (context, index) => _MessageBubbleTile(
-                             message: messages[index], 
-                             isMe: messages[index].isMe(userId),
-                           ),
-                         );
-                       },
-                       loading: () => const Center(child: CircularProgressIndicator()),
-                       error: (e, _) => Center(child: Text('Error: $e')),
-                     ),
-                   ),
-                   _buildChatInput(),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
-    );
-  }
+    final isInstant = widget.appointmentId == 'instant_meeting';
 
-  Widget _buildChatInput() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(color: Colors.white, border: Border(top: BorderSide(color: Colors.grey[200]!))),
-      child: SafeArea(
-        top: false,
-        child: Row(
+    return DraggableScrollableSheet(
+      initialChildSize: 0.1,
+      minChildSize: 0.1,
+      maxChildSize: 0.8,
+      builder: (context, scrollController) => Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+          boxShadow: [BoxShadow(color: Colors.black26, blurRadius: 10)],
+        ),
+        child: Column(
           children: [
-            Expanded(
-              child: TextField(
-                controller: _messageController,
-                decoration: const InputDecoration(hintText: 'Type a message...', border: InputBorder.none),
-              ),
+            // Handle and Title
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 12),
+              width: 40, height: 4,
+              decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)),
             ),
-            _isSending 
-              ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))
-              : IconButton(
-                  icon: const Icon(Icons.send, color: AppTheme.primaryTeal),
-                  onPressed: _sendChatMessage,
+            const Text('Consultation Chat', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+            const SizedBox(height: 8),
+            const Divider(),
+            
+            // Messages List
+            Expanded(
+              child: isInstant 
+                ? const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(32.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(Icons.speaker_notes_off_outlined, color: Colors.grey, size: 48),
+                          SizedBox(height: 16),
+                          Text(
+                            'Chat History Unavailable',
+                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          SizedBox(height: 8),
+                          Text(
+                            'Permanent chat logs are not supported for instant meetings.',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(color: Colors.grey, fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : messagesAsync.when(
+                    data: (messages) {
+                      if (messages.isEmpty) {
+                        return const Center(child: Text('No messages yet', style: TextStyle(color: Colors.grey)));
+                      }
+                      return ListView.builder(
+                        controller: scrollController,
+                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        itemCount: messages.length,
+                        itemBuilder: (context, index) {
+                          final msg = messages[index];
+                          final isMe = msg.sender.id == ref.watch(currentUserProvider).value?.id;
+                          return _MessageBubbleTile(message: msg, isMe: isMe);
+                        },
+                      );
+                    },
+                    loading: () => const Center(child: CircularProgressIndicator()),
+                    error: (err, stack) => Center(child: Text('Error loading chat: $err')),
+                  ),
+            ),
+            
+            // Input Field
+            if (!isInstant)
+              Padding(
+                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 16, left: 16, right: 16, top: 8),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _messageController,
+                        decoration: InputDecoration(
+                          hintText: 'Type a message...',
+                          filled: true,
+                          fillColor: Colors.grey[100],
+                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(24), borderSide: BorderSide.none),
+                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    IconButton(
+                      onPressed: _sendChatMessage,
+                      icon: const Icon(Icons.send, color: AppTheme.primaryTeal),
+                    ),
+                  ],
                 ),
+              ),
+            if (isInstant)
+              const Padding(
+                padding: EdgeInsets.all(24.0),
+                child: Text('Input disabled for instant meetings', style: TextStyle(color: Colors.grey, fontSize: 12)),
+              ),
           ],
         ),
       ),
