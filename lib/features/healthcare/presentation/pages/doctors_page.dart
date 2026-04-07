@@ -66,7 +66,7 @@ class DoctorsPage extends ConsumerWidget {
                           ref.read(doctorSpecialtyFilterProvider.notifier).state = label;
                         }
                       },
-                      selectedColor: AppTheme.primaryBlue,
+                      selectedColor: AppTheme.primaryTeal,
                       labelStyle: TextStyle(
                         color: isSelected ? Colors.white : AppTheme.textPrimary,
                         fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
@@ -160,7 +160,7 @@ class _DoctorCard extends StatelessWidget {
                     const SizedBox(height: 4),
                     Text(
                       doctor.specialty ?? 'General Practitioner',
-                      style: const TextStyle(color: AppTheme.primaryBlue, fontWeight: FontWeight.w500),
+                      style: const TextStyle(color: AppTheme.primaryTeal, fontWeight: FontWeight.w500),
                     ),
                     const SizedBox(height: 4),
                     Row(

@@ -80,18 +80,18 @@ class WishlistPage extends ConsumerWidget {
                   children: [
                     Text(product.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                     const SizedBox(height: 4),
-                    Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(color: AppTheme.primaryBlue, fontWeight: FontWeight.bold)),
+                    Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(color: AppTheme.primaryTeal, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
               Column(
                 children: [
                   IconButton(
-                    icon: const Icon(Icons.favorite, color: AppTheme.accentBlue),
+                    icon: const Icon(Icons.favorite, color: AppTheme.accentTeal),
                     onPressed: () => ref.read(wishlistProvider.notifier).toggle(product),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.add_shopping_cart, color: AppTheme.primaryBlue),
+                    icon: const Icon(Icons.add_shopping_cart, color: AppTheme.primaryTeal),
                     onPressed: () {
                       ref.read(cartProvider.notifier).addItem(
                             CartItem(

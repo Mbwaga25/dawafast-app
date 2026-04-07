@@ -31,7 +31,7 @@ class _PharmaciesPageState extends ConsumerState<PharmaciesPage> {
             width: double.infinity,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [AppTheme.primaryBlue, AppTheme.primaryBlue.withOpacity(0.7)],
+                colors: [AppTheme.primaryTeal, AppTheme.primaryTeal.withOpacity(0.7)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),

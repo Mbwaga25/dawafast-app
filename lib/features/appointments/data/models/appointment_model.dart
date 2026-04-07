@@ -1,15 +1,20 @@
 class Appointment {
   final String id;
   final String doctorName;
-  final String? patientName; // Added for Doctor Dashboard
-  final String? patientId;   // Added for Doctor Dashboard
-  final bool isTransferred;  // Added for transfers tracking
-  final String? transferredFrom; // Name of doctor who transferred
+  final String? patientName;
+  final String? patientId;
+  final bool isTransferred;
+  final String? transferredFrom;
   final String specialization;
   final DateTime date;
-  final String status; // 'pending', 'accomplished', 'cancelled'
-  final String type; // 'telemedicine', 'in-person', 'lab'
+  final String status;
+  final String type;
   final String? imageUrl;
+  final String? issue; // Changed from symptoms
+  final String? consultationNotes; // Changed from diagnosis
+  final String? prescription; // Changed from treatmentPlan
+  final List<String> notes;
+  final String? doctorUserId; // New field for ratings
 
   Appointment({
     required this.id,
@@ -23,21 +28,31 @@ class Appointment {
     required this.status,
     required this.type,
     this.imageUrl,
+    this.issue,
+    this.consultationNotes,
+    this.prescription,
+    this.notes = const [],
+    this.doctorUserId,
   });
 
   factory Appointment.fromJson(Map<String, dynamic> json) {
     return Appointment(
       id: json['id'],
-      doctorName: json['doctorName'] ?? 'Unknown Doctor',
-      patientName: json['patientName'],
-      patientId: json['patientId']?.toString(),
+      doctorName: json['doctor'] != null ? "${json['doctor']['user']['firstName']} ${json['doctor']['user']['lastName']}" : (json['doctorName'] ?? 'Unknown Doctor'),
+      patientName: json['patientName'] ?? (json['patient'] != null ? "${json['patient']['user']['firstName']} ${json['patient']['user']['lastName']}" : null),
+      patientId: json['patient']?['user']?['id']?.toString() ?? json['patientId']?.toString(),
       isTransferred: json['isTransferred'] ?? false,
       transferredFrom: json['transferredFrom'],
-      specialization: json['specialization'] ?? 'General',
-      date: DateTime.parse(json['date']),
+      specialization: json['doctor']?['specialty'] ?? json['specialization'] ?? 'General',
+      date: DateTime.parse(json['scheduledTime'] ?? json['date'] ?? DateTime.now().toIso8601String()),
       status: json['status'] ?? 'pending',
-      type: json['type'] ?? 'in-person',
+      type: json['appointmentType'] ?? json['type'] ?? 'in-person',
       imageUrl: json['imageUrl'],
+      issue: json['issue'],
+      consultationNotes: json['consultationNotes'],
+      prescription: json['prescription'],
+      notes: (json['notes'] as List? ?? []).map((e) => e.toString()).toList(),
+      doctorUserId: json['doctor']?['user']?['id']?.toString(),
     );
   }
 }

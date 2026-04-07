@@ -153,7 +153,7 @@ class CheckoutPage extends ConsumerWidget {
     return Card(
       child: geoAsync.when(
         loading: () => const ListTile(
-          leading: Icon(Icons.location_on_outlined, color: AppTheme.primaryBlue),
+          leading: Icon(Icons.location_on_outlined, color: AppTheme.primaryTeal),
           title: Text('Detecting location...'),
           subtitle: LinearProgressIndicator(),
         ),
@@ -167,7 +167,7 @@ class CheckoutPage extends ConsumerWidget {
         data: (geo) {
           if (geo == null) {
             return ListTile(
-              leading: const Icon(Icons.location_on_outlined, color: AppTheme.primaryBlue),
+              leading: const Icon(Icons.location_on_outlined, color: AppTheme.primaryTeal),
               title: const Text('Delivery Address'),
               subtitle: const Text('Tap to set your location'),
               trailing: const Icon(Icons.chevron_right, color: AppTheme.textSecondary),
@@ -175,7 +175,7 @@ class CheckoutPage extends ConsumerWidget {
             );
           }
           return ListTile(
-            leading: const Icon(Icons.my_location, color: AppTheme.primaryBlue),
+            leading: const Icon(Icons.my_location, color: AppTheme.primaryTeal),
             title: Text(geo.formattedAddress, style: const TextStyle(fontWeight: FontWeight.w600)),
             subtitle: geo.ward != null || geo.district != null
                 ? Text(
@@ -194,7 +194,7 @@ class CheckoutPage extends ConsumerWidget {
   Widget _buildPaymentCard() {
     return Card(
       child: ListTile(
-        leading: const Icon(Icons.account_balance_wallet_outlined, color: AppTheme.primaryBlue),
+        leading: const Icon(Icons.account_balance_wallet_outlined, color: AppTheme.primaryTeal),
         title: const Text('Mobile Money (M-Pesa)'),
         subtitle: const Text('**** **** **** 4567'),
         trailing: TextButton(onPressed: () {}, child: const Text('Edit')),
@@ -239,7 +239,7 @@ class CheckoutPage extends ConsumerWidget {
                mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Total', style: TextStyle(fontWeight: FontWeight.bold)),
-                Text('$symbol ${cartState.total.toStringAsFixed(0)}', style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
+                Text('$symbol ${cartState.total.toStringAsFixed(0)}', style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.primaryTeal)),
               ],
             ),
           ],
@@ -278,7 +278,7 @@ class CheckoutPage extends ConsumerWidget {
             const Text('Select Delivery Address', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
             const SizedBox(height: 20),
             ListTile(
-              leading: const Icon(Icons.my_location, color: AppTheme.primaryBlue),
+              leading: const Icon(Icons.my_location, color: AppTheme.primaryTeal),
               title: const Text('Use Current Location'),
               subtitle: const Text('Tap to use GPS location'),
               onTap: () => Navigator.pop(context),
@@ -287,13 +287,13 @@ class CheckoutPage extends ConsumerWidget {
               leading: const Icon(Icons.home_outlined),
               title: const Text('Home Address'),
               subtitle: const Text('Dar es Salaam, Tanzania'),
-              trailing: const Icon(Icons.check_circle, color: AppTheme.primaryBlue),
+              trailing: const Icon(Icons.check_circle, color: AppTheme.primaryTeal),
               onTap: () => Navigator.pop(context),
             ),
             const Divider(),
             ListTile(
-              leading: const Icon(Icons.add, color: AppTheme.primaryBlue),
-              title: const Text('Add New Address', style: TextStyle(color: AppTheme.primaryBlue, fontWeight: FontWeight.bold)),
+              leading: const Icon(Icons.add, color: AppTheme.primaryTeal),
+              title: const Text('Add New Address', style: TextStyle(color: AppTheme.primaryTeal, fontWeight: FontWeight.bold)),
               onTap: () => Navigator.pop(context),
             ),
           ],

@@ -4,8 +4,11 @@ import '../../../../core/theme.dart';
 import '../../../auth/data/repositories/user_repository.dart';
 import '../../../auth/data/repositories/auth_repository.dart';
 import '../../../auth/presentation/pages/login_page.dart';
-import 'settings_page.dart';
-import 'wishlist_page.dart';
+import 'package:app/features/profile/presentation/pages/settings_page.dart';
+import 'package:app/features/profile/presentation/pages/wishlist_page.dart';
+import 'package:app/features/home/presentation/pages/patient_appointments_page.dart';
+import 'package:app/features/home/presentation/pages/patient_orders_page.dart';
+import 'package:app/features/home/presentation/pages/patient_referrals_page.dart';
 
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
@@ -63,7 +66,7 @@ class ProfilePage extends ConsumerWidget {
               children: [
                 const CircleAvatar(
                   radius: 40,
-                  backgroundColor: AppTheme.primaryBlue,
+                  backgroundColor: AppTheme.primaryTeal,
                   child: Icon(Icons.person, size: 40, color: Colors.white),
                 ),
                 const SizedBox(width: 16),
@@ -85,7 +88,7 @@ class ProfilePage extends ConsumerWidget {
                   onPressed: () {
                     Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsPage()));
                   }, 
-                  icon: const Icon(Icons.edit_outlined, color: AppTheme.primaryBlue),
+                  icon: const Icon(Icons.edit_outlined, color: AppTheme.primaryTeal),
                 ),
               ],
             ),
@@ -96,9 +99,11 @@ class ProfilePage extends ConsumerWidget {
           // Menu Sections
           _buildSection(context, 'My Records', [
             _buildOption(Icons.receipt_long_outlined, 'My Orders', 'View and track orders', 
-              () => _showPlaceholder(context, 'My Orders')),
+              () => Navigator.push(context, MaterialPageRoute(builder: (_) => PatientOrdersPage()))),
             _buildOption(Icons.medical_services_outlined, 'My Consultations', 'History and upcoming',
-              () => _showPlaceholder(context, 'My Consultations')),
+              () => Navigator.push(context, MaterialPageRoute(builder: (_) => PatientAppointmentsPage()))),
+            _buildOption(Icons.assignment_outlined, 'My Referrals', 'Professional referrals',
+              () => Navigator.push(context, MaterialPageRoute(builder: (_) => PatientReferralsPage()))),
             _buildOption(Icons.biotech_outlined, 'Lab Reports', 'Download your results',
               () => _showPlaceholder(context, 'Lab Reports')),
           ]),
@@ -132,8 +137,8 @@ class ProfilePage extends ConsumerWidget {
               },
               style: OutlinedButton.styleFrom(
                 minimumSize: const Size(double.infinity, 50),
-                side: const BorderSide(color: AppTheme.accentBlue),
-                foregroundColor: AppTheme.accentBlue,
+                side: const BorderSide(color: AppTheme.accentTeal),
+                foregroundColor: AppTheme.accentTeal,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
               ),
               child: const Text('Logout', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -167,7 +172,7 @@ class ProfilePage extends ConsumerWidget {
 
   Widget _buildOption(IconData icon, String title, String subtitle, VoidCallback onTap) {
     return ListTile(
-      leading: Icon(icon, color: AppTheme.primaryBlue),
+      leading: Icon(icon, color: AppTheme.primaryTeal),
       title: Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
       subtitle: Text(subtitle, style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
       trailing: const Icon(Icons.chevron_right, size: 20),

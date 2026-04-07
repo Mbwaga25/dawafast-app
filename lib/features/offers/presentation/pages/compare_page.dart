@@ -20,7 +20,7 @@ class ComparePage extends ConsumerWidget {
               onPressed: () {
                 ref.read(compareProvider.notifier).clearList();
               },
-              child: const Text('Clear All', style: TextStyle(color: AppTheme.primaryBlue)),
+              child: const Text('Clear All', style: TextStyle(color: AppTheme.primaryTeal)),
             )
         ],
       ),
@@ -129,7 +129,7 @@ class ComparePage extends ConsumerWidget {
             ],
           ),
           _buildRowValue(product.name, maxLines: 2),
-          _buildRowValue('Tsh ${product.price.toStringAsFixed(0)}', color: AppTheme.primaryBlue, isBold: true),
+          _buildRowValue('Tsh ${product.price.toStringAsFixed(0)}', color: AppTheme.primaryTeal, isBold: true),
           _buildRowValue(product.brandName ?? 'N/A'),
           _buildRowValue(product.categoryName ?? 'N/A'),
           _buildRowValue(product.rating?.toString() ?? 'No rating'),

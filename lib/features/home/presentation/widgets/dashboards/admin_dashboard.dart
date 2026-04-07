@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app/core/theme.dart';
 import 'package:app/features/auth/data/models/user_model.dart';
 import 'package:app/features/orders/data/repositories/order_repository.dart';
+import 'package:app/features/notifications/data/repositories/notification_repository.dart';
+import 'package:app/features/notifications/presentation/pages/notification_page.dart';
 
 class AdminDashboard extends ConsumerStatefulWidget {
   final User user;
@@ -115,7 +117,23 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> with SingleTick
                   Text('${widget.user.fullName} (Root)', style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
                 ],
               ),
-              const CircleAvatar(radius: 25, backgroundColor: Colors.white24, child: Icon(Icons.admin_panel_settings, color: Colors.white, size: 28))
+              Row(
+                children: [
+                  ref.watch(unreadNotificationsCountProvider).when(
+                    data: (count) => Stack(
+                      children: [
+                        IconButton(icon: const Icon(Icons.notifications_none, color: Colors.white), onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationPage()))),
+                        if (count > 0)
+                          Positioned(right: 4, top: 4, child: Container(padding: const EdgeInsets.all(2), decoration: const BoxDecoration(color: Colors.red, shape: BoxShape.circle), constraints: const BoxConstraints(minWidth: 14, minHeight: 14), child: Text(count.toString(), style: const TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold), textAlign: TextAlign.center)))
+                      ],
+                    ),
+                    loading: () => IconButton(icon: const Icon(Icons.notifications_none, color: Colors.white), onPressed: () {}),
+                    error: (_, __) => const SizedBox.shrink(),
+                  ),
+                  const SizedBox(width: 8),
+                  const CircleAvatar(radius: 25, backgroundColor: Colors.white24, child: Icon(Icons.admin_panel_settings, color: Colors.white, size: 28))
+                ],
+              )
             ],
           ),
           const SizedBox(height: 24),

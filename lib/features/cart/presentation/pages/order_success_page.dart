@@ -19,12 +19,12 @@ class OrderSuccessPage extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(24),
                 decoration: BoxDecoration(
-                  color: AppTheme.primaryBlue.withOpacity(0.1),
+                  color: AppTheme.primaryTeal.withOpacity(0.1),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
                   Icons.check_circle,
-                  color: AppTheme.primaryBlue,
+                  color: AppTheme.primaryTeal,
                   size: 100,
                 ),
               ),
@@ -90,7 +90,7 @@ class OrderSuccessPage extends StatelessWidget {
                   // TODO: Navigate to Order History
                    Navigator.of(context).popUntil((route) => route.isFirst);
                 },
-                child: const Text('Track My Order', style: TextStyle(color: AppTheme.primaryBlue, fontWeight: FontWeight.bold)),
+                child: const Text('Track My Order', style: TextStyle(color: AppTheme.primaryTeal, fontWeight: FontWeight.bold)),
               ),
             ],
           ),

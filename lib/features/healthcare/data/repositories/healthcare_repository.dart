@@ -71,11 +71,15 @@ class HealthcareRepository {
           description
           formattedAddress
           children {
-            id
-            name
-            slug
-            storeType
-            city
+            edges {
+              node {
+                id
+                name
+                slug
+                storeType
+                city
+              }
+            }
           }
           doctors {
             id
@@ -92,13 +96,38 @@ class HealthcareRepository {
             name
             description
           }
+          labTests {
+             id
+             name
+             description
+             price
+             turnaroundTime
+             sampleType
+          }
+          products {
+             id
+             price
+             product {
+               name
+               slug
+               image {
+                 imageUrl
+               }
+             }
+          }
         }
       }
     ''';
 
+    final isNumericId = RegExp(r'^\d+$').hasMatch(idOrSlug);
+    // If it's a global ID (Base64), it will be passed as 'id'. 
+    // If it's a slug (alphanumeric/hyphenated), it will be passed as 'slug'.
+    // If it's a numeric ID, it will be passed as 'id'.
+    final isGlobalId = !isNumericId && idOrSlug.length > 8 && idOrSlug.contains(RegExp(r'[A-Z]'));
+
     final QueryOptions options = QueryOptions(
       document: gql(hospitalDetailQuery),
-      variables: int.tryParse(idOrSlug) != null ? {'id': idOrSlug} : {'slug': idOrSlug},
+      variables: (isNumericId || isGlobalId) ? {'id': idOrSlug} : {'slug': idOrSlug},
     );
 
     final QueryResult result = await ApiClient.client.value.query(options);
@@ -110,6 +139,55 @@ class HealthcareRepository {
     final data = result.data?['storeByIdOrSlug'];
     if (data == null) return null;
     return Hospital.fromJson(data);
+  }
+
+  Future<Map<String, dynamic>> createStore({
+    required String name,
+    required String storeType,
+    required String address,
+    required double latitude,
+    required double longitude,
+    String? description,
+    String? phoneNumber,
+    String? email,
+  }) async {
+    const String createStoreMutation = r'''
+      mutation CreateStore($input: StoreInput!) {
+        stores {
+          createStore(input: $input) {
+            success
+            errors
+            store {
+              id
+              name
+              slug
+            }
+          }
+        }
+      }
+    ''';
+
+    final MutationOptions options = MutationOptions(
+      document: gql(createStoreMutation),
+      variables: {
+        'input': {
+          'name': name,
+          'storeType': storeType.toLowerCase(),
+          'addressLine1': address,
+          'latitude': latitude,
+          'longitude': longitude,
+          'description': description,
+          'phone_number': phoneNumber,
+          'email': email,
+          'isActive': true,
+        }
+      },
+    );
+
+    final QueryResult result = await ApiClient.client.value.mutate(options);
+    if (result.hasException) throw result.exception!;
+    
+    return result.data?['stores']?['createStore'] ?? {'success': false, 'errors': ['Unknown error']};
   }
 }
 

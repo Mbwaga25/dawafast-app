@@ -102,7 +102,7 @@ class CartPage extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Total', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                Text('$symbol ${cartState.total.toStringAsFixed(0)}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryBlue)),
+                Text('$symbol ${cartState.total.toStringAsFixed(0)}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryTeal)),
               ],
             ),
             const SizedBox(height: 16),
@@ -162,7 +162,7 @@ class _CartItemTile extends ConsumerWidget {
               children: [
                 Text(item.name, style: const TextStyle(fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis),
                 const SizedBox(height: 4),
-                Text('$symbol ${item.price.toStringAsFixed(0)}', style: const TextStyle(color: AppTheme.primaryBlue)),
+                Text('$symbol ${item.price.toStringAsFixed(0)}', style: const TextStyle(color: AppTheme.primaryTeal)),
               ],
             ),
           ),
