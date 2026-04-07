@@ -7,9 +7,9 @@ final healthcareRepositoryProvider = Provider((ref) => HealthcareRepository());
 
 class HealthcareRepository {
   static const String _getAllStoresQuery = r'''
-    query GetAllStores($storeType: String) {
+    query GetAllStores($storeType: String, $search: String) {
       stores {
-        allStores(isActive: true, storeType: $storeType) {
+        allStores(isActive: true, storeType: $storeType, search: $search) {
           id
           name
           slug
@@ -27,10 +27,13 @@ class HealthcareRepository {
     }
   ''';
 
-  Future<List<Hospital>> fetchStores({String? type}) async {
+  Future<List<Hospital>> fetchStores({String? type, String? search}) async {
     final QueryOptions options = QueryOptions(
       document: gql(_getAllStoresQuery),
-      variables: type != null ? {'storeType': type.toUpperCase()} : {},
+      variables: {
+        if (type != null) 'storeType': type.toUpperCase(),
+        if (search != null && search.isNotEmpty) 'search': search,
+      },
       fetchPolicy: FetchPolicy.networkOnly,
     );
 
@@ -39,7 +42,7 @@ class HealthcareRepository {
     if (result.hasException) {
       // If storeType argument is not supported, fallback to all
       if (result.exception!.graphqlErrors.any((e) => e.message.contains('Unknown argument'))) {
-         return fetchStores(type: null);
+         return fetchStores(type: null, search: search);
       }
       throw result.exception!;
     }
@@ -115,6 +118,7 @@ class HealthcareRepository {
                }
              }
           }
+          ownerId
         }
       }
     ''';
@@ -191,9 +195,9 @@ class HealthcareRepository {
   }
 }
 
-final hospitalsProvider = FutureProvider.family<List<Hospital>, String?>((ref, type) async {
+final hospitalsProvider = FutureProvider.family<List<Hospital>, ({String? type, String? search})>((ref, args) async {
   final repository = ref.watch(healthcareRepositoryProvider);
-  return repository.fetchStores(type: type);
+  return repository.fetchStores(type: args.type, search: args.search);
 });
 
 final hospitalDetailProvider = FutureProvider.family<Hospital?, String>((ref, idOrSlug) async {

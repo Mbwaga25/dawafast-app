@@ -189,7 +189,7 @@ class PatientDashboard extends ConsumerWidget {
                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TelemedicinePage())),
               ),
               _buildServiceButton(context, 
-                title: 'Lab Test', 
+                title: 'Health Services', 
                 icon: Icons.science_outlined, 
                 color: Colors.teal,
                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HealthcarePage())),

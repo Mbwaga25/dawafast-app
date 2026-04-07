@@ -53,7 +53,7 @@ class _HospitalCreatePageState extends ConsumerState<HospitalCreatePage> {
           const SnackBar(content: Text('Facility registered successfully!')),
         );
         Navigator.pop(context);
-        ref.invalidate(hospitalsProvider(null));
+        ref.invalidate(hospitalsProvider((type: null, search: null)));
       } else {
         final errors = (result['errors'] as List?)?.join(', ') ?? 'Registration failed';
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(errors)));

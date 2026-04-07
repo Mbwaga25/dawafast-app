@@ -67,6 +67,11 @@ class UserRepository {
     String? firstName,
     String? lastName,
     String? phoneNumber,
+    String? bloodType,
+    String? gender,
+    String? location,
+    String? specialty,
+    String? licenseNumber,
   }) async {
     const String updateProfileMutation = r'''
       mutation UpdateProfile($input: UpdateAdminUserInput!) {
@@ -78,6 +83,8 @@ class UserRepository {
             firstName
             lastName
             phoneNumber
+            patientProfile { id bloodType gender location }
+            doctorProfile { id specialty isVerified }
           }
         }
       }
@@ -89,7 +96,14 @@ class UserRepository {
         'input': {
           if (firstName != null) 'firstName': firstName,
           if (lastName != null) 'lastName': lastName,
-          if (phoneNumber != null) 'profile': {'phoneNumber': phoneNumber},
+          'profile': {
+            if (phoneNumber != null) 'phoneNumber': phoneNumber,
+            if (gender != null) 'gender': gender,
+            if (bloodType != null) 'bloodType': bloodType,
+            if (location != null) 'location': location,
+          },
+          if (specialty != null) 'specialty': specialty,
+          if (licenseNumber != null) 'licenseNumber': licenseNumber,
         }
       },
     );

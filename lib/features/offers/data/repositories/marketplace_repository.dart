@@ -73,8 +73,8 @@ class MarketplaceRepository {
   }
 
   static const String _allProductsQuery = r'''
-    query GetAllProducts($limit: Int, $offset: Int, $categorySlugs: [String], $brandSlugs: [String]) {
-      allProducts(limit: $limit, offset: $offset, categorySlugs: $categorySlugs, brandSlugs: $brandSlugs) {
+    query GetAllProducts($limit: Int, $offset: Int, $categorySlugs: [String], $brandSlugs: [String], $search: String) {
+      allProducts(limit: $limit, offset: $offset, categorySlugs: $categorySlugs, brandSlugs: $brandSlugs, search: $search) {
         id
         name
         slug
@@ -123,7 +123,7 @@ class MarketplaceRepository {
     return categoriesJson.map((json) => Category.fromJson(json)).toList();
   }
 
-  Future<List<Product>> fetchProducts({int? limit, int? offset, List<String>? categorySlugs, List<String>? brandSlugs}) async {
+  Future<List<Product>> fetchProducts({int? limit, int? offset, List<String>? categorySlugs, List<String>? brandSlugs, String? search}) async {
     final QueryOptions options = QueryOptions(
       document: gql(_allProductsQuery),
       variables: {
@@ -131,6 +131,7 @@ class MarketplaceRepository {
         'offset': offset,
         if (categorySlugs != null) 'categorySlugs': categorySlugs,
         if (brandSlugs != null) 'brandSlugs': brandSlugs,
+        if (search != null && search.isNotEmpty) 'search': search,
       },
       fetchPolicy: FetchPolicy.cacheAndNetwork,
     );
@@ -240,9 +241,9 @@ final categoriesProvider = FutureProvider.family<List<Category>, String?>((ref, 
   return repository.fetchCategories(module: module);
 });
 
-final productsProvider = FutureProvider<List<Product>>((ref) async {
+final productsProvider = FutureProvider.family<List<Product>, String?>((ref, search) async {
   final repository = ref.watch(marketplaceRepositoryProvider);
-  return repository.fetchProducts(limit: 20);
+  return repository.fetchProducts(limit: 20, search: search);
 });
 
 final productDetailProvider = FutureProvider.family<Product?, String>((ref, idOrSlug) async {

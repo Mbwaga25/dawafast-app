@@ -66,5 +66,11 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>We need camera access to allow you to take photos of medical prescriptions and profile pictures.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location to find the nearest pharmacies, hospitals, and laboratories to you.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>We need your location to show you healthcare services nearby even when the app is in background.</string>
 </dict>
 </plist>

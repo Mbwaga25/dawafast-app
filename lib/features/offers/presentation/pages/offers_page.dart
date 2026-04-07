@@ -12,7 +12,7 @@ class OffersPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final productsAsync = ref.watch(productsProvider);
+    final productsAsync = ref.watch(productsProvider(null));
     final categoriesAsync = ref.watch(categoriesProvider(null));
 
     return SingleChildScrollView(

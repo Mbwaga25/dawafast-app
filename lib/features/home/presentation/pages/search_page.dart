@@ -99,7 +99,7 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
   }
 
   Widget _buildProductsTab() {
-    final productsAsync = ref.watch(productsProvider);
+    final productsAsync = ref.watch(productsProvider(_query.isNotEmpty ? _query : null));
     final categoriesAsync = ref.watch(categoriesProvider(null));
 
     return Column(
@@ -111,9 +111,7 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
               final currencyConf = ref.watch(currencySettingsProvider).value;
               final symbol = currencyConf?.symbol ?? 'Tsh';
               
-              var filtered = products.where((p) => 
-                p.name.toLowerCase().contains(_query.toLowerCase())
-              ).toList();
+              var filtered = products;
 
               if (_selectedCategory != 'All') {
                 filtered = filtered.where((p) => p.categoryName == _selectedCategory).toList();
@@ -287,14 +285,11 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
 
   Widget _buildHealthcareTab() {
     final filters = ['All', 'PHARMACY', 'LAB', 'CLINIC', 'HOSPITAL'];
-    final hospitalsAsync = ref.watch(hospitalsProvider(null));
+    final hospitalsAsync = ref.watch(hospitalsProvider((type: null, search: _query.isNotEmpty ? _query : null)));
     
     return hospitalsAsync.when(
       data: (hospitals) {
-        final filtered = hospitals.where((h) => 
-          h.name.toLowerCase().contains(_query.toLowerCase()) || 
-          (h.city?.toLowerCase().contains(_query.toLowerCase()) ?? false)
-        ).toList();
+        final filtered = hospitals;
         
         if (_query.isEmpty) return const Center(child: Text('Search for pharmacies, labs, hospitals...'));
         if (filtered.isEmpty) return const Center(child: Text('No results found'));
@@ -314,13 +309,10 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
   }
 
   Widget _buildDoctorsTab() {
-    final doctorsAsync = ref.watch(doctorsProvider((search: null, specialty: null)));
+    final doctorsAsync = ref.watch(doctorsProvider((search: _query.isNotEmpty ? _query : null, specialty: null)));
     return doctorsAsync.when(
       data: (doctors) {
-        final filtered = doctors.where((d) => 
-          d.fullName.toLowerCase().contains(_query.toLowerCase()) || 
-          (d.specialty?.toLowerCase().contains(_query.toLowerCase()) ?? false)
-        ).toList();
+        final filtered = doctors;
         
         if (_query.isEmpty) return const Center(child: Text('Search for doctors by name or specialty'));
         if (filtered.isEmpty) return const Center(child: Text('No doctors found'));

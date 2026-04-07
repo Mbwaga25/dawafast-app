@@ -185,7 +185,6 @@ class ProductDetailPage extends ConsumerWidget {
                 // Extra info section
                 _buildInfoTile(Icons.verified_user_outlined, '100% Genuine Product'),
                 _buildInfoTile(Icons.local_shipping_outlined, 'Fast Delivery within 24 hours'),
-                _buildInfoTile(Icons.assignment_return_outlined, 'Easy 7-day returns'),
                 const SizedBox(height: 16),
 
                 if (product.categorySlug != null)
@@ -234,34 +233,8 @@ class ProductDetailPage extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // Buy Now – primary action
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                icon: const Icon(Icons.bolt, size: 18),
-                onPressed: () {
-                  ref.read(cartProvider.notifier).addItem(cartItem);
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const CheckoutPage()));
-                },
-                style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 50)),
-                label: const Text('Buy Now', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              ),
-            ),
-            const SizedBox(height: 8),
-            // Add to Cart + View Cart icon row
             Row(
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(color: AppTheme.borderColor),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: IconButton(
-                    onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CartPage())),
-                    icon: const Icon(Icons.shopping_cart_outlined, color: AppTheme.primaryTeal),
-                  ),
-                ),
-                const SizedBox(width: 12),
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () {
@@ -270,19 +243,37 @@ class ProductDetailPage extends ConsumerWidget {
                         SnackBar(
                           content: Text('${product.name} added to cart'),
                           action: SnackBarAction(
-                            label: 'GO TO CHECKOUT',
-                            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CheckoutPage())),
+                            label: 'VIEW CART',
+                            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CartPage())),
                           ),
                         ),
                       );
                     },
-                    style: OutlinedButton.styleFrom(minimumSize: const Size(double.infinity, 48)),
+                    style: OutlinedButton.styleFrom(
+                      minimumSize: const Size(0, 56),
+                      side: const BorderSide(color: AppTheme.primaryTeal),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
                     child: const Text('Add to Cart'),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      ref.read(cartProvider.notifier).addItem(cartItem);
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => const CheckoutPage()));
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(0, 56),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    ),
+                    child: const Text('Buy Now', style: TextStyle(fontWeight: FontWeight.bold)),
                   ),
                 ),
               ],
             ),
-            const SizedBox(height: 4),
+            const SizedBox(height: 12),
           ],
         ),
       ),

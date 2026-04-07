@@ -37,12 +37,12 @@ class Doctor {
       licenseNumber: json['licenseNumber']?.toString(),
       experience: json['experience'],
       consultationFee: json['consultationFee'] != null 
-          ? (json['consultationFee'] as num).toDouble() 
+          ? double.tryParse(json['consultationFee'].toString()) 
           : null,
       languages: json['languages'] != null 
           ? List<String>.from(json['languages']) 
           : [],
-      rating: json['rating'] != null ? (json['rating'] as num).toDouble() : 0.0,
+      rating: json['rating'] != null ? (double.tryParse(json['rating'].toString()) ?? 0.0) : 0.0,
       reviewCount: json['reviewCount'] ?? 0,
       availability: json['availability'],
       hospital: json['hospital'] != null 

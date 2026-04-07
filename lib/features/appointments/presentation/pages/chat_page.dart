@@ -5,6 +5,8 @@ import 'package:app/core/theme.dart';
 import 'package:app/features/appointments/data/repositories/appointment_repository.dart';
 import 'package:app/features/appointments/data/models/chat_model.dart';
 import 'package:app/features/auth/data/repositories/user_repository.dart';
+import 'package:app/core/services/location_service.dart';
+import 'package:app/core/services/media_service.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
   final String appointmentId;
@@ -94,6 +96,26 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 maxLines: null,
                 textCapitalization: TextCapitalization.sentences,
               ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.location_on_outlined, color: Colors.grey),
+              onPressed: () async {
+                final pos = await LocationService().getCurrentPosition();
+                if (pos != null && mounted) {
+                   _messageController.text += "\nMy Location: https://maps.google.com/?q=${pos.latitude},${pos.longitude}";
+                }
+              },
+            ),
+            IconButton(
+              icon: const Icon(Icons.camera_alt_outlined, color: Colors.grey),
+              onPressed: () async {
+                final file = await MediaService().capturePhoto();
+                if (file != null && mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Photo captured at: ${file.path.split('/').last}')),
+                  );
+                }
+              },
             ),
             _isSending
                 ? const SizedBox(width: 24, height: 24, child: CircularProgressIndicator(strokeWidth: 2))

@@ -28,8 +28,9 @@ class _TelemedicinePageState extends ConsumerState<TelemedicinePage> {
       appBar: AppBar(
         title: const Text('Telemedicine'),
       ),
-      body: Column(
-        children: [
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
           // Hero Section
           Container(
             padding: const EdgeInsets.all(24),
@@ -91,8 +92,7 @@ class _TelemedicinePageState extends ConsumerState<TelemedicinePage> {
           ),
 
           // Doctors List
-          Expanded(
-            child: doctorsAsync.when(
+          doctorsAsync.when(
               data: (doctors) {
                 final filtered = doctors.where((d) => 
                   d.fullName.toLowerCase().contains(_searchQuery.toLowerCase()) ||
@@ -102,6 +102,8 @@ class _TelemedicinePageState extends ConsumerState<TelemedicinePage> {
                 if (filtered.isEmpty) return const Center(child: Text('No doctors available for video call'));
 
                 return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
                   padding: const EdgeInsets.symmetric(horizontal: 16),
                   itemCount: filtered.length,
                   itemBuilder: (context, index) {
@@ -113,8 +115,8 @@ class _TelemedicinePageState extends ConsumerState<TelemedicinePage> {
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (err, stack) => Center(child: Text('Error: $err')),
             ),
-          ),
         ],
+        ),
       ),
     );
   }

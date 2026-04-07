@@ -52,6 +52,11 @@ class User {
   String get fullName => (firstName != null || lastName != null) 
     ? '${firstName ?? ''} ${lastName ?? ''}'.trim()
     : username;
+
+  bool get isPatient => patientProfile != null || role == 'PATIENT';
+  bool get isDoctor => doctorProfile != null || role == 'DOCTOR';
+  bool get isPharmacist => pharmacistProfile != null || role == 'PHARMACIST';
+  bool get isLabTechnician => labProfile != null || role == 'LAB_TECHNICIAN';
 }
 
 class PatientProfile {

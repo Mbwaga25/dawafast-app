@@ -6,6 +6,8 @@ import 'package:app/features/healthcare/data/repositories/doctors_repository.dar
 import 'package:app/features/healthcare/data/models/doctor_model.dart';
 import 'package:app/features/auth/data/repositories/user_repository.dart';
 import 'package:app/core/ui_utils.dart';
+import 'package:app/features/appointments/presentation/pages/chat_page.dart';
+import 'package:app/features/appointments/data/repositories/appointment_repository.dart';
 
 class DoctorDetailPage extends ConsumerWidget {
   final String doctorId;
@@ -30,7 +32,7 @@ class DoctorDetailPage extends ConsumerWidget {
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text('Error: $err')),
       ),
-      bottomNavigationBar: _buildBottomBar(context, doctorAsync.value),
+      bottomNavigationBar: _buildBottomBar(context, ref, doctorAsync.value),
     );
   }
 
@@ -159,7 +161,7 @@ class DoctorDetailPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildBottomBar(BuildContext context, Doctor? doctor) {
+  Widget _buildBottomBar(BuildContext context, WidgetRef ref, Doctor? doctor) {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
@@ -181,7 +183,28 @@ class DoctorDetailPage extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: IconButton(
-                onPressed: () {},
+                onPressed: () async {
+                  if (doctor != null) {
+                    try {
+                      // show loading
+                      showDialog(context: context, barrierDismissible: false, builder: (_) => const Center(child: CircularProgressIndicator()));
+                      
+                      final appointmentId = await ref.read(appointmentRepositoryProvider).startDirectChat(doctor.user.id);
+                      
+                      // pop loading
+                      if (context.mounted) Navigator.pop(context);
+                      
+                      if (appointmentId != null && context.mounted) {
+                        Navigator.push(context, MaterialPageRoute(builder: (_) => ChatPage(appointmentId: appointmentId)));
+                      }
+                    } catch (e) {
+                      if (context.mounted) {
+                        Navigator.pop(context);
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Could not start chat: $e')));
+                      }
+                    }
+                  }
+                },
                 icon: const Icon(Icons.chat_bubble_outline, color: AppTheme.primaryTeal),
               ),
             ),

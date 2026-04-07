@@ -17,7 +17,7 @@ class _LabsPageState extends ConsumerState<LabsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final labsAsyncValue = ref.watch(hospitalsProvider('LAB'));
+    final labsAsyncValue = ref.watch(hospitalsProvider((type: 'LAB', search: null)));
 
     return Scaffold(
       appBar: AppBar(
@@ -41,7 +41,7 @@ class _LabsPageState extends ConsumerState<LabsPage> {
                 const Icon(Icons.biotech, color: Colors.white, size: 48),
                 const SizedBox(height: 12),
                 const Text(
-                  'Diagnostics & Lab Tests',
+                  'Health Services',
                   style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 8),

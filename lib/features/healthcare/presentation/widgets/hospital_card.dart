@@ -144,14 +144,27 @@ class _HospitalCardState extends ConsumerState<HospitalCard> {
                     ],
                   ),
                   TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => HospitalDetailPage(idOrSlug: widget.hospital.slug),
+                        ),
+                      );
+                    },
                     style: TextButton.styleFrom(
                       foregroundColor: AppTheme.primaryTeal,
                       padding: EdgeInsets.zero,
                       minimumSize: const Size(0, 0),
                       tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     ),
-                    child: const Text('Book Appointment'),
+                    child: Text(
+                      widget.hospital.storeType == 'PHARMACY' 
+                        ? 'Order Medicine' 
+                        : widget.hospital.storeType == 'LAB' 
+                          ? 'Book Test' 
+                          : 'Book Appointment',
+                    ),
                   ),
                 ],
               ),

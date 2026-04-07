@@ -33,6 +33,8 @@ import 'package:app/features/profile/presentation/pages/profile_page.dart';
 import 'package:app/features/profile/presentation/pages/doctor_profile_page.dart';
 import 'package:app/features/auth/presentation/pages/login_page.dart';
 import 'package:app/core/widgets/product_image.dart';
+import 'package:app/core/providers/location_provider.dart';
+import 'package:app/features/home/presentation/widgets/location_picker_sheet.dart';
 
 // ─── Bottom Nav Index Provider ────────────────────────────────────────────────
 final tabIndexProvider = StateProvider<int>((ref) => 0);
@@ -44,6 +46,7 @@ class HomePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final userAsync = ref.watch(currentUserProvider);
     final tabIndex = ref.watch(tabIndexProvider);
+    final selectedLocation = ref.watch(selectedLocationProvider);
 
     return userAsync.when(
       data: (user) {
@@ -140,6 +143,7 @@ class HomePage extends ConsumerWidget {
 
   // ─── Main shell with 5-tab bottom nav ────────────────────────────────────
   Widget _buildMainShell(BuildContext context, WidgetRef ref, int tabIndex, {User? user}) {
+    final selectedLocation = ref.watch(selectedLocationProvider);
     final tabs = [
       (user != null && user.role?.toUpperCase() == 'PATIENT') ? PatientDashboard(user: user) : _buildGuestHome(context, ref),
       const OffersPage(),
@@ -149,7 +153,7 @@ class HomePage extends ConsumerWidget {
     ];
 
     return Scaffold(
-      appBar: _buildAppBar(context, ref, 'Select Location'),
+      appBar: _buildAppBar(context, ref, selectedLocation),
       body: IndexedStack(index: tabIndex, children: tabs),
       bottomNavigationBar: _buildBottomNav(context, ref, tabIndex),
     );
@@ -162,25 +166,28 @@ class HomePage extends ConsumerWidget {
       elevation: 1,
       shadowColor: AppTheme.borderColor,
       titleSpacing: 0,
-      title: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                const Icon(Icons.location_on, color: AppTheme.primaryTeal, size: 14),
-                const SizedBox(width: 3),
-                const Text('Deliver to', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
-              ],
-            ),
-            Row(
-              children: [
-                Flexible(child: Text(location, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppTheme.textPrimary), overflow: TextOverflow.ellipsis)),
-                const Icon(Icons.keyboard_arrow_down, size: 16, color: AppTheme.primaryTeal),
-              ],
-            ),
-          ],
+      title: InkWell(
+        onTap: () => _showLocationPicker(context),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.location_on, color: AppTheme.primaryTeal, size: 14),
+                  const SizedBox(width: 3),
+                  const Text('Deliver to', style: TextStyle(fontSize: 11, color: AppTheme.textSecondary)),
+                ],
+              ),
+              Row(
+                children: [
+                  Flexible(child: Text(location, style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppTheme.textPrimary), overflow: TextOverflow.ellipsis)),
+                  const Icon(Icons.keyboard_arrow_down, size: 16, color: AppTheme.primaryTeal),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
       actions: [
@@ -235,6 +242,15 @@ class HomePage extends ConsumerWidget {
     );
   }
 
+  void _showLocationPicker(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => const LocationPickerSheet(),
+    );
+  }
+
   Widget _buildBottomNav(BuildContext context, WidgetRef ref, int index) {
     return BottomNavigationBar(
       currentIndex: index,
@@ -248,7 +264,7 @@ class HomePage extends ConsumerWidget {
       items: const [
         BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Home'),
         BottomNavigationBarItem(icon: Icon(Icons.medication_outlined), activeIcon: Icon(Icons.medication), label: 'Medicines'),
-        BottomNavigationBarItem(icon: Icon(Icons.biotech_outlined), activeIcon: Icon(Icons.biotech), label: 'Lab Tests'),
+        BottomNavigationBarItem(icon: Icon(Icons.biotech_outlined), activeIcon: Icon(Icons.biotech), label: 'Health Services'),
         BottomNavigationBarItem(icon: Icon(Icons.video_call_outlined), activeIcon: Icon(Icons.video_call), label: 'Consult'),
         BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
       ],
@@ -256,13 +272,17 @@ class HomePage extends ConsumerWidget {
   }
 
   Widget _buildProfileTab(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(currentUserProvider).value;
+    if (user == null) {
+      return const LoginPage();
+    }
     return const ProfilePage();
   }
 
   // ─── Guest Home Body ──────────────────────────────────────────────────────
   Widget _buildGuestHome(BuildContext context, WidgetRef ref) {
     final categoriesAsync = ref.watch(categoriesProvider(null));
-    final productsAsync = ref.watch(productsProvider);
+    final productsAsync = ref.watch(productsProvider(null));
     final segmentsAsync = ref.watch(allSegmentsProvider);
     final brandsAsync = ref.watch(brandsProvider);
 
@@ -409,7 +429,7 @@ class HomePage extends ConsumerWidget {
   Widget _buildOfferingTiles(BuildContext context, WidgetRef ref) {
     final tiles = [
       {'label': 'Medicines', 'sub': 'SAVE 25%', 'icon': Icons.medication_outlined, 'color': const Color(0xFF4CAF50), 'bg': const Color(0xFFE8F5E9)},
-      {'label': 'Lab Tests', 'sub': 'BUY 1 GET 1', 'icon': Icons.biotech_outlined, 'color': const Color(0xFF2196F3), 'bg': const Color(0xFFE3F2FD)},
+      {'label': 'Health Services', 'sub': 'BUY 1 GET 1', 'icon': Icons.biotech_outlined, 'color': const Color(0xFF2196F3), 'bg': const Color(0xFFE3F2FD)},
       {'label': 'Doctor Consult', 'sub': 'BOOK NOW', 'icon': Icons.video_call_outlined, 'color': const Color(0xFF9C27B0), 'bg': const Color(0xFFF3E5F5)},
       {'label': 'Healthcare', 'sub': 'UPTO 60% OFF', 'icon': Icons.favorite_border_outlined, 'color': const Color(0xFFE91E63), 'bg': const Color(0xFFFCE4EC)},
       {'label': 'Pharmacy', 'sub': 'NEAR YOU', 'icon': Icons.local_pharmacy_outlined, 'color': const Color(0xFF009688), 'bg': const Color(0xFFE0F2F1)},
@@ -753,8 +773,8 @@ class _PromoBannerCarouselState extends State<_PromoBannerCarousel> {
     ),
     _BannerData(
       gradient: [Color(0xFF2E7D32), Color(0xFF66BB6A)],
-      title: 'Lab Tests at Home',
-      subtitle: 'Book certified lab tests online',
+      title: 'Health Services at Home',
+      subtitle: 'Book certified health services online',
       icon: Icons.biotech,
     ),
     _BannerData(

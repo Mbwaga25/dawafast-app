@@ -4,6 +4,8 @@ import 'core/theme.dart';
 import 'features/home/presentation/pages/home_page.dart';
 import 'features/healthcare/presentation/pages/meeting_page.dart';
 
+import 'core/services/notification_service.dart';
+
 void main() {
   runApp(
     const ProviderScope(
@@ -12,11 +14,14 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // Initialize notification ring polling
+    ref.watch(backgroundPollingProvider);
+
     return MaterialApp(
       title: 'Dawafast',
       debugShowCheckedModeBanner: false,

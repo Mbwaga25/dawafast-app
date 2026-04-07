@@ -11,6 +11,7 @@ class Hospital {
   final double? longitude;
   final String? storeType;
   final bool isActive;
+  final String? ownerId;
 
   final List<Hospital>? children;
   final List<HospitalDoctor>? doctors;
@@ -36,6 +37,7 @@ class Hospital {
     this.services,
     this.labTests,
     this.products,
+    this.ownerId,
   });
 
   factory Hospital.fromJson(Map<String, dynamic> json) {
@@ -62,6 +64,7 @@ class Hospital {
       longitude: json['longitude'] != null ? double.tryParse(json['longitude'].toString()) : null,
       storeType: json['storeType'],
       isActive: json['isActive'] ?? true,
+      ownerId: json['ownerId'],
       children: json['children'] != null 
         ? _extractNodes(json['children']).map((i) => Hospital.fromJson(i)).toList()
         : null,

@@ -116,7 +116,7 @@ class _ReferralWizardState extends ConsumerState<ReferralWizard> {
   String _getStep3Title() {
     switch (_selectedType) {
       case 'PHARMACY': return 'Prescribe Medicines';
-      case 'LAB': return 'Order Lab Tests';
+      case 'LAB': return 'Order Health Services';
       case 'HOSPITAL': return 'Describe Medical Issue';
       case 'DOCTOR': return 'Referral Details';
       default: return 'Specification';
@@ -207,7 +207,7 @@ class _ReferralWizardState extends ConsumerState<ReferralWizard> {
         ],
       );
     } else {
-      final facilitiesAsync = ref.watch(hospitalsProvider(_selectedType));
+      final facilitiesAsync = ref.watch(hospitalsProvider((type: _selectedType, search: null)));
       return Column(
         children: [
            TextField(
@@ -340,7 +340,7 @@ class _ReferralWizardState extends ConsumerState<ReferralWizard> {
              child: detailAsync.when(
                 data: (fac) {
                   final tests = fac?.labTests ?? [];
-                  if (tests.isEmpty) return const Center(child: Text('No lab tests available at this facility.'));
+                  if (tests.isEmpty) return const Center(child: Text('No health services available at this facility.'));
                   return ListView.builder(
                     itemCount: tests.length,
                     itemBuilder: (context, i) {

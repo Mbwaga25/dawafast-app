@@ -3,10 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app/core/theme.dart';
 import 'package:app/features/healthcare/data/repositories/healthcare_repository.dart';
 import 'package:app/features/healthcare/data/models/hospital_model.dart';
+import 'package:app/features/appointments/presentation/pages/chat_page.dart';
+import 'package:app/features/appointments/data/repositories/appointment_repository.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:app/core/services/location_service.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:app/features/cart/presentation/providers/cart_provider.dart';
 import 'package:app/features/cart/data/models/cart_model.dart';
 
@@ -47,21 +50,50 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (err, stack) => Center(child: Text('Error: $err')),
       ),
+      floatingActionButton: hospitalAsync.value?.ownerId != null ? FloatingActionButton.extended(
+        onPressed: () async {
+          final ownerId = hospitalAsync.value!.ownerId!;
+          try {
+             showDialog(context: context, barrierDismissible: false, builder: (_) => const Center(child: CircularProgressIndicator()));
+             final appointmentId = await ref.read(appointmentRepositoryProvider).startDirectChat(ownerId);
+             if (context.mounted) Navigator.pop(context);
+             if (appointmentId != null && context.mounted) {
+               Navigator.push(context, MaterialPageRoute(builder: (_) => ChatPage(appointmentId: appointmentId)));
+             }
+          } catch (e) {
+             if (context.mounted) {
+               Navigator.pop(context);
+               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Could not start chat: $e')));
+             }
+          }
+        },
+        backgroundColor: AppTheme.primaryTeal,
+        icon: const Icon(Icons.chat, color: Colors.white),
+        label: const Text('Chat', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+      ) : null,
     );
   }
 
   Widget _buildHospitalContent(BuildContext context, Hospital hospital) {
     final bool isPharmacy = hospital.storeType == 'PHARMACY';
     final bool isLab = hospital.storeType == 'LAB';
+    final bool isHospitalOrClinic = hospital.storeType == 'HOSPITAL' || hospital.storeType == 'CLINIC';
     
     final List<Tab> tabs = [
       const Tab(text: 'Overview'),
-      if (isPharmacy) const Tab(text: 'Medicines') else if (isLab) const Tab(text: 'Lab Tests') else const Tab(text: 'Doctors'),
+      if (isPharmacy) const Tab(text: 'Medicines'),
+      if (isLab) const Tab(text: 'Health Services'),
+      if (isHospitalOrClinic) const Tab(text: 'Doctors'),
       if (isLab) const Tab(text: 'Map View'),
       if (!isLab) const Tab(text: 'Units'),
     ];
 
-    final TabController tabController = TabController(length: tabs.length, vsync: this);
+    int initialIndex = 0;
+    if (isPharmacy || isLab) {
+      initialIndex = 1;
+    }
+
+    final TabController tabController = TabController(length: tabs.length, vsync: this, initialIndex: initialIndex);
 
     String? distanceStr;
     String? timeStr;
@@ -139,7 +171,9 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
             controller: tabController,
             children: [
               _buildOverviewTab(hospital, distanceStr),
-              if (isPharmacy) _buildMedicinesTab(hospital) else if (isLab) _buildLabTestsTab(hospital) else _buildDoctorsTab(hospital),
+              if (isPharmacy) _buildMedicinesTab(hospital),
+              if (isLab) _buildLabTestsTab(hospital),
+              if (isHospitalOrClinic) _buildDoctorsTab(hospital),
               if (isLab) _buildMapTab(hospital),
               if (!isLab) _buildUnitsTab(context, hospital),
             ],
@@ -204,9 +238,46 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
           _buildContactTile(Icons.map, hospital.address ?? hospital.city ?? 'Location not specified'),
           const SizedBox(height: 48),
           ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 56)),
-            child: const Text('Get Directions'),
+            onPressed: () async {
+              if (hospital.latitude != null && hospital.longitude != null) {
+                final Uri googleMapsUrl = Uri.parse("https://www.google.com/maps/search/?api=1&query=${hospital.latitude},${hospital.longitude}");
+                final Uri appleMapsUrl = Uri.parse("https://maps.apple.com/?q=${hospital.latitude},${hospital.longitude}");
+                
+                try {
+                  if (await canLaunchUrl(googleMapsUrl)) {
+                    await launchUrl(googleMapsUrl, mode: LaunchMode.externalApplication);
+                  } else if (await canLaunchUrl(appleMapsUrl)) {
+                    await launchUrl(appleMapsUrl, mode: LaunchMode.externalApplication);
+                  } else {
+                    throw 'Could not launch maps';
+                  }
+                } catch (e) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('Could not open maps: $e')),
+                    );
+                  }
+                }
+              } else {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(content: Text('Coordinates not available for this facility')),
+                  );
+                }
+              }
+            },
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+            ),
+            child: const Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.directions),
+                SizedBox(width: 8),
+                Text('Get Directions', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              ],
+            ),
           ),
           const SizedBox(height: 16),
         ],
@@ -235,7 +306,14 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
            child: Column(
              crossAxisAlignment: CrossAxisAlignment.start,
              children: [
-               Expanded(child: ClipRRect(borderRadius: BorderRadius.vertical(top: Radius.circular(12)), child: Image.network(p.images.first, fit: BoxFit.cover, errorBuilder: (c,e,s) => Icon(Icons.medication)))),
+               Expanded(
+                 child: ClipRRect(
+                   borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                   child: p.images.isNotEmpty && p.images.first.isNotEmpty
+                       ? Image.network(p.images.first, fit: BoxFit.cover, errorBuilder: (c, e, s) => const Icon(Icons.medication))
+                       : Container(color: Colors.grey.shade100, child: const Icon(Icons.medication, color: Colors.grey)),
+                 ),
+               ),
                Padding(
                  padding: const EdgeInsets.all(8.0),
                  child: Column(
@@ -258,7 +336,7 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
 
   Widget _buildLabTestsTab(Hospital hospital) {
     final tests = hospital.labTests ?? [];
-    if (tests.isEmpty) return const Center(child: Text('No lab tests listed'));
+    if (tests.isEmpty) return const Center(child: Text('No health services listed'));
 
     return ListView.builder(
       padding: const EdgeInsets.all(16),

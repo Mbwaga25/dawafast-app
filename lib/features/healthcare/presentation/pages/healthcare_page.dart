@@ -25,7 +25,7 @@ class _HealthcarePageState extends ConsumerState<HealthcarePage> {
   @override
   Widget build(BuildContext context) {
     final selectedFilter = ref.watch(selectedHealthcareFilterProvider);
-    final hospitalsAsyncValue = ref.watch(hospitalsProvider(selectedFilter == 'All' ? null : selectedFilter));
+    final hospitalsAsyncValue = ref.watch(hospitalsProvider((type: selectedFilter == 'All' ? null : selectedFilter, search: null)));
 
     return Scaffold(
       appBar: AppBar(

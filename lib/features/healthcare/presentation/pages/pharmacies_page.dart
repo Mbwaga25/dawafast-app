@@ -17,7 +17,7 @@ class _PharmaciesPageState extends ConsumerState<PharmaciesPage> {
 
   @override
   Widget build(BuildContext context) {
-    final pharmaciesAsyncValue = ref.watch(hospitalsProvider('PHARMACY'));
+    final pharmaciesAsyncValue = ref.watch(hospitalsProvider((type: 'PHARMACY', search: null)));
 
     return Scaffold(
       appBar: AppBar(

@@ -23,7 +23,12 @@ class LocationService {
     if (permission == LocationPermission.deniedForever) return null;
 
     try {
-      return await Geolocator.getCurrentPosition();
+      return await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.best,
+          distanceFilter: 10,
+        ),
+      );
     } catch (e) {
       final errorMsg = e.toString();
       // Silencing the 'Position update is unavailable' error which spams logs on Chrome/Web

@@ -9,7 +9,10 @@ import 'package:app/features/profile/presentation/pages/wishlist_page.dart';
 import 'package:app/features/home/presentation/pages/patient_appointments_page.dart';
 import 'package:app/features/home/presentation/pages/patient_orders_page.dart';
 import 'package:app/features/home/presentation/pages/patient_referrals_page.dart';
-
+import 'package:app/features/profile/presentation/pages/addresses_page.dart';
+import 'package:app/features/profile/presentation/pages/about_afyalink_page.dart';
+import 'package:app/features/profile/presentation/pages/help_support_page.dart';
+import 'package:app/features/healthcare/presentation/pages/patient_lab_reports_page.dart';
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 
@@ -20,30 +23,70 @@ class ProfilePage extends ConsumerWidget {
     return userAsync.when(
       data: (user) {
         if (user == null) {
-          return Center(
-            child: Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.account_circle_outlined, size: 80, color: AppTheme.textSecondary),
-                  const SizedBox(height: 16),
-                  const Text('Please login to view your profile', 
-                    style: TextStyle(color: AppTheme.textSecondary, fontSize: 16),
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(height: 24),
-                  ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginPage()));
-                    },
-                    style: ElevatedButton.styleFrom(
-                      minimumSize: const Size(200, 50),
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 48, horizontal: 24),
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [AppTheme.primaryTeal, AppTheme.primaryTeal.withOpacity(0.8)],
                     ),
-                    child: const Text('Login / Signup'),
                   ),
-                ],
-              ),
+                  child: Column(
+                    children: [
+                      const Icon(Icons.account_circle, size: 80, color: Colors.white),
+                      const SizedBox(height: 16),
+                      const Text(
+                        'Your Health Hub',
+                        style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(height: 8),
+                      const Text(
+                        'Log in to sync your medical records, track orders, and chat with doctors.',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(color: Colors.white70, fontSize: 14),
+                      ),
+                      const SizedBox(height: 32),
+                      ElevatedButton(
+                        onPressed: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginPage()));
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          foregroundColor: AppTheme.primaryTeal,
+                          minimumSize: const Size(220, 56),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                          elevation: 0,
+                        ),
+                        child: const Text('Log in to My Profile', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                      ),
+                    ],
+                  ),
+                ),
+                
+                const SizedBox(height: 16),
+                
+                _buildSection(context, 'Unlock Features', [
+                  _buildOption(Icons.receipt_long_outlined, 'Order Tracking', 'Real-time updates on your medicine', () => _showLoginPrompt(context)),
+                  _buildOption(Icons.biotech_outlined, 'Lab Reports', 'Access results from anywhere', () => _showLoginPrompt(context)),
+                  _buildOption(Icons.favorite_outline, 'Wishlist', 'Save your favorite products', () => _showLoginPrompt(context)),
+                ]),
+                
+                const SizedBox(height: 16),
+                
+                _buildSection(context, 'Support', [
+                  _buildOption(Icons.help_outline, 'Help & Support', 'Get assistance', 
+                    () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HelpSupportPage()))),
+                  _buildOption(Icons.info_outline, 'About AfyaLink', 'Learn more about our mission', 
+                    () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutAfyalinkPage()))),
+                ]),
+                
+                const SizedBox(height: 48),
+              ],
             ),
           );
         }
@@ -103,9 +146,9 @@ class ProfilePage extends ConsumerWidget {
             _buildOption(Icons.medical_services_outlined, 'My Consultations', 'History and upcoming',
               () => Navigator.push(context, MaterialPageRoute(builder: (_) => PatientAppointmentsPage()))),
             _buildOption(Icons.assignment_outlined, 'My Referrals', 'Professional referrals',
-              () => Navigator.push(context, MaterialPageRoute(builder: (_) => PatientReferralsPage()))),
+              () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PatientReferralsPage()))),
             _buildOption(Icons.biotech_outlined, 'Lab Reports', 'Download your results',
-              () => _showPlaceholder(context, 'Lab Reports')),
+              () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PatientLabReportsPage()))),
           ]),
 
           const SizedBox(height: 16),
@@ -114,16 +157,16 @@ class ProfilePage extends ConsumerWidget {
             _buildOption(Icons.favorite_outline, 'My Favorites', 'Hospitals and products',
               () => Navigator.push(context, MaterialPageRoute(builder: (_) => const WishlistPage()))),
             _buildOption(Icons.location_on_outlined, 'Manage Addresses', 'Saved delivery addresses',
-              () => _showPlaceholder(context, 'Manage Addresses')),
+              () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AddressesPage()))),
           ]),
 
           const SizedBox(height: 16),
 
           _buildSection(context, 'More', [
             _buildOption(Icons.help_outline, 'Help & Support', 'Get assistance',
-              () => _showPlaceholder(context, 'Help & Support')),
-            _buildOption(Icons.info_outline, 'About DawaFast', 'Learn more about us',
-              () => _showPlaceholder(context, 'About DawaFast')),
+              () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HelpSupportPage()))),
+            _buildOption(Icons.info_outline, 'About AfyaLink', 'Learn more about us',
+              () => Navigator.push(context, MaterialPageRoute(builder: (_) => const AboutAfyalinkPage()))),
           ]),
           
           const SizedBox(height: 24),
@@ -177,6 +220,21 @@ class ProfilePage extends ConsumerWidget {
       subtitle: Text(subtitle, style: const TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
       trailing: const Icon(Icons.chevron_right, size: 20),
       onTap: onTap,
+    );
+  }
+
+  void _showLoginPrompt(BuildContext context) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text('Please login to access this feature'),
+        action: SnackBarAction(
+          label: 'LOGIN',
+          textColor: AppTheme.accentTeal,
+          onPressed: () {
+            Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginPage()));
+          },
+        ),
+      ),
     );
   }
 
