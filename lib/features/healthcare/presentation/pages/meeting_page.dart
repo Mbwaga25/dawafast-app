@@ -216,9 +216,23 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                 ),
               ),
               const SizedBox(height: 40),
-              TextButton(
-                onPressed: () => Navigator.pop(context),
-                child: const Text('Cancel Request', style: TextStyle(color: Colors.redAccent)),
+              ElevatedButton(
+                onPressed: () async {
+                  try {
+                    final repo = ref.read(doctorsRepositoryProvider);
+                    final success = await repo.rejectAppointment(widget.appointmentId, reason: "Patient cancelled from meeting screen");
+                    if (mounted) {
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(success ? 'Request Cancelled' : 'Failed to cancel request'))
+                      );
+                    }
+                  } catch (e) {
+                    if (mounted) Navigator.pop(context);
+                  }
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.redAccent, foregroundColor: Colors.white),
+                child: const Text('Cancel Request'),
               ),
             ],
           ),

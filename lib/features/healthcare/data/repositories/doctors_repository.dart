@@ -138,7 +138,7 @@ class DoctorsRepository {
   ''';
 
   static const String _startCallSessionMutation = r'''
-    mutation StartCallSession($appointmentId: ID!) {
+    mutation StartCallSession($appointmentId: String!) {
       appointments {
         startCallSession(appointmentId: $appointmentId) {
           callSession {
@@ -153,7 +153,7 @@ class DoctorsRepository {
   ''';
 
   static const String _getCallSessionQuery = r'''
-    query GetCallSession($appointmentId: ID!) {
+    query GetCallSession($appointmentId: String!) {
       appointments {
         callSessionByAppointmentId(appointmentId: $appointmentId) {
           id
@@ -166,7 +166,7 @@ class DoctorsRepository {
   ''';
 
   static const String _rejectAppointmentMutation = r'''
-    mutation RejectAppointment($appointmentId: ID!, $reason: String) {
+    mutation RejectAppointment($appointmentId: String!, $reason: String) {
       appointments {
         cancelAppointment(appointmentId: $appointmentId, reason: $reason) {
           success
@@ -379,6 +379,7 @@ class DoctorsRepository {
         productIds: $productIds
       ) {
         success
+        errors
         referral {
           id
           status
@@ -666,7 +667,12 @@ class DoctorsRepository {
 
     final QueryResult result = await ApiClient.client.value.mutate(options);
     if (result.hasException) throw result.exception!;
-    return result.data?['referPatient']?['success'] ?? false;
+    final data = result.data?['referPatient'];
+    if (data?['success'] == false) {
+      final errorMsg = (data?['errors'] as List?)?.join(', ') ?? 'Unknown referral error';
+      throw Exception(errorMsg);
+    }
+    return true;
   }
 }
 

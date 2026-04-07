@@ -53,6 +53,17 @@ class AvailabilityRepository {
     }
   ''';
 
+  static const String _addAvailabilitySlotsMutation = r'''
+    mutation AddAvailabilitySlots($slots: [SlotInput!]!) {
+      appointments {
+        addAvailabilitySlots(slots: $slots) {
+          success
+          errors
+        }
+      }
+    }
+  ''';
+
   static const String _deleteAvailabilityMutation = r'''
     mutation DeleteAvailability($id: ID!) {
       appointments {
@@ -87,7 +98,28 @@ class AvailabilityRepository {
 
     final QueryResult result = await ApiClient.client.value.mutate(options);
     if (result.hasException) throw result.exception!;
-    return result.data?['appointments']?['createAvailability']?['success'] ?? false;
+    final data = result.data?['appointments']?['createAvailability'];
+    if (data?['success'] == false) {
+       throw Exception((data?['errors'] as List?)?.join(', ') ?? 'Failed to create availability');
+    }
+    return true;
+  }
+
+  Future<bool> addAvailabilitySlots(List<Map<String, String>> slots) async {
+    final MutationOptions options = MutationOptions(
+      document: gql(_addAvailabilitySlotsMutation),
+      variables: {
+        'slots': slots,
+      },
+    );
+
+    final QueryResult result = await ApiClient.client.value.mutate(options);
+    if (result.hasException) throw result.exception!;
+    final data = result.data?['appointments']?['addAvailabilitySlots'];
+    if (data?['success'] == false) {
+       throw Exception((data?['errors'] as List?)?.join(', ') ?? 'Failed to add availability slots');
+    }
+    return true;
   }
 
   Future<bool> deleteAvailability(String id) async {
