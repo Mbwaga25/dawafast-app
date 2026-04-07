@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app/core/theme.dart';
-import 'package:app/features/auth/data/models/user_model.dart';
-import 'package:app/features/orders/data/repositories/order_repository.dart';
-import 'package:app/features/notifications/data/repositories/notification_repository.dart';
-import 'package:app/features/notifications/presentation/pages/notification_page.dart';
+import 'package:afyalink/core/theme.dart';
+import 'package:afyalink/features/auth/data/models/user_model.dart';
+import 'package:afyalink/features/orders/data/repositories/order_repository.dart';
+import 'package:afyalink/features/notifications/data/repositories/notification_repository.dart';
+import 'package:afyalink/features/notifications/presentation/pages/notification_page.dart';
 
 class AdminDashboard extends ConsumerStatefulWidget {
   final User user;

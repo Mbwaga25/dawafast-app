@@ -4,7 +4,7 @@ import '../../../../core/api_client.dart';
 import '../../../../core/theme.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/user_repository.dart';
-import 'package:app/features/home/presentation/pages/home_page.dart';
+import 'package:afyalink/features/home/presentation/pages/home_page.dart';
 import 'signup_page.dart';
 
 class LoginPage extends ConsumerStatefulWidget {

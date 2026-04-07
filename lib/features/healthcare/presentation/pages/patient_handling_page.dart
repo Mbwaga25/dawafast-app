@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/theme.dart';
+import 'package:afyalink/core/theme.dart';
 
 class PatientHandlingPage extends StatelessWidget {
   final String appointmentId;

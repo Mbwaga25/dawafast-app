@@ -2,11 +2,11 @@ import 'dart:html' as html;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:app/core/theme.dart';
-import 'package:app/core/api_client.dart';
-import 'package:app/features/cart/presentation/pages/order_success_page.dart';
-import 'package:app/features/cart/presentation/providers/cart_provider.dart';
-import 'package:app/features/profile/data/repositories/settings_repository.dart';
+import 'package:afyalink/core/theme.dart';
+import 'package:afyalink/core/api_client.dart';
+import 'package:afyalink/features/cart/presentation/pages/order_success_page.dart';
+import 'package:afyalink/features/cart/presentation/providers/cart_provider.dart';
+import 'package:afyalink/features/profile/data/repositories/settings_repository.dart';
 
 // --- Riverpod providers for geo location ---
 

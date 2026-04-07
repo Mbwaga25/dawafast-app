@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:app/core/theme.dart';
-import 'package:app/features/appointments/data/repositories/appointment_repository.dart';
-import 'package:app/features/appointments/data/models/appointment_model.dart';
-import 'package:app/features/appointments/presentation/pages/chat_page.dart';
-import 'package:app/features/healthcare/presentation/widgets/instant_call_button.dart';
-import 'package:app/features/healthcare/presentation/pages/meeting_page.dart';
+import 'package:afyalink/core/theme.dart';
+import 'package:afyalink/features/appointments/data/repositories/appointment_repository.dart';
+import 'package:afyalink/features/appointments/data/models/appointment_model.dart';
+import 'package:afyalink/features/appointments/presentation/pages/chat_page.dart';
+import 'package:afyalink/features/healthcare/presentation/widgets/instant_call_button.dart';
+import 'package:afyalink/features/healthcare/presentation/pages/meeting_page.dart';
 
 class PatientAppointmentsPage extends ConsumerStatefulWidget {
   const PatientAppointmentsPage({super.key});

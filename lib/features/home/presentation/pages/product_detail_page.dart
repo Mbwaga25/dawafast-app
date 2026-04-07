@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:app/core/theme.dart';
-import 'package:app/features/offers/data/repositories/marketplace_repository.dart';
-import 'package:app/features/offers/data/models/product_model.dart';
-import 'package:app/features/profile/data/repositories/settings_repository.dart';
-import 'package:app/features/cart/presentation/providers/cart_provider.dart';
-import 'package:app/features/cart/presentation/pages/cart_page.dart';
-import 'package:app/features/cart/presentation/pages/checkout_page.dart';
-import 'package:app/features/cart/data/models/cart_model.dart';
-import 'package:app/features/profile/presentation/providers/wishlist_provider.dart';
-import 'package:app/features/offers/presentation/providers/compare_provider.dart';
-import 'package:app/features/offers/presentation/pages/compare_page.dart';
+import 'package:afyalink/core/theme.dart';
+import 'package:afyalink/features/offers/data/repositories/marketplace_repository.dart';
+import 'package:afyalink/features/offers/data/models/product_model.dart';
+import 'package:afyalink/features/profile/data/repositories/settings_repository.dart';
+import 'package:afyalink/features/cart/presentation/providers/cart_provider.dart';
+import 'package:afyalink/features/cart/presentation/pages/cart_page.dart';
+import 'package:afyalink/features/cart/presentation/pages/checkout_page.dart';
+import 'package:afyalink/features/cart/data/models/cart_model.dart';
+import 'package:afyalink/features/profile/presentation/providers/wishlist_provider.dart';
+import 'package:afyalink/features/offers/presentation/providers/compare_provider.dart';
+import 'package:afyalink/features/offers/presentation/pages/compare_page.dart';
 
 class ProductDetailPage extends ConsumerWidget {
   final String idOrSlug;

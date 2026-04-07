@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app/core/theme.dart';
-import 'package:app/features/healthcare/data/repositories/healthcare_repository.dart';
+import 'package:afyalink/core/theme.dart';
+import 'package:afyalink/features/healthcare/data/repositories/healthcare_repository.dart';
+import 'package:geolocator/geolocator.dart';
+import '../../../../core/services/location_service.dart';
 
 class HospitalCreatePage extends ConsumerStatefulWidget {
   const HospitalCreatePage({super.key});
@@ -20,6 +22,7 @@ class _HospitalCreatePageState extends ConsumerState<HospitalCreatePage> {
   
   String _selectedType = 'HOSPITAL';
   bool _isLoading = false;
+  final _locationService = LocationService();
 
   @override
   void dispose() {
@@ -36,13 +39,21 @@ class _HospitalCreatePageState extends ConsumerState<HospitalCreatePage> {
     
     setState(() => _isLoading = true);
     try {
+      // Attempt to get current location
+      Position? position;
+      try {
+        position = await _locationService.getCurrentPosition();
+      } catch (e) {
+        debugPrint('Location service error: $e');
+      }
+
       final repo = ref.read(healthcareRepositoryProvider);
       final result = await repo.createStore(
         name: _nameController.text,
         storeType: _selectedType,
         address: _addressController.text,
-        latitude: -6.7924, // Mock coordinates for Dar es Salaam
-        longitude: 39.2083,
+        latitude: position?.latitude ?? -6.7924, // Fallback to DSM
+        longitude: position?.longitude ?? 39.2083,
         description: _descController.text,
         phoneNumber: _phoneController.text,
         email: _emailController.text,

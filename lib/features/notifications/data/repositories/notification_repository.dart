@@ -42,7 +42,9 @@ class NotificationRepository {
     );
 
     final QueryResult result = await ApiClient.client.value.query(options);
-    if (result.hasException) throw result.exception!;
+    if (result.hasException) {
+      throw result.exception ?? Exception('Unknown GraphQL error');
+    }
 
     final List data = result.data?['myNotifications'] ?? [];
     return data.map((json) => AppNotification.fromJson(json)).toList();
@@ -55,7 +57,9 @@ class NotificationRepository {
     );
 
     final QueryResult result = await ApiClient.client.value.mutate(options);
-    if (result.hasException) throw result.exception!;
+    if (result.hasException) {
+      throw result.exception ?? Exception('Unknown GraphQL error');
+    }
     return result.data?['markNotificationRead']?['success'] ?? false;
   }
 }

@@ -7,7 +7,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>App</string>
+	<string>AfyaLink</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>app</string>
+	<string>AfyaLink</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -67,10 +67,21 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
 	<key>NSCameraUsageDescription</key>
-	<string>We need camera access to allow you to take photos of medical prescriptions and profile pictures.</string>
+	<string>AfyaLink needs camera access to allow you to take photos of medical prescriptions and profile pictures.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>We need your location to find the nearest pharmacies, hospitals, and laboratories to you.</string>
+	<string>AfyaLink needs your location to find the nearest pharmacies, hospitals, and laboratories to you.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>We need your location to show you healthcare services nearby even when the app is in background.</string>
+	<string>AfyaLink needs your location to show you healthcare services nearby even when the app is in background.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>AfyaLink needs access to your photo library to allow you to upload images of medical prescriptions and profile photos.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>AfyaLink requires microphone access for audio communication during telemedicine video consultations.</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>googlechromes</string>
+		<string>comgooglemaps</string>
+		<string>iosamap</string>
+		<string>itms-apps</string>
+	</array>
 </dict>
 </plist>

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app/core/theme.dart';
-import 'package:app/features/healthcare/data/models/hospital_model.dart';
-import 'package:app/features/healthcare/data/repositories/healthcare_repository.dart';
-import 'package:app/features/healthcare/presentation/pages/hospital_detail_page.dart';
-import 'package:app/features/healthcare/presentation/widgets/hospital_card.dart';
-import 'package:app/features/healthcare/presentation/pages/doctors_page.dart';
-import 'package:app/features/healthcare/presentation/pages/pharmacies_page.dart';
-import 'package:app/features/healthcare/presentation/pages/labs_page.dart';
-import 'package:app/features/healthcare/presentation/pages/telemedicine_page.dart';
-import 'package:app/features/cart/presentation/providers/cart_provider.dart';
-import 'package:app/features/cart/presentation/pages/cart_page.dart';
+import 'package:afyalink/core/theme.dart';
+import 'package:afyalink/features/healthcare/data/models/hospital_model.dart';
+import 'package:afyalink/features/healthcare/data/repositories/healthcare_repository.dart';
+import 'package:afyalink/features/healthcare/presentation/pages/hospital_detail_page.dart';
+import 'package:afyalink/features/healthcare/presentation/widgets/hospital_card.dart';
+import 'package:afyalink/features/healthcare/presentation/pages/doctors_page.dart';
+import 'package:afyalink/features/healthcare/presentation/pages/pharmacies_page.dart';
+import 'package:afyalink/features/healthcare/presentation/pages/labs_page.dart';
+import 'package:afyalink/features/healthcare/presentation/pages/telemedicine_page.dart';
+import 'package:afyalink/features/cart/presentation/providers/cart_provider.dart';
+import 'package:afyalink/features/cart/presentation/pages/cart_page.dart';
 
 final selectedHealthcareFilterProvider = StateProvider<String>((ref) => 'All');
 

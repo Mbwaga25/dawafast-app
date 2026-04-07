@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app/core/theme.dart';
+import 'package:afyalink/core/theme.dart';
 import 'package:intl/intl.dart';
-import 'package:app/features/healthcare/data/repositories/doctors_repository.dart';
-import 'package:app/features/healthcare/data/models/doctor_model.dart';
-import 'package:app/features/auth/data/repositories/user_repository.dart';
-import 'package:app/core/ui_utils.dart';
-import 'package:app/features/appointments/presentation/pages/chat_page.dart';
-import 'package:app/features/appointments/data/repositories/appointment_repository.dart';
+import 'package:afyalink/features/healthcare/data/repositories/doctors_repository.dart';
+import 'package:afyalink/features/healthcare/data/models/doctor_model.dart';
+import 'package:afyalink/features/auth/data/repositories/user_repository.dart';
+import 'package:afyalink/core/ui_utils.dart';
+import 'package:afyalink/features/appointments/presentation/pages/chat_page.dart';
+import 'package:afyalink/features/appointments/data/repositories/appointment_repository.dart';
 
 class DoctorDetailPage extends ConsumerWidget {
   final String doctorId;

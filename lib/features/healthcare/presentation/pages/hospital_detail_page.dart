@@ -1,18 +1,18 @@
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app/core/theme.dart';
-import 'package:app/features/healthcare/data/repositories/healthcare_repository.dart';
-import 'package:app/features/healthcare/data/models/hospital_model.dart';
-import 'package:app/features/appointments/presentation/pages/chat_page.dart';
-import 'package:app/features/appointments/data/repositories/appointment_repository.dart';
+import 'package:afyalink/core/theme.dart';
+import 'package:afyalink/features/healthcare/data/repositories/healthcare_repository.dart';
+import 'package:afyalink/features/healthcare/data/models/hospital_model.dart';
+import 'package:afyalink/features/appointments/presentation/pages/chat_page.dart';
+import 'package:afyalink/features/appointments/data/repositories/appointment_repository.dart';
 
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:app/core/services/location_service.dart';
+import 'package:afyalink/core/services/location_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:app/features/cart/presentation/providers/cart_provider.dart';
-import 'package:app/features/cart/data/models/cart_model.dart';
+import 'package:afyalink/features/cart/presentation/providers/cart_provider.dart';
+import 'package:afyalink/features/cart/data/models/cart_model.dart';
 
 class HospitalDetailPage extends ConsumerStatefulWidget {
   final String idOrSlug;
@@ -389,8 +389,9 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
             ),
           } : {},
           myLocationEnabled: true,
-          zoomControlsEnabled: false,
-          mapToolbarEnabled: false,
+          myLocationButtonEnabled: true,
+          zoomControlsEnabled: true,
+          mapToolbarEnabled: true,
         ),
         
         // Floating HUD for Directivity

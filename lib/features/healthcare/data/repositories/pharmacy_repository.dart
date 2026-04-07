@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:app/core/api_client.dart';
+import 'package:afyalink/core/api_client.dart';
 
 class MutationResult {
   final bool success;

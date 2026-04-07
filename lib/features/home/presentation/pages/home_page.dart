@@ -1,40 +1,43 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app/core/theme.dart';
-import 'package:app/features/auth/data/models/user_model.dart';
-import 'package:app/features/auth/data/repositories/user_repository.dart';
-import 'package:app/features/offers/data/models/product_model.dart';
-import 'package:app/features/offers/data/models/brand_model.dart';
-import 'package:app/features/offers/data/repositories/marketplace_repository.dart';
-import 'package:app/features/profile/data/repositories/settings_repository.dart';
-import 'package:app/features/offers/presentation/pages/category_page.dart';
-import 'package:app/features/offers/presentation/pages/offers_page.dart';
-import 'package:app/features/auth/data/repositories/auth_repository.dart';
-import 'package:app/features/home/presentation/pages/product_detail_page.dart';
-import 'package:app/features/home/presentation/widgets/dashboards/patient_dashboard.dart';
-import 'package:app/features/home/presentation/widgets/dashboards/doctor_dashboard.dart';
-import 'package:app/features/home/presentation/widgets/dashboards/doctor_schedule_tab.dart';
-import 'package:app/features/home/presentation/widgets/dashboards/doctor_patients_tab.dart';
-import 'package:app/features/home/presentation/widgets/dashboards/doctor_chat_tab.dart';
-import 'package:app/features/home/presentation/widgets/dashboards/lab_dashboard.dart';
-import 'package:app/features/home/presentation/widgets/dashboards/pharmacy_dashboard.dart';
-import 'package:app/features/home/presentation/widgets/dashboards/admin_dashboard.dart';
-import 'package:app/features/home/presentation/widgets/dashboards/hospital_dashboard.dart';
-import 'package:app/features/healthcare/presentation/pages/healthcare_page.dart';
-import 'package:app/features/cart/presentation/providers/cart_provider.dart';
-import 'package:app/features/cart/presentation/pages/cart_page.dart';
-import 'package:app/features/cart/data/models/cart_model.dart';
-import 'package:app/features/home/presentation/pages/search_page.dart';
-import 'package:app/features/healthcare/presentation/pages/telemedicine_page.dart';
-import 'package:app/features/offers/presentation/pages/brands_page.dart';
-import 'package:app/features/profile/presentation/pages/settings_page.dart';
-import 'package:app/features/profile/presentation/pages/profile_page.dart';
-import 'package:app/features/profile/presentation/pages/doctor_profile_page.dart';
-import 'package:app/features/auth/presentation/pages/login_page.dart';
-import 'package:app/core/widgets/product_image.dart';
-import 'package:app/core/providers/location_provider.dart';
-import 'package:app/features/home/presentation/widgets/location_picker_sheet.dart';
+import 'package:afyalink/core/theme.dart';
+import 'package:afyalink/features/auth/data/models/user_model.dart';
+import 'package:afyalink/features/auth/data/repositories/user_repository.dart';
+import 'package:afyalink/features/offers/data/models/product_model.dart';
+import 'package:afyalink/features/offers/data/models/brand_model.dart';
+import 'package:afyalink/features/offers/data/repositories/marketplace_repository.dart';
+import 'package:afyalink/features/profile/data/repositories/settings_repository.dart';
+import 'package:afyalink/features/offers/presentation/pages/category_page.dart';
+import 'package:afyalink/features/offers/presentation/pages/offers_page.dart';
+import 'package:afyalink/features/auth/data/repositories/auth_repository.dart';
+import 'package:afyalink/features/home/presentation/pages/product_detail_page.dart';
+import 'package:afyalink/features/home/presentation/widgets/dashboards/patient_dashboard.dart';
+import 'package:afyalink/features/home/presentation/widgets/dashboards/doctor_dashboard.dart';
+import 'package:afyalink/features/home/presentation/widgets/dashboards/doctor_schedule_tab.dart';
+import 'package:afyalink/features/home/presentation/widgets/dashboards/doctor_patients_tab.dart';
+import 'package:afyalink/features/home/presentation/widgets/dashboards/doctor_chat_tab.dart';
+import 'package:afyalink/features/home/presentation/widgets/dashboards/lab_dashboard.dart';
+import 'package:afyalink/features/home/presentation/widgets/dashboards/pharmacy_dashboard.dart';
+import 'package:afyalink/features/home/presentation/widgets/dashboards/admin_dashboard.dart';
+import 'package:afyalink/features/home/presentation/widgets/dashboards/hospital_dashboard.dart';
+import 'package:afyalink/features/healthcare/presentation/pages/healthcare_page.dart';
+import 'package:afyalink/features/cart/presentation/providers/cart_provider.dart';
+import 'package:afyalink/features/cart/presentation/pages/cart_page.dart';
+import 'package:afyalink/features/cart/data/models/cart_model.dart';
+import 'package:afyalink/features/home/presentation/pages/search_page.dart';
+import 'package:afyalink/features/healthcare/presentation/pages/telemedicine_page.dart';
+import 'package:afyalink/features/healthcare/presentation/pages/labs_page.dart';
+import 'package:afyalink/features/healthcare/presentation/pages/pharmacies_page.dart';
+import 'package:afyalink/features/offers/presentation/pages/brands_page.dart';
+import 'package:afyalink/features/profile/presentation/pages/settings_page.dart';
+import 'package:afyalink/features/profile/presentation/pages/profile_page.dart';
+import 'package:afyalink/features/profile/presentation/pages/doctor_profile_page.dart';
+import 'package:afyalink/features/auth/presentation/pages/login_page.dart';
+import 'package:afyalink/core/widgets/product_image.dart';
+import 'package:afyalink/core/providers/location_provider.dart';
+import 'package:afyalink/features/notifications/presentation/widgets/notification_bell.dart';
+import 'package:afyalink/features/home/presentation/widgets/location_picker_sheet.dart';
 
 // ─── Bottom Nav Index Provider ────────────────────────────────────────────────
 final tabIndexProvider = StateProvider<int>((ref) => 0);
@@ -191,6 +194,7 @@ class HomePage extends ConsumerWidget {
         ),
       ),
       actions: [
+        const NotificationBell(),
         Consumer(
           builder: (context, ref, child) {
             final userAsync = ref.watch(currentUserProvider);
@@ -252,8 +256,19 @@ class HomePage extends ConsumerWidget {
   }
 
   Widget _buildBottomNav(BuildContext context, WidgetRef ref, int index) {
+    final user = ref.watch(currentUserProvider).value;
+    
+    final items = [
+      const BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Home'),
+      const BottomNavigationBarItem(icon: Icon(Icons.medication_outlined), activeIcon: Icon(Icons.medication), label: 'Medicines'),
+      const BottomNavigationBarItem(icon: Icon(Icons.biotech_outlined), activeIcon: Icon(Icons.biotech), label: 'Health Services'),
+      const BottomNavigationBarItem(icon: Icon(Icons.video_call_outlined), activeIcon: Icon(Icons.video_call), label: 'Consult'),
+      if (user != null)
+        const BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
+    ];
+
     return BottomNavigationBar(
-      currentIndex: index,
+      currentIndex: index > items.length - 1 ? 0 : index,
       onTap: (i) => ref.read(tabIndexProvider.notifier).state = i,
       selectedItemColor: AppTheme.primaryTeal,
       unselectedItemColor: AppTheme.textSecondary,
@@ -261,13 +276,7 @@ class HomePage extends ConsumerWidget {
       selectedFontSize: 11,
       unselectedFontSize: 11,
       elevation: 8,
-      items: const [
-        BottomNavigationBarItem(icon: Icon(Icons.home_outlined), activeIcon: Icon(Icons.home), label: 'Home'),
-        BottomNavigationBarItem(icon: Icon(Icons.medication_outlined), activeIcon: Icon(Icons.medication), label: 'Medicines'),
-        BottomNavigationBarItem(icon: Icon(Icons.biotech_outlined), activeIcon: Icon(Icons.biotech), label: 'Health Services'),
-        BottomNavigationBarItem(icon: Icon(Icons.video_call_outlined), activeIcon: Icon(Icons.video_call), label: 'Consult'),
-        BottomNavigationBarItem(icon: Icon(Icons.person_outline), activeIcon: Icon(Icons.person), label: 'Profile'),
-      ],
+      items: items,
     );
   }
 
@@ -454,7 +463,13 @@ class HomePage extends ConsumerWidget {
           final bg = tile['bg'] as Color;
           return GestureDetector(
             onTap: () {
-              if (i == 1 || i == 4) {
+              if (i == 0 || i == 5) {
+                ref.read(tabIndexProvider.notifier).state = 1; // Medicines/Wellness
+              } else if (i == 1) {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const LabsPage())); 
+              } else if (i == 4) {
+                Navigator.push(context, MaterialPageRoute(builder: (_) => const PharmaciesPage()));
+              } else if (i == 3) {
                 Navigator.push(context, MaterialPageRoute(builder: (_) => const HealthcarePage()));
               } else if (i == 2) {
                 Navigator.push(context, MaterialPageRoute(builder: (_) => const TelemedicinePage()));
@@ -768,7 +783,7 @@ class _PromoBannerCarouselState extends State<_PromoBannerCarousel> {
     _BannerData(
       gradient: [Color(0xFF1565C0), Color(0xFF42A5F5)],
       title: '25% OFF on all Medicines',
-      subtitle: 'Use code DAWAFAST25 at checkout',
+      subtitle: 'Use code AFYALINK25 at checkout',
       icon: Icons.medication,
     ),
     _BannerData(
@@ -821,35 +836,48 @@ class _PromoBannerCarouselState extends State<_PromoBannerCarousel> {
             itemCount: _banners.length,
             itemBuilder: (context, i) {
               final banner = _banners[i];
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 12),
-                child: Container(
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: banner.gradient, begin: Alignment.topLeft, end: Alignment.bottomRight),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  padding: const EdgeInsets.all(20),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(banner.title, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold, height: 1.2)),
-                            const SizedBox(height: 8),
-                            Text(banner.subtitle, style: TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 13)),
-                            const SizedBox(height: 12),
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
-                              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
-                              child: Text('Shop Now', style: TextStyle(color: banner.gradient[0], fontWeight: FontWeight.bold, fontSize: 12)),
-                            ),
-                          ],
-                        ),
+              return Consumer(
+                builder: (context, ref, child) => GestureDetector(
+                  onTap: () {
+                    if (i == 0 || i == 3) {
+                      ref.read(tabIndexProvider.notifier).state = 1; // Medicines/Wellness
+                    } else if (i == 1) {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => const LabsPage()));
+                    } else if (i == 2) {
+                      Navigator.push(context, MaterialPageRoute(builder: (_) => const TelemedicinePage()));
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(colors: banner.gradient, begin: Alignment.topLeft, end: Alignment.bottomRight),
+                        borderRadius: BorderRadius.circular(16),
                       ),
-                      Icon(banner.icon, color: Colors.white.withOpacity(0.25), size: 80),
-                    ],
+                      padding: const EdgeInsets.all(20),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(banner.title, style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold, height: 1.2)),
+                                const SizedBox(height: 8),
+                                Text(banner.subtitle, style: TextStyle(color: Colors.white.withOpacity(0.85), fontSize: 13)),
+                                const SizedBox(height: 12),
+                                Container(
+                                  padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 7),
+                                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+                                  child: Text('Shop Now', style: TextStyle(color: banner.gradient[0], fontWeight: FontWeight.bold, fontSize: 12)),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Icon(banner.icon, color: Colors.white.withOpacity(0.25), size: 80),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
               );

@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app/features/offers/data/models/product_model.dart';
+import 'package:afyalink/features/offers/data/models/product_model.dart';
 
 final wishlistProvider = StateNotifierProvider<WishlistNotifier, List<Product>>((ref) {
   return WishlistNotifier();

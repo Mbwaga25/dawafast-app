@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app/core/theme.dart';
-import 'package:app/features/auth/data/models/user_model.dart';
-import 'package:app/features/appointments/data/models/appointment_model.dart';
+import 'package:afyalink/core/theme.dart';
+import 'package:afyalink/features/auth/data/models/user_model.dart';
+import 'package:afyalink/features/appointments/data/models/appointment_model.dart';
 
 // --- Local Providers for Lab Workflow ---
 

@@ -58,7 +58,7 @@ class MarketplaceRepository {
     final QueryResult result = await ApiClient.client.value.query(options);
 
     if (result.hasException) {
-      throw result.exception!;
+      throw result.exception ?? Exception('GraphQL Operation Failed');
     }
 
     final dynamic segmentsData = result.data?['allSegments'];
@@ -109,7 +109,7 @@ class MarketplaceRepository {
     final QueryResult result = await ApiClient.client.value.query(options);
 
     if (result.hasException) {
-      throw result.exception!;
+      throw result.exception ?? Exception('GraphQL Operation Failed');
     }
 
     final dynamic categoriesData = result.data?['allCategories'];
@@ -139,7 +139,7 @@ class MarketplaceRepository {
     final QueryResult result = await ApiClient.client.value.query(options);
 
     if (result.hasException) {
-      throw result.exception!;
+      throw result.exception ?? Exception('GraphQL Operation Failed');
     }
 
     final dynamic productsData = result.data?['allProducts'];
@@ -191,7 +191,7 @@ class MarketplaceRepository {
     final QueryResult result = await ApiClient.client.value.query(options);
 
     if (result.hasException) {
-      throw result.exception!;
+      throw result.exception ?? Exception('GraphQL Operation Failed');
     }
 
     final data = result.data?['productByIdOrSlug'];
@@ -221,7 +221,7 @@ class MarketplaceRepository {
     final QueryResult result = await ApiClient.client.value.query(options);
 
     if (result.hasException) {
-      throw result.exception!;
+      throw result.exception ?? Exception('GraphQL Operation Failed');
     }
 
     final dynamic brandsData = result.data?['allBrands'];

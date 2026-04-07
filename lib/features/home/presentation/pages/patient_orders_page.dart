@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:app/core/theme.dart';
-import 'package:app/features/orders/data/repositories/order_repository.dart';
-import 'package:app/features/orders/data/models/order_model.dart';
-import 'package:app/features/appointments/data/repositories/appointment_repository.dart';
-import 'package:app/features/appointments/presentation/pages/chat_page.dart';
+import 'package:afyalink/core/theme.dart';
+import 'package:afyalink/features/orders/data/repositories/order_repository.dart';
+import 'package:afyalink/features/orders/data/models/order_model.dart';
+import 'package:afyalink/features/appointments/data/repositories/appointment_repository.dart';
+import 'package:afyalink/features/appointments/presentation/pages/chat_page.dart';
 
 class PatientOrdersPage extends ConsumerWidget {
   const PatientOrdersPage({super.key});

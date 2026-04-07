@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:app/core/services/location_service.dart';
+import 'package:afyalink/core/services/location_service.dart';
 import '../../../../core/theme.dart';
-import 'package:app/features/healthcare/presentation/pages/hospital_detail_page.dart';
+import 'package:afyalink/features/healthcare/presentation/pages/hospital_detail_page.dart';
 import '../../data/models/hospital_model.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 

@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class AppTheme {
-  // Slate/Blue theme inspired by Dawafast Web Frontend (globals.css OKLCH colors)
-  static const Color primaryTeal = Color(0xFF0D837C); // Dawafast Brand Teal
+  // Slate/Blue theme inspired by AfyaLink Web Frontend (globals.css OKLCH colors)
+  static const Color primaryTeal = Color(0xFF0D837C); // AfyaLink Brand Teal
   static const Color accentTeal = Color(0xFF14B8A6); // Brighter teal for highlights
   static const Color backgroundWhite = Color(0xFFF8FAFC); // Slate 50 (Off-white)
   static const Color surfaceWhite = Color(0xFFFFFFFF);
   static const Color textPrimary = Color(0xFF0F172A); // Slate 900
   static const Color textSecondary = Color(0xFF64748B); // Slate 500
   static const Color borderColor = Color(0xFFE2E8F0); // Slate 200
+  static const Color primaryBlue = Color(0xFF1E40AF); // Blue 800 (for secondary actions)
 
   static final TextStyle headingStyle = GoogleFonts.inter(
     color: textPrimary,
@@ -62,7 +63,7 @@ class AppTheme {
       cardTheme: CardThemeData(
         elevation: 0,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10), // Dawafast Web radius (0.625rem = 10px)
+          borderRadius: BorderRadius.circular(10), // AfyaLink Web radius (0.625rem = 10px)
           side: const BorderSide(color: borderColor),
         ),
         color: surfaceWhite,

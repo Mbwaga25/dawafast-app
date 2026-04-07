@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:app/core/theme.dart';
+import 'package:afyalink/core/theme.dart';
 
 const String requestInstantCallMutation = r'''
   mutation RequestInstantCall($appointmentId: ID!) {

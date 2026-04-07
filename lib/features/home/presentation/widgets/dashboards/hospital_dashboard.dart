@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app/core/theme.dart';
+import 'package:afyalink/core/theme.dart';
 import 'package:intl/intl.dart';
-import 'package:app/features/auth/data/models/user_model.dart';
-import 'package:app/features/appointments/data/repositories/appointment_repository.dart';
-import 'package:app/features/home/presentation/widgets/dashboards/pharmacy_dashboard.dart' as pharmacy;
-import 'package:app/features/home/presentation/widgets/dashboards/lab_dashboard.dart' as lab;
+import 'package:afyalink/features/auth/data/models/user_model.dart';
+import 'package:afyalink/features/appointments/data/repositories/appointment_repository.dart';
+import 'package:afyalink/features/home/presentation/widgets/dashboards/pharmacy_dashboard.dart' as pharmacy;
+import 'package:afyalink/features/home/presentation/widgets/dashboards/lab_dashboard.dart' as lab;
 
 class HospitalDashboard extends ConsumerStatefulWidget {
   final User user;

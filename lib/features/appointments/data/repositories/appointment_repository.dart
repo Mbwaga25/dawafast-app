@@ -1,10 +1,10 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
-import 'package:app/core/api_client.dart';
-import 'package:app/features/appointments/data/models/appointment_model.dart';
-import 'package:app/features/appointments/data/models/chat_model.dart';
-import 'package:app/features/auth/data/repositories/user_repository.dart';
+import 'package:afyalink/core/api_client.dart';
+import 'package:afyalink/features/appointments/data/models/appointment_model.dart';
+import 'package:afyalink/features/appointments/data/models/chat_model.dart';
+import 'package:afyalink/features/auth/data/repositories/user_repository.dart';
 
 final appointmentRepositoryProvider = Provider((ref) => AppointmentRepository());
 

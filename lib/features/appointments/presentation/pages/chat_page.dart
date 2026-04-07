@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:app/core/theme.dart';
-import 'package:app/features/appointments/data/repositories/appointment_repository.dart';
-import 'package:app/features/appointments/data/models/chat_model.dart';
-import 'package:app/features/auth/data/repositories/user_repository.dart';
-import 'package:app/core/services/location_service.dart';
-import 'package:app/core/services/media_service.dart';
+import 'package:afyalink/core/theme.dart';
+import 'package:afyalink/features/appointments/data/repositories/appointment_repository.dart';
+import 'package:afyalink/features/appointments/data/models/chat_model.dart';
+import 'package:afyalink/features/auth/data/repositories/user_repository.dart';
+import 'package:afyalink/core/services/location_service.dart';
+import 'package:afyalink/core/services/media_service.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
   final String appointmentId;

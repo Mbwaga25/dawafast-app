@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app/core/theme.dart';
-import 'package:app/features/offers/data/models/product_model.dart';
-import 'package:app/features/offers/data/repositories/marketplace_repository.dart';
-import 'package:app/features/profile/data/repositories/settings_repository.dart';
-import 'package:app/features/home/presentation/pages/product_detail_page.dart';
+import 'package:afyalink/core/theme.dart';
+import 'package:afyalink/features/offers/data/models/product_model.dart';
+import 'package:afyalink/features/offers/data/repositories/marketplace_repository.dart';
+import 'package:afyalink/features/profile/data/repositories/settings_repository.dart';
+import 'package:afyalink/features/home/presentation/pages/product_detail_page.dart';
 
 class CategoryPage extends ConsumerWidget {
   final Category category;

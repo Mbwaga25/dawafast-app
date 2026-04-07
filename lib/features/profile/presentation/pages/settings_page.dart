@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app/core/theme.dart';
-import 'package:app/features/auth/data/repositories/user_repository.dart';
-import 'package:app/features/profile/data/repositories/settings_repository.dart';
-import 'package:app/features/auth/data/models/user_model.dart';
+import 'package:afyalink/core/theme.dart';
+import 'package:afyalink/features/auth/data/repositories/user_repository.dart';
+import 'package:afyalink/features/profile/data/repositories/settings_repository.dart';
+import 'package:afyalink/features/auth/data/models/user_model.dart';
+import 'package:afyalink/features/auth/data/repositories/auth_repository.dart';
+import 'package:afyalink/features/auth/presentation/pages/login_page.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
   const SettingsPage({super.key});
@@ -97,8 +100,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     final tabs = [
       const Tab(icon: Icon(Icons.person_outline), text: 'Profile'),
       if (isDoctor) const Tab(icon: Icon(Icons.work_outline), text: 'Professional'),
-      const Tab(icon: Icon(Icons.palette_outlined), text: 'Appearance'),
-      const Tab(icon: Icon(Icons.security_outlined), text: 'Security'),
+      const Tab(icon: Icon(Icons.palette_outlined), text: 'Preferences'),
+      const Tab(icon: Icon(Icons.security_outlined), text: 'Account'),
     ];
 
     final views = [
@@ -303,10 +306,70 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Text('Security', style: TextStyle(color: AppTheme.textSecondary, fontWeight: FontWeight.bold)),
+        ),
         _buildMenuOption(Icons.lock_outline, 'Change Password', 'Update your login protection'),
         _buildMenuOption(Icons.fingerprint, 'Biometric Login', 'Use face or fingerprint ID'),
         _buildMenuOption(Icons.devices, 'Managed Devices', 'Devices logged into your account'),
+        
+        const Divider(height: 32),
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          child: Text('Legal & Support', style: TextStyle(color: AppTheme.textSecondary, fontWeight: FontWeight.bold)),
+        ),
+        ListTile(
+          leading: const Icon(Icons.privacy_tip_outlined, color: AppTheme.primaryTeal),
+          title: const Text('Privacy Policy'),
+          trailing: const Icon(Icons.open_in_new, size: 16),
+          onTap: () => launchUrl(Uri.parse('https://afyalink.com/privacy')),
+        ),
+        ListTile(
+          leading: const Icon(Icons.description_outlined, color: AppTheme.primaryTeal),
+          title: const Text('Terms of Service'),
+          trailing: const Icon(Icons.open_in_new, size: 16),
+          onTap: () => launchUrl(Uri.parse('https://afyalink.com/terms')),
+        ),
+        
+        const Divider(height: 48),
+        ListTile(
+          leading: const Icon(Icons.delete_forever, color: Colors.red),
+          title: const Text('Delete Account', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+          subtitle: const Text('Permanently delete your data', style: TextStyle(color: Colors.redAccent, fontSize: 12)),
+          onTap: () => _confirmDeleteAccount(context),
+        ),
       ],
+    );
+  }
+
+  void _confirmDeleteAccount(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete Account?'),
+        content: const Text('This action is permanent and cannot be undone. All your health records, orders, and profile data will be permanently erased. Are you sure?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            onPressed: () async {
+              Navigator.pop(ctx);
+              showDialog(context: context, barrierDismissible: false, builder: (_) => const Center(child: CircularProgressIndicator()));
+              
+              await ref.read(authRepositoryProvider).deleteAccount();
+              
+              if (mounted) {
+                Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const LoginPage()), 
+                  (route) => false
+                );
+              }
+            },
+            child: const Text('Delete Permanently', style: TextStyle(color: Colors.white)),
+          ),
+        ],
+      ),
     );
   }
 

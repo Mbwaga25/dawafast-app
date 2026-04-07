@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app/core/theme.dart';
-import 'package:app/features/auth/data/repositories/user_repository.dart';
-import 'package:app/features/appointments/data/repositories/appointment_repository.dart';
-import 'package:app/features/appointments/presentation/pages/chat_page.dart';
+import 'package:afyalink/core/theme.dart';
+import 'package:afyalink/features/auth/data/repositories/user_repository.dart';
+import 'package:afyalink/features/appointments/data/repositories/appointment_repository.dart';
+import 'package:afyalink/features/appointments/presentation/pages/chat_page.dart';
 
-import 'package:app/features/auth/data/models/user_model.dart';
+import 'package:afyalink/features/auth/data/models/user_model.dart';
 
 class DoctorChatTab extends ConsumerStatefulWidget {
   const DoctorChatTab({super.key});

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app/core/theme.dart';
-import 'package:app/features/cart/presentation/providers/cart_provider.dart';
-import 'package:app/features/profile/data/repositories/settings_repository.dart';
-import 'package:app/features/cart/data/models/cart_model.dart';
-import 'package:app/features/cart/presentation/pages/checkout_page.dart';
+import 'package:afyalink/core/theme.dart';
+import 'package:afyalink/features/cart/presentation/providers/cart_provider.dart';
+import 'package:afyalink/features/profile/data/repositories/settings_repository.dart';
+import 'package:afyalink/features/cart/data/models/cart_model.dart';
+import 'package:afyalink/features/cart/presentation/pages/checkout_page.dart';
 
 
 class CartPage extends ConsumerWidget {

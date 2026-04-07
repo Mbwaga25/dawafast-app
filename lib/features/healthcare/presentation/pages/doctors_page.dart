@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app/core/theme.dart';
-import 'package:app/features/healthcare/data/repositories/doctors_repository.dart';
-import 'package:app/features/healthcare/data/models/doctor_model.dart';
-import 'package:app/features/healthcare/presentation/pages/doctor_detail_page.dart';
+import 'package:afyalink/core/theme.dart';
+import 'package:afyalink/features/healthcare/data/repositories/doctors_repository.dart';
+import 'package:afyalink/features/healthcare/data/models/doctor_model.dart';
+import 'package:afyalink/features/healthcare/presentation/pages/doctor_detail_page.dart';
 
 class DoctorsPage extends ConsumerWidget {
   const DoctorsPage({super.key});

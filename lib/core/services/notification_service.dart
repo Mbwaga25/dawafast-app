@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app/features/notifications/data/repositories/notification_repository.dart';
-import 'package:app/features/notifications/data/models/notification_model.dart';
+import 'package:afyalink/features/notifications/data/repositories/notification_repository.dart';
+import 'package:afyalink/features/notifications/data/models/notification_model.dart';
 
 final flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 

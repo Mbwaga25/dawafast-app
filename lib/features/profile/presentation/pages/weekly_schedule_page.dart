@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app/core/theme.dart';
+import 'package:afyalink/core/theme.dart';
 import '../../data/repositories/availability_repository.dart';
 
 class WeeklySchedulePage extends ConsumerStatefulWidget {

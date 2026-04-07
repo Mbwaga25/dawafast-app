@@ -6,7 +6,12 @@ import 'features/healthcare/presentation/pages/meeting_page.dart';
 
 import 'core/services/notification_service.dart';
 
-void main() {
+import 'package:graphql_flutter/graphql_flutter.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await initHiveForFlutter();
+  
   runApp(
     const ProviderScope(
       child: MyApp(),
@@ -23,7 +28,7 @@ class MyApp extends ConsumerWidget {
     ref.watch(backgroundPollingProvider);
 
     return MaterialApp(
-      title: 'Dawafast',
+      title: 'AfyaLink',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       home: const HomePage(),

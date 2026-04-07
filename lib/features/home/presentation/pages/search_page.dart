@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
-import 'package:app/core/theme.dart';
-import 'package:app/features/offers/data/models/product_model.dart';
-import 'package:app/features/healthcare/data/repositories/healthcare_repository.dart';
-import 'package:app/features/healthcare/data/repositories/doctors_repository.dart';
-import 'package:app/features/offers/data/repositories/marketplace_repository.dart';
-import 'package:app/features/home/presentation/pages/product_detail_page.dart';
-import 'package:app/features/healthcare/presentation/pages/doctor_detail_page.dart';
-import 'package:app/features/healthcare/presentation/pages/hospital_detail_page.dart';
-import 'package:app/features/healthcare/presentation/widgets/hospital_card.dart';
-import 'package:app/features/cart/presentation/providers/cart_provider.dart';
-import 'package:app/features/cart/data/models/cart_model.dart';
-import 'package:app/features/profile/presentation/providers/wishlist_provider.dart';
-import 'package:app/features/profile/data/repositories/settings_repository.dart';
+import 'package:afyalink/core/theme.dart';
+import 'package:afyalink/features/offers/data/models/product_model.dart';
+import 'package:afyalink/features/healthcare/data/repositories/healthcare_repository.dart';
+import 'package:afyalink/features/healthcare/data/repositories/doctors_repository.dart';
+import 'package:afyalink/features/offers/data/repositories/marketplace_repository.dart';
+import 'package:afyalink/features/home/presentation/pages/product_detail_page.dart';
+import 'package:afyalink/features/healthcare/presentation/pages/doctor_detail_page.dart';
+import 'package:afyalink/features/healthcare/presentation/pages/hospital_detail_page.dart';
+import 'package:afyalink/features/healthcare/presentation/widgets/hospital_card.dart';
+import 'package:afyalink/features/cart/presentation/providers/cart_provider.dart';
+import 'package:afyalink/features/cart/data/models/cart_model.dart';
+import 'package:afyalink/features/profile/presentation/providers/wishlist_provider.dart';
+import 'package:afyalink/features/profile/data/repositories/settings_repository.dart';
 
 class SearchPage extends ConsumerStatefulWidget {
   const SearchPage({super.key});

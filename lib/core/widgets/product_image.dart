@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:app/core/theme.dart';
+import 'package:afyalink/core/theme.dart';
 
 /// A network image that silently falls back to a placeholder when
 /// the media file is missing (404) or when no URL is provided.

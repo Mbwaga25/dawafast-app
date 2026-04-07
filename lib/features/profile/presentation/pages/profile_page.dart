@@ -4,15 +4,15 @@ import '../../../../core/theme.dart';
 import '../../../auth/data/repositories/user_repository.dart';
 import '../../../auth/data/repositories/auth_repository.dart';
 import '../../../auth/presentation/pages/login_page.dart';
-import 'package:app/features/profile/presentation/pages/settings_page.dart';
-import 'package:app/features/profile/presentation/pages/wishlist_page.dart';
-import 'package:app/features/home/presentation/pages/patient_appointments_page.dart';
-import 'package:app/features/home/presentation/pages/patient_orders_page.dart';
-import 'package:app/features/home/presentation/pages/patient_referrals_page.dart';
-import 'package:app/features/profile/presentation/pages/addresses_page.dart';
-import 'package:app/features/profile/presentation/pages/about_afyalink_page.dart';
-import 'package:app/features/profile/presentation/pages/help_support_page.dart';
-import 'package:app/features/healthcare/presentation/pages/patient_lab_reports_page.dart';
+import 'package:afyalink/features/profile/presentation/pages/settings_page.dart';
+import 'package:afyalink/features/profile/presentation/pages/wishlist_page.dart';
+import 'package:afyalink/features/home/presentation/pages/patient_appointments_page.dart';
+import 'package:afyalink/features/home/presentation/pages/patient_orders_page.dart';
+import 'package:afyalink/features/home/presentation/pages/patient_referrals_page.dart';
+import 'package:afyalink/features/profile/presentation/pages/addresses_page.dart';
+import 'package:afyalink/features/profile/presentation/pages/about_afyalink_page.dart';
+import 'package:afyalink/features/profile/presentation/pages/help_support_page.dart';
+import 'package:afyalink/features/healthcare/presentation/pages/patient_lab_reports_page.dart';
 class ProfilePage extends ConsumerWidget {
   const ProfilePage({super.key});
 

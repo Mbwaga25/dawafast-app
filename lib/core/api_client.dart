@@ -4,7 +4,7 @@ import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiClient {
-  static const String _baseUrl = 'http://127.0.0.1:8000/graphql/';
+  static const String _baseUrl = 'https://api.afyalink.com/graphql/';
   static const String _apiKey = 'AfyaLink_Secure_API_Key_2024_verfied';
 
   static final ValueNotifier<GraphQLClient> _clientNotifier = ValueNotifier(_buildClient(useAuth: true));
@@ -61,7 +61,7 @@ class ApiClient {
 
     return GraphQLClient(
       link: link,
-      cache: GraphQLCache(store: InMemoryStore()),
+      cache: GraphQLCache(store: HiveStore()),
     );
   }
 

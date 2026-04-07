@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app/core/theme.dart';
-import 'package:app/features/notifications/data/repositories/notification_repository.dart';
-import 'package:app/features/notifications/data/models/notification_model.dart';
-import 'package:app/features/appointments/presentation/pages/chat_page.dart';
+import 'package:afyalink/core/theme.dart';
+import 'package:afyalink/features/notifications/data/repositories/notification_repository.dart';
+import 'package:afyalink/features/notifications/data/models/notification_model.dart';
+import 'package:afyalink/features/appointments/presentation/pages/chat_page.dart';
 
 class NotificationPage extends ConsumerWidget {
   const NotificationPage({super.key});

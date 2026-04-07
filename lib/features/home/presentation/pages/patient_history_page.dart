@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:app/core/theme.dart';
-import 'package:app/features/healthcare/data/repositories/doctors_repository.dart';
-import 'package:app/features/healthcare/data/models/referral_model.dart';
+import 'package:afyalink/core/theme.dart';
+import 'package:afyalink/features/healthcare/data/repositories/doctors_repository.dart';
+import 'package:afyalink/features/healthcare/data/models/referral_model.dart';
 
-import 'package:app/features/healthcare/presentation/widgets/referral_wizard.dart';
+import 'package:afyalink/features/healthcare/presentation/widgets/referral_wizard.dart';
 
 class PatientHistoryPage extends ConsumerWidget {
   final String patientId;

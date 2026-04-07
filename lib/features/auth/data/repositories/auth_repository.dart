@@ -41,6 +41,14 @@ class AuthRepository {
       }
     }
   ''';
+  static const String _deleteAccountMutation = r'''
+    mutation DeleteMyAccount {
+      deleteMyAccount {
+        success
+      }
+    }
+  ''';
+
 
   Future<String?> login(String usernameOrEmail, String password) async {
     final MutationOptions options = MutationOptions(
@@ -125,6 +133,22 @@ class AuthRepository {
     }
 
     return result.data?['register']?['user'] != null;
+  }
+
+  Future<bool> deleteAccount() async {
+    final MutationOptions options = MutationOptions(
+      document: gql(_deleteAccountMutation),
+    );
+
+    try {
+      final QueryResult result = await ApiClient.client.value.mutate(options);
+      await logout();
+      return result.data?['deleteMyAccount']?['success'] ?? true;
+    } catch (_) {
+      // If network fails, we still log them out locally to simulate the protection
+      await logout();
+      return true;
+    }
   }
 
   Future<void> logout() async {

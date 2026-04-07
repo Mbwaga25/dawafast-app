@@ -55,7 +55,7 @@ class UserRepository {
       if (errors.any((e) => e.message.contains('Unauthorized') || e.message.contains('Signature has expired'))) {
         return null;
       }
-      throw result.exception!;
+      throw result.exception ?? Exception('User fetch failed');
     }
 
     final Map<String, dynamic>? data = result.data?['me'];
@@ -112,7 +112,7 @@ class UserRepository {
     final QueryResult result = await ApiClient.client.value.mutate(options);
 
     if (result.hasException) {
-      throw result.exception!;
+      throw result.exception ?? Exception('Update failed');
     }
 
     return result.data?['updateProfile']?['success'] ?? false;
@@ -141,7 +141,7 @@ class UserRepository {
     );
 
     final QueryResult result = await ApiClient.client.value.query(options);
-    if (result.hasException) throw result.exception!;
+    if (result.hasException) throw result.exception ?? Exception('Search failed');
 
     final List usersData = result.data?['users']?['searchUsers'] ?? [];
     return usersData.map((u) => User.fromJson(u)).toList();

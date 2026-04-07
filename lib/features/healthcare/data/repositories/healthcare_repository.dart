@@ -181,7 +181,7 @@ class HealthcareRepository {
           'latitude': latitude,
           'longitude': longitude,
           'description': description,
-          'phone_number': phoneNumber,
+          'phoneNumber': phoneNumber,
           'email': email,
           'isActive': true,
         }

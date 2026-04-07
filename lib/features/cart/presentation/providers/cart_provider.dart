@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:app/features/cart/data/models/cart_model.dart';
+import 'package:afyalink/features/cart/data/models/cart_model.dart';
 
 final cartProvider = StateNotifierProvider<CartNotifier, CartState>((ref) {
   return CartNotifier();
