@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:app/core/theme.dart';
 import 'package:app/features/healthcare/data/models/doctor_model.dart';
 import 'package:app/features/healthcare/data/repositories/doctors_repository.dart';
@@ -59,6 +58,7 @@ class _ReferralWizardState extends ConsumerState<ReferralWizard> {
       );
 
       if (success) {
+        if (!mounted) return;
         Navigator.pop(context);
         ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Referral sent successfully!'), backgroundColor: Colors.green));
         ref.invalidate(sentReferralsProvider(null));
@@ -66,6 +66,7 @@ class _ReferralWizardState extends ConsumerState<ReferralWizard> {
         throw 'Failed to send referral';
       }
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red));
     }
   }
@@ -135,7 +136,7 @@ class _ReferralWizardState extends ConsumerState<ReferralWizard> {
 
   Widget _buildStep1() {
     final options = [
-      {'label': 'Laboratory', 'type': 'LAB', 'icon': Icons.biotech, 'color': Colors.blue},
+      {'label': 'Health Services', 'type': 'LAB', 'icon': Icons.biotech, 'color': Colors.blue},
       {'label': 'Pharmacy', 'type': 'PHARMACY', 'icon': Icons.medication, 'color': Colors.teal},
       {'label': 'Hospital', 'type': 'HOSPITAL', 'icon': Icons.local_hospital, 'color': Colors.red},
       {'label': 'Specialist', 'type': 'DOCTOR', 'icon': Icons.person_search, 'color': Colors.purple},
@@ -154,7 +155,7 @@ class _ReferralWizardState extends ConsumerState<ReferralWizard> {
           }),
           child: Container(
             decoration: BoxDecoration(
-              color: isSelected ? (opt['color'] as Color).withOpacity(0.1) : Colors.grey.withOpacity(0.05),
+              color: isSelected ? (opt['color'] as Color).withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.05),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: isSelected ? opt['color'] as Color : Colors.transparent, width: 2),
             ),
@@ -321,7 +322,7 @@ class _ReferralWizardState extends ConsumerState<ReferralWizard> {
          ],
        );
     } else if (_selectedType == 'LAB') {
-       if (_selectedFacility == null) return const Center(child: Text('Please select a laboratory first.'));
+       if (_selectedFacility == null) return const Center(child: Text('Please select a facility first.'));
        final detailAsync = ref.watch(hospitalDetailProvider(_selectedFacility!.id));
        return Column(
          children: [
@@ -329,7 +330,7 @@ class _ReferralWizardState extends ConsumerState<ReferralWizard> {
               controller: _diagnosticNotesController,
               maxLines: 3,
               decoration: const InputDecoration(
-                hintText: 'Clinical diagnostic notes/instructions for the laboratory...',
+                hintText: 'Clinical diagnostic notes/instructions for health services...',
                 border: OutlineInputBorder(),
               ),
             ),

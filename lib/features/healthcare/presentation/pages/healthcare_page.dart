@@ -96,7 +96,7 @@ class _HealthcarePageState extends ConsumerState<HealthcarePage> {
                       _buildFilterChip('Hospital', selectedFilter == 'Hospital'),
                       _buildFilterChip('Doctor', selectedFilter == 'Doctor'),
                       _buildFilterChip('Clinic', selectedFilter == 'Clinic'),
-                      _buildFilterChip('Lab', selectedFilter == 'Lab'),
+                      _buildFilterChip('Health Services', selectedFilter == 'Lab'),
                       _buildFilterChip('Pharmacy', selectedFilter == 'Pharmacy'),
                       _buildFilterChip('Telemedicine', selectedFilter == 'Telemedicine'),
                     ],
@@ -178,7 +178,7 @@ class _HealthcarePageState extends ConsumerState<HealthcarePage> {
               Navigator.push(context, MaterialPageRoute(builder: (_) => const DoctorsPage()));
             } else if (label == 'Pharmacy') {
               Navigator.push(context, MaterialPageRoute(builder: (_) => const PharmaciesPage()));
-            } else if (label == 'Lab') {
+            } else if (label == 'Health Services') {
               Navigator.push(context, MaterialPageRoute(builder: (_) => const LabsPage()));
             } else if (label == 'Telemedicine') {
               Navigator.push(context, MaterialPageRoute(builder: (_) => const TelemedicinePage()));

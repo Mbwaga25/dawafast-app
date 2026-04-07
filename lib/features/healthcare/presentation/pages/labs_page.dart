@@ -21,7 +21,7 @@ class _LabsPageState extends ConsumerState<LabsPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Laboratory Services'),
+        title: const Text('Health Services'),
       ),
       body: Column(
         children: [
@@ -59,7 +59,7 @@ class _LabsPageState extends ConsumerState<LabsPage> {
             padding: const EdgeInsets.all(16.0),
             child: TextField(
               decoration: InputDecoration(
-                hintText: 'Search for tests or laboratories...',
+                hintText: 'Search for tests or health services...',
                 prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30),
@@ -82,7 +82,7 @@ class _LabsPageState extends ConsumerState<LabsPage> {
                 ).toList();
 
                 if (filtered.isEmpty) {
-                  return const Center(child: Text('No laboratories found'));
+                  return const Center(child: Text('No health services found'));
                 }
 
                 return ListView.builder(

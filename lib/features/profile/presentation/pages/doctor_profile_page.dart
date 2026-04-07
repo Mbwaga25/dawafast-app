@@ -184,7 +184,7 @@ class _DoctorProfilePageState extends ConsumerState<DoctorProfilePage> with Sing
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(12),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10)],
           border: Border.all(color: Colors.grey[100]!),
         ),
         child: Column(
@@ -298,7 +298,7 @@ class _DoctorProfilePageState extends ConsumerState<DoctorProfilePage> with Sing
                   runSpacing: 8,
                   children: skills.map((s) => InputChip(
                     label: Text(s['name']),
-                    backgroundColor: AppTheme.primaryTeal.withOpacity(0.1),
+                    backgroundColor: AppTheme.primaryTeal.withValues(alpha: 0.1),
                     labelStyle: const TextStyle(color: AppTheme.primaryTeal),
                     onDeleted: () => _deleteSkill(s['id']),
                     deleteIconColor: AppTheme.primaryTeal,
@@ -350,7 +350,7 @@ class _DoctorProfilePageState extends ConsumerState<DoctorProfilePage> with Sing
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10)],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10)],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -467,11 +467,13 @@ class _DoctorProfilePageState extends ConsumerState<DoctorProfilePage> with Sing
                   languages: field == 'languages' ? controller.text : null,
                   consultationFee: field == 'consultationFee' ? double.tryParse(controller.text) : null,
                 );
+                if (!mounted) return;
                 ref.invalidate(myCVDataProvider);
                 Navigator.pop(ctx);
                 ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Profile updated!'), backgroundColor: Colors.green));
               } catch (e) {
-                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red));
+                if (!mounted) return;
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e'), backgroundColor: Colors.red));
               }
             },
             child: const Text('Save'),
@@ -492,6 +494,7 @@ class _DoctorProfilePageState extends ConsumerState<DoctorProfilePage> with Sing
             title: Text(s.toUpperCase()),
             onTap: () async {
               await ref.read(cvRepositoryProvider).updateProfessionalProfile(availabilityStatus: s);
+              if (!mounted) return;
               ref.invalidate(myCVDataProvider);
               Navigator.pop(ctx);
             },
@@ -534,6 +537,7 @@ class _DoctorProfilePageState extends ConsumerState<DoctorProfilePage> with Sing
                 fieldOfStudy: fieldController.text,
                 startYear: int.tryParse(yearController.text) ?? 2020,
               );
+              if (!mounted) return;
               ref.invalidate(myCVDataProvider);
               Navigator.pop(ctx);
             },
@@ -578,6 +582,7 @@ class _DoctorProfilePageState extends ConsumerState<DoctorProfilePage> with Sing
                 location: locController.text,
                 startDate: DateTime.now().subtract(const Duration(days: 365)),
               );
+              if (!mounted) return;
               ref.invalidate(myCVDataProvider);
               Navigator.pop(ctx);
             },
@@ -605,6 +610,7 @@ class _DoctorProfilePageState extends ConsumerState<DoctorProfilePage> with Sing
           ElevatedButton(
             onPressed: () async {
               await ref.read(cvRepositoryProvider).addSkill(name: nameController.text);
+              if (!mounted) return;
               ref.invalidate(myCVDataProvider);
               Navigator.pop(ctx);
             },
@@ -646,6 +652,7 @@ class _DoctorProfilePageState extends ConsumerState<DoctorProfilePage> with Sing
                 issuingOrganization: orgController.text,
                 issueDate: DateTime.now(),
               );
+              if (!mounted) return;
               ref.invalidate(myCVDataProvider);
               Navigator.pop(ctx);
             },
@@ -689,13 +696,13 @@ class _DoctorProfilePageState extends ConsumerState<DoctorProfilePage> with Sing
                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                        child: ListTile(
                          leading: CircleAvatar(
-                           backgroundColor: s.isBooked ? Colors.orange.withOpacity(0.1) : Colors.green.withOpacity(0.1),
+                           backgroundColor: s.isBooked ? Colors.orange.withValues(alpha: 0.1) : Colors.green.withValues(alpha: 0.1),
                            child: Icon(s.isBooked ? Icons.lock : Icons.event_available, color: s.isBooked ? Colors.orange : Colors.green, size: 20),
                          ),
                          title: Text(DateFormat('EEEE, MMM d').format(s.startTime)),
                          subtitle: Text('${DateFormat('HH:mm').format(s.startTime)} - ${DateFormat('HH:mm').format(s.endTime)}'),
                          trailing: s.isBooked 
-                           ? Chip(label: const Text('Booked', style: TextStyle(fontSize: 10)), backgroundColor: Colors.orange.withOpacity(0.1))
+                           ? Chip(label: const Text('Booked', style: TextStyle(fontSize: 10)), backgroundColor: Colors.orange.withValues(alpha: 0.1))
                            : IconButton(icon: const Icon(Icons.delete_outline, color: Colors.red), onPressed: () => _deleteSlot(s.id)),
                        ),
                      );
@@ -723,19 +730,40 @@ class _DoctorProfilePageState extends ConsumerState<DoctorProfilePage> with Sing
 
     try {
       await ref.read(availabilityRepositoryProvider).createAvailability(start, end);
+      if (!mounted) return;
       ref.invalidate(myAvailabilitiesProvider);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Slot added!'), backgroundColor: Colors.green));
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
     }
   }
 
   void _deleteSlot(String id) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text('Delete Slot'),
+        content: const Text('Are you sure you want to remove this availability slot?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(ctx, false), child: const Text('Cancel')),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true), 
+            child: const Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true) return;
+
     try {
       await ref.read(availabilityRepositoryProvider).deleteAvailability(id);
+      if (!mounted) return;
       ref.invalidate(myAvailabilitiesProvider);
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Slot removed'), backgroundColor: Colors.blueGrey));
     } catch (e) {
+      if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $e')));
     }
   }
