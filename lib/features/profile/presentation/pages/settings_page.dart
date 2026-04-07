@@ -61,29 +61,89 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
+    final user = ref.watch(currentUserProvider).value;
+    final isDoctor = user?.role == 'DOCTOR';
+
+    final tabs = [
+      const Tab(icon: Icon(Icons.person_outline), text: 'Profile'),
+      if (isDoctor) const Tab(icon: Icon(Icons.work_outline), text: 'Professional'),
+      const Tab(icon: Icon(Icons.palette_outlined), text: 'Appearance'),
+      const Tab(icon: Icon(Icons.security_outlined), text: 'Security'),
+    ];
+
+    final views = [
+      _buildProfileTab(),
+      if (isDoctor) _buildProfessionalTab(),
+      _buildAppearanceTab(),
+      _buildSecurityTab(),
+    ];
+
     return DefaultTabController(
-      length: 3,
+      length: tabs.length,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Settings'),
-          bottom: const TabBar(
-            tabs: [
-              Tab(icon: Icon(Icons.person_outline), text: 'Profile'),
-              Tab(icon: Icon(Icons.palette_outlined), text: 'Appearance'),
-              Tab(icon: Icon(Icons.security_outlined), text: 'Security'),
-            ],
+          bottom: TabBar(
+            tabs: tabs,
             indicatorColor: AppTheme.primaryBlue,
             labelColor: AppTheme.primaryBlue,
             unselectedLabelColor: AppTheme.textSecondary,
           ),
         ),
         body: TabBarView(
-          children: [
-            _buildProfileTab(),
-            _buildAppearanceTab(),
-            _buildSecurityTab(),
-          ],
+          children: views,
         ),
+      ),
+    );
+  }
+
+  Widget _buildProfessionalTab() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('Professional Information', style: AppTheme.headingStyle),
+          const SizedBox(height: 24),
+          const Text('Upload CV', style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            onPressed: () {}, 
+            icon: const Icon(Icons.upload_file), 
+            label: const Text('Select CV (PDF)')
+          ),
+          const SizedBox(height: 16),
+          const Text('Upload Certificate', style: TextStyle(fontWeight: FontWeight.bold)),
+          const SizedBox(height: 8),
+          OutlinedButton.icon(
+            onPressed: () {}, 
+            icon: const Icon(Icons.card_membership), 
+            label: const Text('Select Certificate')
+          ),
+          const SizedBox(height: 16),
+          const TextField(
+            decoration: InputDecoration(
+              labelText: 'Web Profile Bio',
+              border: OutlineInputBorder(),
+              hintText: 'Write a public bio for your profile...',
+            ),
+            maxLines: 4,
+          ),
+          const SizedBox(height: 24),
+          Text('Availability Slots', style: AppTheme.headingStyle.copyWith(fontSize: 18)),
+          const SizedBox(height: 12),
+          ElevatedButton.icon(
+            onPressed: () {},
+            icon: const Icon(Icons.add),
+            label: const Text('Add Time Slot'),
+          ),
+          const SizedBox(height: 32),
+          ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(minimumSize: const Size(double.infinity, 50)),
+            child: const Text('Save Professional Data'),
+          ),
+        ],
       ),
     );
   }
