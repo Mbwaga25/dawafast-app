@@ -458,6 +458,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
 
   Widget _buildChatOverlay() {
     final messagesAsync = ref.watch(chatMessagesProvider(widget.appointmentId));
+    final userId = ref.watch(currentUserProvider).value?.id ?? '';
     
     return Positioned.fill(
       child: GestureDetector(
@@ -497,7 +498,10 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                            controller: _chatScrollController,
                            padding: const EdgeInsets.all(16),
                            itemCount: messages.length,
-                           itemBuilder: (context, index) => _MessageBubbleTile(message: messages[index]),
+                           itemBuilder: (context, index) => _MessageBubbleTile(
+                             message: messages[index], 
+                             isMe: messages[index].isMe(userId),
+                           ),
                          );
                        },
                        loading: () => const Center(child: CircularProgressIndicator()),
@@ -635,14 +639,12 @@ class _BlinkingDotState extends State<_BlinkingDot> with SingleTickerProviderSta
   }
 }
 class _MessageBubbleTile extends StatelessWidget {
-  final dynamic message;
-  const _MessageBubbleTile({required this.message});
+  final ChatMessage message;
+  final bool isMe;
+  const _MessageBubbleTile({required this.message, required this.isMe});
 
   @override
   Widget build(BuildContext context) {
-    bool isMe = false;
-    try { isMe = message.sender.id == "current"; } catch(_) {} // Local check fallback
-    
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
       child: Container(
