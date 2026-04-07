@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:app/core/theme.dart';
@@ -356,18 +357,119 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
 
   Widget _buildMapTab(Hospital hospital) {
     if (hospital.latitude == null || hospital.longitude == null) {
-      return const Center(child: Text('Coordinates not available for this lab'));
+      return const Center(child: Text('Coordinates not available for this facility'));
     }
 
-    return GoogleMap(
-      initialCameraPosition: CameraPosition(target: LatLng(hospital.latitude!, hospital.longitude!), zoom: 14),
-      markers: {
-        Marker(markerId: MarkerId('lab'), position: LatLng(hospital.latitude!, hospital.longitude!), infoWindow: InfoWindow(title: hospital.name)),
-        if (_userPosition != null) Marker(markerId: MarkerId('me'), position: LatLng(_userPosition!.latitude, _userPosition!.longitude), icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure)),
-      },
-      myLocationEnabled: true,
-      zoomControlsEnabled: false,
+    final destination = LatLng(hospital.latitude!, hospital.longitude!);
+    final userPos = _userPosition != null ? LatLng(_userPosition!.latitude, _userPosition!.longitude) : null;
+
+    // Use a Stack to overlay the HUD
+    return Stack(
+      children: [
+        GoogleMap(
+          initialCameraPosition: CameraPosition(target: destination, zoom: 14),
+          markers: {
+            Marker(markerId: MarkerId('destination'), position: destination, infoWindow: InfoWindow(title: hospital.name)),
+            if (userPos != null) 
+              Marker(
+                markerId: MarkerId('me'), 
+                position: userPos, 
+                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
+                infoWindow: const InfoWindow(title: 'Your Location'),
+              ),
+          },
+          polylines: userPos != null ? {
+            Polyline(
+              polylineId: const PolylineId('path'),
+              points: [userPos, destination],
+              color: AppTheme.primaryTeal,
+              width: 4,
+              jointType: JointType.round,
+              patterns: [PatternItem.dash(20), PatternItem.gap(10)], // Styled as dots for "direction" feel
+            ),
+          } : {},
+          myLocationEnabled: true,
+          zoomControlsEnabled: false,
+          mapToolbarEnabled: false,
+        ),
+        
+        // Floating HUD for Directivity
+        if (userPos != null)
+          Positioned(
+            top: 20,
+            left: 20,
+            right: 20,
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4)),
+                ],
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(color: AppTheme.primaryTeal.withOpacity(0.1), shape: BoxShape.circle),
+                    child: const Icon(Icons.navigation, color: AppTheme.primaryTeal),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Text('LIVE DIRECTION', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold, color: Colors.grey, letterSpacing: 1.2)),
+                        const SizedBox(height: 2),
+                        _buildDistanceInfo(userPos, destination),
+                      ],
+                    ),
+                  ),
+                  const VerticalDivider(width: 32),
+                  IconButton(
+                    onPressed: () => _launchDirections(hospital),
+                    icon: const Icon(Icons.open_in_new, color: AppTheme.primaryTeal),
+                    tooltip: 'External Maps',
+                  ),
+                ],
+              ),
+            ),
+          ),
+      ],
     );
+  }
+
+  Widget _buildDistanceInfo(LatLng p1, LatLng p2) {
+    // Haversine formula to calculate distance
+    const double r = 6371; // Earth's radius in km
+    final double dLat = (p2.latitude - p1.latitude) * pi / 180;
+    final double dLon = (p2.longitude - p1.longitude) * pi / 180;
+    final double a = sin(dLat / 2) * sin(dLat / 2) +
+        cos(p1.latitude * pi / 180) * cos(p2.latitude * pi / 180) *
+        sin(dLon / 2) * sin(dLon / 2);
+    final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
+    final double distance = r * c;
+
+    final String distanceStr = distance < 1 
+        ? '${(distance * 1000).toStringAsFixed(0)} m' 
+        : '${distance.toStringAsFixed(1)} km';
+    
+    // Estimate time (average 30km/h for city driving)
+    final int minutes = (distance / 30 * 60).ceil();
+    final String timeStr = minutes < 60 ? '$minutes mins' : '${(minutes / 60).toStringAsFixed(1)} hrs';
+
+    return Text('$distanceStr • $timeStr away', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16));
+  }
+
+  void _launchDirections(Hospital hospital) async {
+    if (_userPosition != null && hospital.latitude != null && hospital.longitude != null) {
+      final url = "https://www.google.com/maps/dir/?api=1&origin=${_userPosition!.latitude},${_userPosition!.longitude}&destination=${hospital.latitude},${hospital.longitude}&travelmode=driving";
+      if (await canLaunchUrl(Uri.parse(url))) {
+        await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+      }
+    }
   }
 
   Widget _buildDoctorsTab(Hospital hospital) {

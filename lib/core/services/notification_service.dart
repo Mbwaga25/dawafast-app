@@ -49,7 +49,7 @@ class NotificationService {
 
   void _startPolling() {
     _pollingTimer?.cancel();
-    _pollingTimer = Timer.periodic(const Duration(seconds: 15), (timer) async {
+    _pollingTimer = Timer.periodic(const Duration(seconds: 8), (timer) async {
       _pollForNewNotifications();
     });
   }
@@ -101,12 +101,19 @@ class NotificationService {
 
     final int notifId = DateTime.now().millisecondsSinceEpoch.remainder(100000);
 
-    // Dynamic title/message formatting
+    // Dynamic title/message formatting based on backend standardized types
     String displayTitle = "DawaFast Alert";
-    if (notif.type.toUpperCase() == 'APPOINTMENT') displayTitle = "Appointment Update";
-    if (notif.type.toUpperCase() == 'ORDER') displayTitle = "Order Status Update";
-    if (notif.type.toUpperCase() == 'REFERRAL') displayTitle = "New Referral Received";
-    if (notif.type.toUpperCase() == 'CHAT_MESSAGE') displayTitle = "New Message";
+    final type = notif.type.toUpperCase();
+    
+    if (type.contains('APPOINTMENT')) {
+      displayTitle = "📅 Appointment Update";
+    } else if (type.contains('ORDER')) {
+      displayTitle = "📦 Order Update";
+    } else if (type.contains('REFERRAL')) {
+      displayTitle = "🏥 Referral Received";
+    } else if (type.contains('CHAT') || type.contains('MESSAGE')) {
+      displayTitle = "💬 New Message";
+    }
 
     await flutterLocalNotificationsPlugin.show(
       id: notifId,

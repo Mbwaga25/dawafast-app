@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme.dart';
 import '../../../../core/api_client.dart';
+import '../../../../core/theme.dart';
 import '../../data/repositories/auth_repository.dart';
 import '../../data/repositories/user_repository.dart';
+import 'package:app/features/home/presentation/pages/home_page.dart';
 import 'signup_page.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -36,12 +37,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       if (token != null) {
         // Reset GraphQL client so the new token is picked up immediately
         ApiClient.resetClient();
-        // Invalidate the user provider so it re-fetches with the new token
-        ref.invalidate(currentUserProvider);
+        // Clear and force re-fetch of user profile so we have the role before redirecting
+        await ref.refresh(currentUserProvider.future);
         
         // Reset tab index to 0 (Home/Dashboard)
-        // Note: Home page uses a private _tabIndexProvider, but we can't access it easily.
-        // However, we can push a new HomePage and clear the stack to ensure index 0.
+        ref.read(tabIndexProvider.notifier).state = 0;
         
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
@@ -50,7 +50,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           
           // Redirect to Home and clear the navigation stack
           // This ensures the role-based dashboard logic in HomePage is triggered from scratch.
-          Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (_) => const HomePage()),
+            (route) => false,
+          );
         }
       } else if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

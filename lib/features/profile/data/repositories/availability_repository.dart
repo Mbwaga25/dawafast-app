@@ -20,6 +20,28 @@ class AvailabilitySlot {
   }
 }
 
+class WeeklySlot {
+  final int dayOfWeek; // 0=Mon, 6=Sun
+  final String startTime; // HH:MM
+  final String endTime; // HH:MM
+
+  WeeklySlot({required this.dayOfWeek, required this.startTime, required this.endTime});
+
+  factory WeeklySlot.fromJson(Map<String, dynamic> json) {
+    return WeeklySlot(
+      dayOfWeek: json['dayOfWeek'] ?? 0,
+      startTime: json['startTime'] ?? '09:00',
+      endTime: json['endTime'] ?? '17:00',
+    );
+  }
+
+  Map<String, dynamic> toJson() => {
+    'dayOfWeek': dayOfWeek,
+    'startTime': startTime,
+    'endTime': endTime,
+  };
+}
+
 final availabilityRepositoryProvider = Provider((ref) => AvailabilityRepository());
 
 class AvailabilityRepository {
@@ -68,6 +90,29 @@ class AvailabilityRepository {
     mutation DeleteAvailability($id: ID!) {
       appointments {
         deleteAvailability(id: $id) {
+          success
+          errors
+        }
+      }
+    }
+  ''';
+
+  static const String _getMyWeeklyAvailabilityQuery = r'''
+    query GetMyWeeklyAvailability {
+      bookings {
+        myAvailability {
+          dayOfWeek
+          startTime
+          endTime
+        }
+      }
+    }
+  ''';
+
+  static const String _updateWeeklyAvailabilityMutation = r'''
+    mutation UpdateWeeklyAvailability($slots: [DoctorWeeklySlotInput!]!) {
+      bookings {
+        updateWeeklyAvailability(slots: $slots) {
           success
           errors
         }
@@ -132,8 +177,41 @@ class AvailabilityRepository {
     if (result.hasException) throw result.exception!;
     return result.data?['appointments']?['deleteAvailability']?['success'] ?? false;
   }
+
+  Future<List<WeeklySlot>> fetchMyWeeklyAvailability() async {
+    final QueryOptions options = QueryOptions(
+      document: gql(_getMyWeeklyAvailabilityQuery),
+      fetchPolicy: FetchPolicy.noCache,
+    );
+
+    final QueryResult result = await ApiClient.client.value.query(options);
+    if (result.hasException) throw result.exception!;
+    final List list = result.data?['bookings']?['myAvailability'] ?? [];
+    return list.map((e) => WeeklySlot.fromJson(e)).toList();
+  }
+
+  Future<bool> updateWeeklyAvailability(List<WeeklySlot> slots) async {
+    final MutationOptions options = MutationOptions(
+      document: gql(_updateWeeklyAvailabilityMutation),
+      variables: {
+        'slots': slots.map((s) => s.toJson()).toList(),
+      },
+    );
+
+    final QueryResult result = await ApiClient.client.value.mutate(options);
+    if (result.hasException) throw result.exception!;
+    final data = result.data?['bookings']?['updateWeeklyAvailability'];
+    if (data?['success'] == false) {
+       throw Exception((data?['errors'] as List?)?.join(', ') ?? 'Failed to update weekly availability');
+    }
+    return true;
+  }
 }
 
 final myAvailabilitiesProvider = FutureProvider<List<AvailabilitySlot>>((ref) async {
   return ref.watch(availabilityRepositoryProvider).fetchMyAvailabilities();
+});
+
+final myWeeklyAvailabilityProvider = FutureProvider<List<WeeklySlot>>((ref) async {
+  return ref.watch(availabilityRepositoryProvider).fetchMyWeeklyAvailability();
 });

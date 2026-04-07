@@ -5,6 +5,8 @@ import 'package:app/features/auth/data/repositories/user_repository.dart';
 import 'package:app/features/appointments/data/repositories/appointment_repository.dart';
 import 'package:app/features/appointments/presentation/pages/chat_page.dart';
 
+import 'package:app/features/auth/data/models/user_model.dart';
+
 class DoctorChatTab extends ConsumerStatefulWidget {
   const DoctorChatTab({super.key});
 
@@ -14,7 +16,7 @@ class DoctorChatTab extends ConsumerStatefulWidget {
 
 class _DoctorChatTabState extends ConsumerState<DoctorChatTab> {
   final TextEditingController _searchController = TextEditingController();
-  List<dynamic> _searchResults = [];
+  List<User> _searchResults = [];
   bool _isSearching = false;
 
   Future<void> _performSearch(String query) async {
@@ -91,15 +93,15 @@ class _DoctorChatTabState extends ConsumerState<DoctorChatTab> {
                       return ListTile(
                         leading: CircleAvatar(
                           backgroundColor: AppTheme.primaryTeal.withOpacity(0.1),
-                          child: Text(user['firstName']?[0] ?? '?', style: const TextStyle(color: AppTheme.primaryTeal)),
+                          child: Text(user.firstName?[0] ?? '?', style: const TextStyle(color: AppTheme.primaryTeal)),
                         ),
-                        title: Text('${user['firstName'] ?? ''} ${user['lastName'] ?? ''}'),
-                        subtitle: Text(user['email'] ?? ''),
+                        title: Text('${user.firstName ?? ''} ${user.lastName ?? ''}'),
+                        subtitle: Text(user.email ?? ''),
                         trailing: IconButton(
                           icon: const Icon(Icons.message_outlined, color: AppTheme.primaryTeal),
-                          onPressed: () => _startChat(user['id']),
+                          onPressed: () => _startChat(user.id),
                         ),
-                        onTap: () => _startChat(user['id']),
+                        onTap: () => _startChat(user.id),
                       );
                     },
                   ),

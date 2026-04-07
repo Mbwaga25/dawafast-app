@@ -11,6 +11,7 @@ import 'package:camera/camera.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'dart:async';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 class MeetingPage extends ConsumerStatefulWidget {
   final Doctor? doctor; // Made optional for shared links
@@ -40,6 +41,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
   bool _isScreenSharing = false;
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _chatScrollController = ScrollController();
+  bool _isChatCleared = false;
 
   @override
   void initState() {
@@ -55,7 +57,12 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
       if (status.isGranted) {
         _cameras = await availableCameras();
         if (_cameras != null && _cameras!.isNotEmpty) {
-          _cameraController = CameraController(_cameras![1], ResolutionPreset.medium, enableAudio: false);
+          // Look for front camera, fallback to first available
+          final frontCamera = _cameras!.firstWhere(
+            (c) => c.lensDirection == CameraLensDirection.front,
+            orElse: () => _cameras![0],
+          );
+          _cameraController = CameraController(frontCamera, ResolutionPreset.medium, enableAudio: false);
           await _cameraController!.initialize();
           if (mounted) setState(() => _isCameraReady = true);
         }
@@ -420,8 +427,8 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                     inactiveColor: AppTheme.primaryTeal.withOpacity(0.8),
                   ),
                   _buildControlButton(
-                    onPressed: _shareMeetingLink,
-                    icon: Icons.ios_share,
+                    onPressed: _showMeetingDetailsSheet,
+                    icon: Icons.info_outline,
                     isActive: true,
                     activeColor: Colors.white12,
                     size: 52,
@@ -453,7 +460,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                ),
              ),
           
-          if (_isChatOpen) _buildChatOverlay(),
+          // The double build of chat overlay was removed
         ],
       ),
     );
@@ -464,9 +471,9 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
     final isInstant = widget.appointmentId == 'instant_meeting';
 
     return DraggableScrollableSheet(
-      initialChildSize: 0.1,
-      minChildSize: 0.1,
-      maxChildSize: 0.8,
+      initialChildSize: 0.6,
+      minChildSize: 0.3,
+      maxChildSize: 0.95,
       builder: (context, scrollController) => Container(
         decoration: const BoxDecoration(
           color: Colors.white,
@@ -475,93 +482,195 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
         ),
         child: Column(
           children: [
-            // Handle and Title
+            // Handle
             Container(
               margin: const EdgeInsets.symmetric(vertical: 12),
               width: 40, height: 4,
               decoration: BoxDecoration(color: Colors.grey[300], borderRadius: BorderRadius.circular(2)),
             ),
-            const Text('Consultation Chat', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-            const SizedBox(height: 8),
-            const Divider(),
             
-            // Messages List
-            Expanded(
-              child: isInstant 
-                ? const Center(
-                    child: Padding(
-                      padding: EdgeInsets.all(32.0),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.speaker_notes_off_outlined, color: Colors.grey, size: 48),
-                          SizedBox(height: 16),
-                          Text(
-                            'Chat History Unavailable',
-                            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Permanent chat logs are not supported for instant meetings.',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(color: Colors.grey, fontSize: 12),
-                          ),
-                        ],
+            // Header: "In-call messages"
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('In-call messages', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 18, color: Colors.black87)),
+                  Row(
+                    children: [
+                      TextButton(
+                        onPressed: () => setState(() => _isChatCleared = true),
+                        child: const Text('Clear', style: TextStyle(color: Colors.blueAccent, fontWeight: FontWeight.bold)),
                       ),
-                    ),
-                  )
-                : messagesAsync.when(
-                    data: (messages) {
-                      if (messages.isEmpty) {
-                        return const Center(child: Text('No messages yet', style: TextStyle(color: Colors.grey)));
-                      }
-                      return ListView.builder(
-                        controller: scrollController,
-                        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                        itemCount: messages.length,
-                        itemBuilder: (context, index) {
-                          final msg = messages[index];
-                          final isMe = msg.sender.id == ref.watch(currentUserProvider).value?.id;
-                          return _MessageBubbleTile(message: msg, isMe: isMe);
-                        },
-                      );
-                    },
-                    loading: () => const Center(child: CircularProgressIndicator()),
-                    error: (err, stack) => Center(child: Text('Error loading chat: $err')),
+                      IconButton(onPressed: () => setState(() => _isChatOpen = false), icon: const Icon(Icons.close, color: Colors.black54)),
+                    ],
                   ),
+                ],
+              ),
             ),
             
-            // Input Field
-            if (!isInstant)
-              Padding(
-                padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 16, left: 16, right: 16, top: 8),
-                child: Row(
+            // Privacy Note
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(color: Colors.blue.withOpacity(0.05), borderRadius: BorderRadius.circular(8)),
+              child: const Text(
+                'Messages can only be seen by people in the call and are deleted when the call ends.',
+                style: TextStyle(fontSize: 12, color: Colors.blueAccent),
+              ),
+            ),
+            
+            const Divider(height: 1),
+            
+            // Message area
+            Expanded(
+              child: SingleChildScrollView(
+                controller: scrollController,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
                   children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _messageController,
-                        decoration: InputDecoration(
-                          hintText: 'Type a message...',
-                          filled: true,
-                          fillColor: Colors.grey[100],
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(24), borderSide: BorderSide.none),
-                          contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    // Messages List
+                    Container(
+                      height: 400,
+                      child: isInstant 
+                        ? const Center(
+                            child: Padding(
+                              padding: EdgeInsets.all(32.0),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.speaker_notes_off_outlined, color: Colors.grey, size: 48),
+                                  SizedBox(height: 16),
+                                  Text('Chat History Unavailable', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+                                  SizedBox(height: 8),
+                                  Text('Permanent chat logs are not supported for instant meetings.', textAlign: TextAlign.center, style: TextStyle(color: Colors.grey, fontSize: 12)),
+                                ],
+                              ),
+                            ),
+                          )
+                        : messagesAsync.when(
+                            data: (messages) {
+                              if (_isChatCleared) {
+                                return const Center(child: Padding(
+                                  padding: EdgeInsets.all(24.0),
+                                  child: Text('Chat history cleared for this session', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                                ));
+                              }
+                              if (messages.isEmpty) return const Center(child: Text('No messages yet', style: TextStyle(color: Colors.grey)));
+                              return ListView.builder(
+                                physics: const NeverScrollableScrollPhysics(),
+                                shrinkWrap: true,
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                itemCount: messages.length,
+                                itemBuilder: (context, index) {
+                                  final msg = messages[index];
+                                  final isMe = msg.sender.id == ref.watch(currentUserProvider).value?.id;
+                                  return _MessageBubbleTile(message: msg, isMe: isMe);
+                                },
+                              );
+                            },
+                            loading: () => const Center(child: CircularProgressIndicator()),
+                            error: (err, stack) => Center(child: Text('Error loading chat: $err')),
+                          ),
+                    ),
+                    
+                    // Input Field
+                    if (!isInstant)
+                      Padding(
+                        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 16, left: 16, right: 16, top: 8),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                controller: _messageController,
+                                decoration: InputDecoration(
+                                  hintText: 'Type a message...',
+                                  filled: true,
+                                  fillColor: Colors.grey[100],
+                                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(24), borderSide: BorderSide.none),
+                                  contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            IconButton(onPressed: _sendChatMessage, icon: const Icon(Icons.send, color: AppTheme.primaryTeal)),
+                          ],
                         ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    IconButton(
-                      onPressed: _sendChatMessage,
-                      icon: const Icon(Icons.send, color: AppTheme.primaryTeal),
-                    ),
+                    if (isInstant)
+                      const Padding(
+                        padding: EdgeInsets.all(24.0),
+                        child: Text('Input disabled for instant meetings', style: TextStyle(color: Colors.grey, fontSize: 12)),
+                      ),
                   ],
                 ),
               ),
-            if (isInstant)
-              const Padding(
-                padding: EdgeInsets.all(24.0),
-                child: Text('Input disabled for instant meetings', style: TextStyle(color: Colors.grey, fontSize: 12)),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _showMeetingDetailsSheet() {
+    final String url = "https://afyalink.com/meeting/${widget.appointmentId}";
+    
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: Colors.transparent,
+      builder: (context) => Container(
+        decoration: const BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+        ),
+        padding: const EdgeInsets.all(28),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Meeting details', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                IconButton(onPressed: () => Navigator.pop(context), icon: const Icon(Icons.close)),
+              ],
+            ),
+            const SizedBox(height: 24),
+            const Text('Joining info', style: TextStyle(fontSize: 14, color: Colors.black54, fontWeight: FontWeight.w500)),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(color: Colors.grey[100], borderRadius: BorderRadius.circular(12)),
+              child: Row(
+                children: [
+                  Expanded(child: Text(url, style: const TextStyle(fontSize: 15, color: Colors.black87), overflow: TextOverflow.ellipsis)),
+                  const SizedBox(width: 8),
+                  IconButton(
+                    onPressed: () {
+                      Clipboard.setData(ClipboardData(text: url));
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Link copied!')));
+                    },
+                    icon: const Icon(Icons.copy_all, color: AppTheme.primaryTeal),
+                  ),
+                ],
               ),
+            ),
+            const SizedBox(height: 32),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: _shareMeetingLink,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.primaryTeal,
+                  foregroundColor: Colors.white,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                ),
+                icon: const Icon(Icons.ios_share),
+                label: const Text('Share joining info', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              ),
+            ),
+            const SizedBox(height: 12),
           ],
         ),
       ),
@@ -575,6 +684,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
     try {
       await ref.read(appointmentRepositoryProvider).sendMessage(widget.appointmentId, text);
       _messageController.clear();
+      setState(() => _isChatCleared = false); // Resume showing chat if a new message is sent
       ref.invalidate(chatMessagesProvider(widget.appointmentId));
     } catch (e) {
        debugPrint("Chat Error: $e");
@@ -584,7 +694,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
   }
 
   void _shareMeetingLink() {
-    final String url = "https://dawafast.app/meeting/${widget.appointmentId}";
+    final String url = "https://afyalink.com/meeting/${widget.appointmentId}";
     
     Clipboard.setData(ClipboardData(text: url)).then((_) {
       if (mounted) {
@@ -669,19 +779,30 @@ class _MessageBubbleTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Align(
-      alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
-      child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 4, horizontal: 16),
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: isMe ? AppTheme.primaryTeal : Colors.grey[200],
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Text(
-          message.message, 
-          style: TextStyle(color: isMe ? Colors.white : Colors.black87)
-        ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                isMe ? 'You' : message.sender.name,
+                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.black87),
+              ),
+              const SizedBox(width: 8),
+              Text(
+                DateFormat('h:mm a').format(message.timestamp),
+                style: const TextStyle(fontSize: 11, color: Colors.black45),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            message.message,
+            style: const TextStyle(color: Colors.black54, fontSize: 15, height: 1.4),
+          ),
+        ],
       ),
     );
   }

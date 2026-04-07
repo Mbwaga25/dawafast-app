@@ -1,5 +1,6 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
 import 'package:app/core/api_client.dart';
 import 'package:app/features/appointments/data/models/appointment_model.dart';
 import 'package:app/features/appointments/data/models/chat_model.dart';
@@ -36,6 +37,8 @@ class AppointmentRepository {
         messages {
           id
           message
+          imageUrl
+          expiresAt
           timestamp
           user {
             id
@@ -56,6 +59,8 @@ class AppointmentRepository {
           chatMessage {
             id
             message
+            imageUrl
+            expiresAt
             timestamp
             user {
               id
@@ -183,6 +188,54 @@ class AppointmentRepository {
     if (result.hasException) throw result.exception!;
 
     return result.data?['users']?['createReview']?['success'] ?? false;
+  }
+
+  static const String _uploadMediaMutation = r'''
+    mutation UploadChatMedia($appointment_id: ID!, $image: Upload!) {
+      appointments {
+        uploadChatMedia(appointmentId: $appointment_id, image: $image) {
+          success
+          message {
+            id
+            message
+            imageUrl
+            expiresAt
+            timestamp
+            user {
+              id
+              firstName
+              lastName
+              role
+            }
+          }
+        }
+      }
+    }
+  ''';
+
+  Future<ChatMessage?> uploadChatMedia(String appointmentId, List<int> bytes, String filename) async {
+    if (appointmentId == 'instant_meeting') return null;
+
+    final http.MultipartFile multipartFile = http.MultipartFile.fromBytes(
+      'image',
+      bytes,
+      filename: filename,
+    );
+
+    final MutationOptions options = MutationOptions(
+      document: gql(_uploadMediaMutation),
+      variables: {
+        'appointment_id': appointmentId,
+        'image': multipartFile,
+      },
+    );
+
+    final QueryResult result = await ApiClient.client.value.mutate(options);
+    if (result.hasException) throw result.exception!;
+
+    final chatJson = result.data?['appointments']?['uploadChatMedia']?['message'];
+    if (chatJson == null) return null;
+    return ChatMessage.fromJson(chatJson);
   }
 }
 

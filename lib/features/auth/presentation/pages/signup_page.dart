@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/theme.dart';
 import '../../data/repositories/auth_repository.dart';
+import '../../data/repositories/user_repository.dart';
+import '../../../home/presentation/pages/home_page.dart';
 
 class SignupPage extends ConsumerStatefulWidget {
   const SignupPage({super.key});
@@ -33,9 +35,30 @@ class _SignupPageState extends ConsumerState<SignupPage> {
       );
       
       if (success) {
-        if (mounted) {
+        // Automatically login the user
+        final token = await ref.read(authRepositoryProvider).login(
+          _nameController.text, // Usernames match in this flow
+          _passwordController.text,
+        );
+        
+        if (token != null && mounted) {
+          // Clear and force re-fetch of user profile
+          await ref.refresh(currentUserProvider.future);
+          
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Registration successful! Welcome to DawaFast.')),
+            );
+            
+            // Redirect to Home and clear the navigation stack
+            Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => HomePage()),
+              (route) => false,
+            );
+          }
+        } else if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Registration successful! Please login.')),
+            const SnackBar(content: Text('Registration successful! Please login manually.')),
           );
           Navigator.pop(context);
         }

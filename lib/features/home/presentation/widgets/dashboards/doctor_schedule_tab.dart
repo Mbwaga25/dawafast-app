@@ -6,6 +6,7 @@ import 'package:app/features/appointments/data/repositories/appointment_reposito
 import 'package:app/features/appointments/data/models/appointment_model.dart';
 import 'package:app/features/profile/data/repositories/availability_repository.dart';
 import 'package:intl/intl.dart';
+import 'package:app/features/profile/presentation/pages/weekly_schedule_page.dart';
 
 class DoctorScheduleTab extends ConsumerWidget {
   final User user;
@@ -55,8 +56,10 @@ class DoctorScheduleTab extends ConsumerWidget {
                     const SizedBox(height: 16),
                     ElevatedButton(
                       onPressed: () {
-                         // This is already in Profile tab availability management, 
-                         // but we can add a shortcut here if desired.
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (_) => const WeeklySchedulePage()),
+                        );
                       },
                       style: ElevatedButton.styleFrom(backgroundColor: AppTheme.primaryTeal, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
                       child: const Text('Configure Availability', style: TextStyle(color: Colors.white)),

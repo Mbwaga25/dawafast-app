@@ -257,15 +257,12 @@ class _TeleDoctorCardState extends ConsumerState<_TeleDoctorCard> {
 
       final appId = appointment['id'];
       if (appId != null) {
-        // Step 2: Confirm the appointment (Status must be CONFIRMED for instant calls)
-        await repo.confirmAppointment(appId);
-
-        // Step 3: Request instant flag and notification
+        // Step 2: Request instant flag and notification (Removed confirmAppointment)
         await repo.requestInstantCall(appId);
         
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Consultation requested! Waiting for doctor confirmation.')),
+            const SnackBar(content: Text('Doctor will reply shortly to start call as sent to doctor as instant meeting on that case.')),
           );
           // Navigate to meeting page in "waiting" mode
           Navigator.push(context, MaterialPageRoute(
