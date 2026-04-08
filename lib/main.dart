@@ -3,9 +3,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:graphql_flutter/graphql_flutter.dart';
 import 'core/theme.dart';
+
 import 'core/notifications/notification_service.dart';
 import 'core/notifications/notification_models.dart';
+import 'firebase_options.dart';
 import 'features/home/presentation/pages/home_page.dart';
 import 'features/notifications/presentation/pages/notifications_page.dart';
 
@@ -16,16 +19,23 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // ── Firebase init ────────────────────────────────────────────────────────
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  // ── Hive init for GraphQL ───────────────────────────────────────────────
+  await initHiveForFlutter();
   
-  // ── Crashlytics init ─────────────────────────────────────────────────────
-  FlutterError.onError = (errorDetails) {
-    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-  };
-  PlatformDispatcher.instance.onError = (error, stack) {
-    FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
-    return true;
-  };
+  // ── Crashlytics init (skip on Web) ──────────────────────────────────────
+  if (!kIsWeb) {
+    FlutterError.onError = (errorDetails) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    };
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
+  }
 
   await NotificationService.instance.initialize();
 

@@ -31,13 +31,17 @@ class ProductImage extends StatelessWidget {
         height: height,
         width: width,
         fit: fit,
-        errorBuilder: (_, __, ___) => _placeholder(),
+        errorBuilder: (context, error, stackTrace) {
+          debugPrint('Error loading image: $url - $error');
+          return _placeholder();
+        },
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
           return _shimmer();
         },
       );
     }
+
 
     if (borderRadius != null) {
       return ClipRRect(borderRadius: borderRadius!, child: image);
