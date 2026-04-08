@@ -1,17 +1,22 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'core/theme.dart';
+import 'core/notifications/notification_service.dart';
+import 'core/notifications/notification_models.dart';
 import 'features/home/presentation/pages/home_page.dart';
-import 'features/healthcare/presentation/pages/meeting_page.dart';
+import 'features/notifications/presentation/pages/notifications_page.dart';
 
-import 'core/services/notification_service.dart';
-
-import 'package:graphql_flutter/graphql_flutter.dart';
+// Global navigator key for routing from notification taps
+final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initHiveForFlutter();
-  
+
+  // ── Firebase init ────────────────────────────────────────────────────────
+  await Firebase.initializeApp();
+  await NotificationService.instance.initialize();
+
   runApp(
     const ProviderScope(
       child: MyApp(),
@@ -19,30 +24,57 @@ void main() async {
   );
 }
 
-class MyApp extends ConsumerWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // Initialize notification ring polling
-    ref.watch(backgroundPollingProvider);
+  State<MyApp> createState() => _MyAppState();
+}
 
+class _MyAppState extends State<MyApp> {
+  @override
+  void initState() {
+    super.initState();
+    // Wire notification taps → routing
+    NotificationService.instance.onNotificationTap.listen(_handleNotificationTap);
+  }
+
+  void _handleNotificationTap(AppNotification notif) {
+    final context = navigatorKey.currentContext;
+    if (context == null) return;
+
+    switch (notif.type) {
+      case NotificationType.orderUpdate:
+        // TODO: navigate to Orders page
+        _pushNotificationsPage(context);
+        break;
+      case NotificationType.doctorMessage:
+        // TODO: navigate to Telemedicine page
+        _pushNotificationsPage(context);
+        break;
+      case NotificationType.labResult:
+        // TODO: navigate to Lab Results page
+        _pushNotificationsPage(context);
+        break;
+      default:
+        _pushNotificationsPage(context);
+    }
+  }
+
+  void _pushNotificationsPage(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (_) => const NotificationsPage()),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return MaterialApp(
       title: 'AfyaLink',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
+      navigatorKey: navigatorKey,
       home: const HomePage(),
-      onGenerateRoute: (settings) {
-        if (settings.name != null && settings.name!.startsWith('/meeting/')) {
-          final id = settings.name!.replaceFirst('/meeting/', '');
-          return MaterialPageRoute(
-            builder: (_) => MeetingPage(appointmentId: id),
-            settings: settings,
-          );
-        }
-        return null;
-      },
     );
   }
 }
-

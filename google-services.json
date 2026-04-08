@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "697790023667",
+    "project_id": "afyalink-app-cba6f",
+    "storage_bucket": "afyalink-app-cba6f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:697790023667:android:80f4f2aaf6143b151df486",
+        "android_client_info": {
+          "package_name": "com.iibs.afyalink.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyATn3jT3jAIF78CaJiXgCZbW-zDVkMhC68"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
