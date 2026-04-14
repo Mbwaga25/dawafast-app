@@ -1,4 +1,4 @@
-import 'dart:html' as html;
+import 'package:geolocator/geolocator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
@@ -55,20 +55,25 @@ final geoAddressProvider = FutureProvider<GeoAddress?>((ref) async {
     }
   ''';
 
-  // Use browser geolocation (works on Flutter Web)
-  final completer = Future<Map<String, double>>(() async {
-    final geo = html.window.navigator.geolocation;
-    final pos = await geo.getCurrentPosition(enableHighAccuracy: true);
-    return {
-      'lat': pos.coords!.latitude!.toDouble(),
-      'lon': pos.coords!.longitude!.toDouble(),
-    };
-  });
+  // Use geolocator (works on Android, iOS, and Web)
+  Future<Position> determinePosition() async {
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) return Future.error('Location services are disabled.');
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) return Future.error('Location permissions are denied');
+    }
+    if (permission == LocationPermission.deniedForever) return Future.error('Location permissions are permanently denied');
+
+    return await Geolocator.getCurrentPosition();
+  }
 
   try {
-    final coords = await completer.timeout(const Duration(seconds: 10));
-    final lat = coords['lat']!;
-    final lon = coords['lon']!;
+    final pos = await determinePosition().timeout(const Duration(seconds: 15));
+    final lat = pos.latitude;
+    final lon = pos.longitude;
 
     final QueryOptions options = QueryOptions(
       document: gql(reverseGeocodeQuery),
