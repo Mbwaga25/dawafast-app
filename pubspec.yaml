@@ -119,5 +119,5 @@ flutter:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/logo.png"
+  image_path: "assets/afyalink-logo-horizontal.png"
   min_sdk_android: 21

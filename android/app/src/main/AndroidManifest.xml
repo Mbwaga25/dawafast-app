@@ -9,7 +9,8 @@
     <application
         android:label="AfyaLink"
         android:name="${applicationName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/launcher_icon"
+        android:usesCleartextTraffic="true">
 
         <!-- FCM: default notification channel & icon -->
         <meta-data

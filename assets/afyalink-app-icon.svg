@@ -1,0 +1,80 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+
+  <!-- App icon background — rounded square -->
+  <rect width="512" height="512" rx="110" fill="#ffffff"/>
+
+  <!-- Subtle grid mood lines -->
+  <line x1="60" y1="160" x2="60" y2="370" stroke="#E1F5EE" stroke-width="1.5"/>
+  <line x1="140" y1="160" x2="140" y2="370" stroke="#E1F5EE" stroke-width="1.5"/>
+  <line x1="220" y1="160" x2="220" y2="370" stroke="#E1F5EE" stroke-width="1.5"/>
+  <line x1="292" y1="160" x2="292" y2="370" stroke="#E1F5EE" stroke-width="1.5"/>
+  <line x1="372" y1="160" x2="372" y2="370" stroke="#E1F5EE" stroke-width="1.5"/>
+  <line x1="452" y1="160" x2="452" y2="370" stroke="#E1F5EE" stroke-width="1.5"/>
+  <line x1="55" y1="370" x2="455" y2="370" stroke="#E1F5EE" stroke-width="1.5"/>
+  <line x1="55" y1="290" x2="455" y2="290" stroke="#E1F5EE" stroke-width="1.5"/>
+  <line x1="55" y1="210" x2="455" y2="210" stroke="#E1F5EE" stroke-width="1.5"/>
+
+  <!-- Gradient defs -->
+  <defs>
+    <linearGradient id="arcG" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E24B4A"/>
+      <stop offset="44%" stop-color="#BA7517"/>
+      <stop offset="58%" stop-color="#1D9E75"/>
+      <stop offset="100%" stop-color="#085041"/>
+    </linearGradient>
+  </defs>
+
+  <!-- LEFT erratic ECG (sick) -->
+  <polyline
+    points="58,348 78,348 84,326 91,368 97,308 104,372 110,348 128,348 138,348 144,320 151,362 157,340 175,340"
+    fill="none" stroke="#E24B4A" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Rising arc through chain -->
+  <path d="M175,340 Q210,330 256,258"
+        fill="none" stroke="url(#arcG)" stroke-width="8" stroke-linecap="round"/>
+
+  <!-- RIGHT stable ECG -->
+  <path d="M256,258 Q300,185 336,172"
+        fill="none" stroke="#1D9E75" stroke-width="8" stroke-linecap="round"/>
+  <polyline
+    points="336,172 354,172 362,152 370,192 376,172 396,172 406,172 413,158 420,186 426,172 454,172"
+    fill="none" stroke="#1D9E75" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- START dot -->
+  <circle cx="58" cy="348" r="10" fill="#E24B4A"/>
+  <circle cx="58" cy="348" r="17" fill="none" stroke="#E24B4A" stroke-width="2" opacity="0.3"/>
+
+  <!-- END dot -->
+  <circle cx="454" cy="172" r="10" fill="#085041"/>
+  <circle cx="454" cy="172" r="17" fill="none" stroke="#085041" stroke-width="2" opacity="0.3"/>
+
+  <!-- ── CHAIN LINK — center of icon ── -->
+  <!-- Glow background -->
+  <circle cx="256" cy="258" r="72" fill="#E1F5EE" opacity="0.8"/>
+  <circle cx="256" cy="258" r="60" fill="white"/>
+
+  <!-- Left ring (coral) -->
+  <rect x="188" y="230" width="62" height="56" rx="28"
+        fill="none" stroke="#D85A30" stroke-width="9"/>
+  <rect x="200" y="242" width="38" height="32" rx="16" fill="white"/>
+
+  <!-- Right ring (teal) -->
+  <rect x="262" y="230" width="62" height="56" rx="28"
+        fill="none" stroke="#1D9E75" stroke-width="9"/>
+  <rect x="274" y="242" width="38" height="32" rx="16" fill="white"/>
+
+  <!-- Interlock overlap area -->
+  <rect x="228" y="233" width="48" height="50" fill="white"/>
+
+  <!-- Left ring front arc (below, in front) -->
+  <path d="M228,258 Q228,286 256,286 Q284,286 284,258"
+        fill="none" stroke="#D85A30" stroke-width="9" stroke-linecap="round"/>
+  <!-- Right ring back arc (above, behind) -->
+  <path d="M228,258 Q228,230 256,230 Q284,230 284,258"
+        fill="none" stroke="#1D9E75" stroke-width="9" stroke-linecap="round"/>
+
+  <!-- Heart above chain -->
+  <path d="M256 224 C251 219 242 213 242 206 C242 201 245.5 198 250 198 C252.5 198 254.5 199.5 256 201.5 C257.5 199.5 259.5 198 262 198 C266.5 198 270 201 270 206 C270 213 261 219 256 224Z"
+        fill="#1D9E75"/>
+
+</svg>

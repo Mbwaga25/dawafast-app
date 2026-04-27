@@ -1,0 +1,88 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 300" width="512" height="300">
+
+  <defs>
+    <linearGradient id="arcGS" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E24B4A"/>
+      <stop offset="44%" stop-color="#BA7517"/>
+      <stop offset="58%" stop-color="#1D9E75"/>
+      <stop offset="100%" stop-color="#085041"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="300" fill="white"/>
+
+  <!-- Grid -->
+  <line x1="80"  y1="30" x2="80"  y2="165" stroke="#E1F5EE" stroke-width="1"/>
+  <line x1="150" y1="30" x2="150" y2="165" stroke="#E1F5EE" stroke-width="1"/>
+  <line x1="220" y1="30" x2="220" y2="165" stroke="#E1F5EE" stroke-width="1"/>
+  <line x1="292" y1="30" x2="292" y2="165" stroke="#E1F5EE" stroke-width="1"/>
+  <line x1="362" y1="30" x2="362" y2="165" stroke="#E1F5EE" stroke-width="1"/>
+  <line x1="432" y1="30" x2="432" y2="165" stroke="#E1F5EE" stroke-width="1"/>
+  <line x1="78" y1="165" x2="434" y2="165" stroke="#E1F5EE" stroke-width="1"/>
+  <line x1="78" y1="110" x2="434" y2="110" stroke="#E1F5EE" stroke-width="1"/>
+  <line x1="78" y1="58"  x2="434" y2="58"  stroke="#E1F5EE" stroke-width="1"/>
+
+  <!-- LEFT erratic ECG -->
+  <polyline
+    points="82,145 99,145 104,128 111,162 117,112 124,166 129,145 144,145 152,145 157,127 164,156 169,140 184,140"
+    fill="none" stroke="#E24B4A" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Rising arc -->
+  <path d="M184,140 Q218,124 256,75"
+        fill="none" stroke="url(#arcGS)" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- RIGHT stable ECG -->
+  <path d="M256,75 Q294,30 328,26"
+        fill="none" stroke="#1D9E75" stroke-width="6" stroke-linecap="round"/>
+  <polyline
+    points="328,26 344,26 351,12 358,40 363,26 382,26 390,26 396,14 402,38 407,26 430,26"
+    fill="none" stroke="#1D9E75" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Start / End dots -->
+  <circle cx="82"  cy="145" r="7" fill="#E24B4A"/>
+  <circle cx="82"  cy="145" r="13" fill="none" stroke="#E24B4A" stroke-width="1.5" opacity="0.3"/>
+  <circle cx="430" cy="26"  r="7" fill="#085041"/>
+  <circle cx="430" cy="26"  r="13" fill="none" stroke="#085041" stroke-width="1.5" opacity="0.3"/>
+
+  <!-- CHAIN LINK -->
+  <circle cx="256" cy="75" r="48" fill="#E1F5EE" opacity="0.75"/>
+  <circle cx="256" cy="75" r="38" fill="white"/>
+
+  <!-- Left ring (coral) -->
+  <rect x="210" y="51" width="46" height="48" rx="24"
+        fill="none" stroke="#D85A30" stroke-width="7.5"/>
+  <rect x="221" y="62" width="24" height="26" rx="13" fill="white"/>
+
+  <!-- Right ring (teal) -->
+  <rect x="256" y="51" width="46" height="48" rx="24"
+        fill="none" stroke="#1D9E75" stroke-width="7.5"/>
+  <rect x="267" y="62" width="24" height="26" rx="13" fill="white"/>
+
+  <!-- Interlock area -->
+  <rect x="232" y="54" width="36" height="42" fill="white"/>
+  <path d="M232,75 Q232,99 256,99 Q280,99 280,75"
+        fill="none" stroke="#D85A30" stroke-width="7.5" stroke-linecap="round"/>
+  <path d="M232,75 Q232,51 256,51 Q280,51 280,75"
+        fill="none" stroke="#1D9E75" stroke-width="7.5" stroke-linecap="round"/>
+
+  <!-- Heart -->
+  <path d="M256 48 C252 44 244 39 244 33 C244 29 247 26 251 26 C253 26 255 27.5 256 29 C257 27.5 259 26 261 26 C265 26 268 29 268 33 C268 39 260 44 256 48Z"
+        fill="#1D9E75"/>
+
+  <!-- WORDMARK below icon -->
+  <text x="256" y="224" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="72" font-weight="900" letter-spacing="-2">
+    <tspan fill="#D85A30">Afya</tspan><tspan fill="#1D9E75">Link</tspan>
+  </text>
+
+  <!-- Underline -->
+  <line x1="96"  y1="237" x2="256" y2="237" stroke="#D85A30" stroke-width="3" stroke-linecap="round"/>
+  <line x1="256" y1="237" x2="416" y2="237" stroke="#1D9E75" stroke-width="3" stroke-linecap="round"/>
+
+  <!-- Tagline -->
+  <text x="256" y="264" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="11" fill="#888780" letter-spacing="2.5">YOUR HEALTH · CONNECTED · STABLE</text>
+
+  <!-- DawaFast badge -->
+  <rect x="200" y="272" width="112" height="20" rx="10" fill="#E1F5EE"/>
+  <text x="256" y="286" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="9.5" fill="#0F6E56" letter-spacing="2.5" font-weight="700">DAWAFAST</text>
+
+</svg>

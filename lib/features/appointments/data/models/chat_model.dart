@@ -86,7 +86,7 @@ class ChatMessage {
     
     // Fix: If the backend returns a relative path, prepend the server URL
     if (!rawUrl.startsWith('http') && !rawUrl.startsWith('data:image')) {
-      final base = 'http://127.0.0.1:8000'; // Default dev backend
+      final base = 'https://api.afyalink.com'; // Production backend
       if (rawUrl.startsWith('/')) return '$base$rawUrl';
       if (rawUrl.startsWith('media/')) return '$base/$rawUrl';
       return '$base/media/$rawUrl';
