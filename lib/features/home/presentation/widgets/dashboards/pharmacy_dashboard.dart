@@ -67,7 +67,7 @@ class _PharmacyDashboardState extends ConsumerState<PharmacyDashboard> {
       ),
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, -5))],
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 10, offset: const Offset(0, -5))],
         ),
         child: BottomNavigationBar(
           currentIndex: _selectedIndex,
@@ -159,7 +159,7 @@ class _OverviewTab extends ConsumerWidget {
       children: [
         CircleAvatar(
           radius: 24,
-          backgroundColor: AppTheme.primaryTeal.withOpacity(0.1),
+          backgroundColor: AppTheme.primaryTeal.withValues(alpha: 0.1),
           child: const Icon(Icons.store, color: AppTheme.primaryTeal),
         ),
         const SizedBox(width: 12),
@@ -198,7 +198,7 @@ class _OverviewTab extends ConsumerWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade100),
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 4, offset: const Offset(0, 2))],
+        boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.02), blurRadius: 4, offset: const Offset(0, 2))],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -223,7 +223,7 @@ class _OverviewTab extends ConsumerWidget {
         onTap: onTap,
         child: Container(
           padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(color: color.withOpacity(0.05), border: Border.all(color: color.withOpacity(0.1)), borderRadius: BorderRadius.circular(12)),
+          decoration: BoxDecoration(color: color.withValues(alpha: 0.05), border: Border.all(color: color.withValues(alpha: 0.1)), borderRadius: BorderRadius.circular(12)),
           child: Column(children: [Icon(icon, color: color), const SizedBox(height: 8), Text(label, style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 13))]),
         ),
       ),
@@ -386,7 +386,7 @@ class _DirectOrdersViewState extends ConsumerState<_DirectOrdersView> {
     final color = status.toLowerCase() == 'pending' ? Colors.orange : Colors.green;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
       child: Text(status, style: TextStyle(color: color, fontSize: 12, fontWeight: FontWeight.bold)),
     );
   }
@@ -420,7 +420,7 @@ class _StatusChip extends StatelessWidget {
       selected: isSelected,
       onSelected: (_) => onTap(),
       backgroundColor: Colors.grey[100],
-      selectedColor: AppTheme.primaryTeal.withOpacity(0.1),
+      selectedColor: AppTheme.primaryTeal.withValues(alpha: 0.1),
       checkmarkColor: AppTheme.primaryTeal,
       labelStyle: TextStyle(
         color: isSelected ? AppTheme.primaryTeal : Colors.black87,
@@ -721,7 +721,7 @@ class _ReferralsViewState extends ConsumerState<_ReferralsView> {
             onSelectionChanged: (set) => setState(() => _selectedSection = set.first),
             showSelectedIcon: false,
             style: SegmentedButton.styleFrom(
-              selectedBackgroundColor: AppTheme.primaryTeal.withOpacity(0.1),
+              selectedBackgroundColor: AppTheme.primaryTeal.withValues(alpha: 0.1),
               selectedForegroundColor: AppTheme.primaryTeal,
               side: BorderSide(color: Colors.grey.shade200),
             ),
@@ -768,7 +768,7 @@ class _ReferralsViewState extends ConsumerState<_ReferralsView> {
       child: ExpansionTile(
         title: Text('${patient['firstName']} ${patient['lastName']}', style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Text('ID: #${presc['id']} • From: Dr. ${doctor['firstName']}'),
-        leading: CircleAvatar(backgroundColor: Colors.blue.withOpacity(0.1), child: const Icon(Icons.person, color: Colors.blue)),
+        leading: CircleAvatar(backgroundColor: Colors.blue.withValues(alpha: 0.1), child: const Icon(Icons.person, color: Colors.blue)),
         children: [
           Padding(
             padding: const EdgeInsets.all(16),
@@ -817,7 +817,7 @@ class _ReferralsViewState extends ConsumerState<_ReferralsView> {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: ListTile(
-        leading: CircleAvatar(backgroundColor: Colors.orange.withOpacity(0.1), child: const Icon(Icons.outbox, color: Colors.orange)),
+        leading: CircleAvatar(backgroundColor: Colors.orange.withValues(alpha: 0.1), child: const Icon(Icons.outbox, color: Colors.orange)),
         title: Text('${patient['firstName']} ${patient['lastName']}', style: const TextStyle(fontWeight: FontWeight.bold)),
         subtitle: Text('To: $targetName • ${referral['reason']}'),
         trailing: _buildStatusChip(referral['status']),
@@ -829,7 +829,7 @@ class _ReferralsViewState extends ConsumerState<_ReferralsView> {
   Widget _buildStatusChip(String status) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(color: Colors.green.withOpacity(0.1), borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(color: Colors.green.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(12)),
       child: Text(status, style: const TextStyle(color: Colors.green, fontSize: 10, fontWeight: FontWeight.bold)),
     );
   }
@@ -1506,7 +1506,7 @@ class _ReportsTab extends ConsumerWidget {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            CircleAvatar(backgroundColor: color.withOpacity(0.1), child: Icon(Icons.list_alt, color: color)),
+            CircleAvatar(backgroundColor: color.withValues(alpha: 0.1), child: Icon(Icons.list_alt, color: color)),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -1640,7 +1640,7 @@ class _ProfileTabState extends ConsumerState<_ProfileTab> {
             children: [
               CircleAvatar(
                 radius: 50, 
-                backgroundColor: AppTheme.primaryTeal.withOpacity(0.1), 
+                backgroundColor: AppTheme.primaryTeal.withValues(alpha: 0.1), 
                 backgroundImage: _imagePath != null ? FileImage(io.File(_imagePath!)) : null,
                 child: _imagePath == null ? const Icon(Icons.store, size: 40, color: AppTheme.primaryTeal) : null,
               ),

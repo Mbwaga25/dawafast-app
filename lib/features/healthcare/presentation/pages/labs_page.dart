@@ -48,7 +48,7 @@ class _LabsPageState extends ConsumerState<LabsPage> {
                 Text(
                   'Find labs, book diagnostics, and get accurate results near you.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 14),
+                  style: TextStyle(color: Colors.white.withValues(alpha: 0.9), fontSize: 14),
                 ),
               ],
             ),

@@ -408,7 +408,7 @@ class _MessageBubble extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.grey[100],
         borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
-        border: Border(left: BorderSide(color: AppTheme.primaryTeal.withOpacity(0.5), width: 4)),
+        border: Border(left: BorderSide(color: AppTheme.primaryTeal.withValues(alpha: 0.5), width: 4)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -438,7 +438,7 @@ class _MessageBubble extends StatelessWidget {
           bottomRight: isMe ? Radius.zero : const Radius.circular(16),
         ),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 2)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4, offset: const Offset(0, 2)),
         ],
       ),
       child: Text(
@@ -458,7 +458,7 @@ class _MessageBubble extends StatelessWidget {
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 2)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4, offset: const Offset(0, 2)),
         ],
       ),
       child: ClipRRect(
@@ -504,7 +504,7 @@ class _MessageBubble extends StatelessWidget {
         color: isMe ? AppTheme.primaryTeal : Colors.white,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 4, offset: const Offset(0, 2)),
+          BoxShadow(color: Colors.black.withValues(alpha: 0.05), blurRadius: 4, offset: const Offset(0, 2)),
         ],
       ),
       child: Column(

@@ -97,7 +97,7 @@ class PatientHistoryPage extends ConsumerWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(radius: 30, backgroundColor: Colors.white.withOpacity(0.2), child: Text(patientName[0], style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold))),
+              CircleAvatar(radius: 30, backgroundColor: Colors.white.withValues(alpha: 0.2), child: Text(patientName[0], style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold))),
               const SizedBox(width: 16),
               Expanded(
                 child: Column(
@@ -137,7 +137,7 @@ class PatientHistoryPage extends ConsumerWidget {
   Widget _buildInfoChip(IconData icon, String label, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-      decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), borderRadius: BorderRadius.circular(12)),
+      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(12)),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

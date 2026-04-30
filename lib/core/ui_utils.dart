@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:afyalink/core/theme.dart';
 import 'package:afyalink/features/auth/presentation/pages/login_page.dart';
 import 'package:afyalink/features/auth/presentation/pages/signup_page.dart';
@@ -14,7 +15,7 @@ class UIUtils {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: AppTheme.primaryTeal.withOpacity(0.1),
+                color: AppTheme.primaryTeal.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
               child: const Icon(Icons.lock_person_outlined, color: AppTheme.primaryTeal, size: 24),
@@ -35,7 +36,7 @@ class UIUtils {
                 child: OutlinedButton(
                   onPressed: () {
                     Navigator.pop(ctx);
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => const SignupPage()));
+                    context.push('/signup');
                   },
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14),
@@ -50,7 +51,7 @@ class UIUtils {
                 child: ElevatedButton(
                   onPressed: () {
                     Navigator.pop(ctx);
-                    Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginPage()));
+                    context.push('/login');
                   },
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14),

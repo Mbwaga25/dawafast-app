@@ -1,11 +1,12 @@
 import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:graphql_flutter/graphql_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'services/secure_storage.dart';
+import 'app_config.dart';
 
 class ApiClient {
-  static const String _baseUrl = 'https://api.afyalink.com/graphql/';
-  static const String _apiKey = 'AfyaLink_Secure_API_Key_2024_verfied';
+  static String get _baseUrl => AppConfig.baseUrl;
+  static String get _apiKey => AppConfig.apiKey;
 
   static final ValueNotifier<GraphQLClient> _clientNotifier = ValueNotifier(_buildClient(useAuth: true));
   static final ValueNotifier<GraphQLClient> _publicClientNotifier = ValueNotifier(_buildClient(useAuth: false));
@@ -26,8 +27,7 @@ class ApiClient {
     if (useAuth) {
       final authLink = AuthLink(
         getToken: () async {
-          final prefs = await SharedPreferences.getInstance();
-          final token = prefs.getString('auth_token');
+          final token = await SecureStorage.read('auth_token');
           return token == null ? null : 'Bearer $token';
         },
       );
@@ -76,8 +76,7 @@ class ApiClient {
 
   static Future<String?> _doRefresh() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final refreshToken = prefs.getString('refresh_token');
+      final refreshToken = await SecureStorage.read('refresh_token');
       if (refreshToken == null) return null;
 
       final mutation = r'''
@@ -98,8 +97,8 @@ class ApiClient {
 
       if (result.hasException) {
         // Refresh failed (e.g. refresh token also expired)
-        await prefs.remove('auth_token');
-        await prefs.remove('refresh_token');
+        await SecureStorage.delete('auth_token');
+        await SecureStorage.delete('refresh_token');
         resetClient();
         return null;
       }
@@ -108,9 +107,9 @@ class ApiClient {
       final String? newRefreshToken = result.data?['refreshToken']?['refreshToken'];
 
       if (newToken != null) {
-        await prefs.setString('auth_token', newToken);
+        await SecureStorage.write('auth_token', newToken);
         if (newRefreshToken != null) {
-          await prefs.setString('refresh_token', newRefreshToken);
+          await SecureStorage.write('refresh_token', newRefreshToken);
         }
         resetClient();
         return newToken;

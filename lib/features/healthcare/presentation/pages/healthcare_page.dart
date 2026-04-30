@@ -188,7 +188,7 @@ class _HealthcarePageState extends ConsumerState<HealthcarePage> {
           }
         },
         backgroundColor: AppTheme.surfaceWhite,
-        selectedColor: AppTheme.primaryTeal.withOpacity(0.2),
+        selectedColor: AppTheme.primaryTeal.withValues(alpha: 0.2),
         checkmarkColor: AppTheme.primaryTeal,
         labelStyle: TextStyle(
           color: isSelected ? AppTheme.primaryTeal : AppTheme.textPrimary,

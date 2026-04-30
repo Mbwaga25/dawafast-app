@@ -122,7 +122,7 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
                     gradient: LinearGradient(
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
-                      colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+                      colors: [Colors.transparent, Colors.black.withValues(alpha: 0.7)],
                     ),
                   ),
                 ),
@@ -194,7 +194,7 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppTheme.accentTeal.withOpacity(0.1),
+                color: AppTheme.accentTeal.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Row(
@@ -406,14 +406,14 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
-                  BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 4)),
+                  BoxShadow(color: Colors.black.withValues(alpha: 0.1), blurRadius: 10, offset: const Offset(0, 4)),
                 ],
               ),
               child: Row(
                 children: [
                   Container(
                     padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(color: AppTheme.primaryTeal.withOpacity(0.1), shape: BoxShape.circle),
+                    decoration: BoxDecoration(color: AppTheme.primaryTeal.withValues(alpha: 0.1), shape: BoxShape.circle),
                     child: const Icon(Icons.navigation, color: AppTheme.primaryTeal),
                   ),
                   const SizedBox(width: 16),
@@ -499,7 +499,7 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: const BorderSide(color: AppTheme.borderColor)),
           child: ListTile(
             leading: CircleAvatar(
-              backgroundColor: AppTheme.primaryTeal.withOpacity(0.1),
+              backgroundColor: AppTheme.primaryTeal.withValues(alpha: 0.1),
               child: const Icon(Icons.person, color: AppTheme.primaryTeal),
             ),
             title: Text(doctor.fullName, style: const TextStyle(fontWeight: FontWeight.bold)),
@@ -539,7 +539,7 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
           child: ListTile(
             leading: Container(
               padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(color: AppTheme.accentTeal.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: AppTheme.accentTeal.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
               child: Icon(
                 unit.storeType == 'LAB' ? Icons.biotech : Icons.local_pharmacy,
                 color: AppTheme.accentTeal,

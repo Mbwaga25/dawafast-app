@@ -112,7 +112,7 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> with SingleTick
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Super Admin Control', style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14)),
+                  Text('Super Admin Control', style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 14)),
                   const SizedBox(height: 4),
                   Text('${widget.user.fullName} (Root)', style: const TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
                 ],
@@ -210,7 +210,7 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> with SingleTick
        margin: const EdgeInsets.only(bottom: 12),
        decoration: BoxDecoration(border: Border.all(color: Colors.grey.shade200), borderRadius: BorderRadius.circular(12), color: Colors.white),
        child: ListTile(
-         leading: CircleAvatar(backgroundColor: color.withOpacity(0.1), child: Icon(icon, color: color)),
+         leading: CircleAvatar(backgroundColor: color.withValues(alpha: 0.1), child: Icon(icon, color: color)),
          title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
          subtitle: Text(subtitle),
          trailing: const Icon(Icons.chevron_right),
@@ -284,7 +284,7 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> with SingleTick
             children: [
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                decoration: BoxDecoration(color: statusColor.withOpacity(0.1), borderRadius: BorderRadius.circular(6)),
+                decoration: BoxDecoration(color: statusColor.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(6)),
                 child: Text(order.status.toUpperCase(), style: TextStyle(color: statusColor, fontSize: 10, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 4),

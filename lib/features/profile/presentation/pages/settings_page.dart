@@ -359,7 +359,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               
               await ref.read(authRepositoryProvider).deleteAccount();
               
-              if (mounted) {
+              if (context.mounted) {
                 Navigator.of(context).pushAndRemoveUntil(
                   MaterialPageRoute(builder: (_) => const LoginPage()), 
                   (route) => false

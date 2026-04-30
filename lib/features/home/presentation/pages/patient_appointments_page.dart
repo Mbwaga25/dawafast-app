@@ -126,7 +126,7 @@ class _AppointmentCard extends ConsumerWidget {
             Row(
               children: [
                 CircleAvatar(
-                  backgroundColor: AppTheme.primaryTeal.withOpacity(0.1),
+                  backgroundColor: AppTheme.primaryTeal.withValues(alpha: 0.1),
                   child: Icon(isVideo ? Icons.video_call : Icons.local_hospital, color: AppTheme.primaryTeal),
                 ),
                 const SizedBox(width: 12),
@@ -220,7 +220,7 @@ class _AppointmentCard extends ConsumerWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
       child: Text(status.toUpperCase(), style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold)),
     );
   }

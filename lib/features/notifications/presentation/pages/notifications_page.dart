@@ -277,13 +277,13 @@ class _NotificationsPageState extends ConsumerState<NotificationsPage>
                 width: 100,
                 height: 100,
                 decoration: BoxDecoration(
-                  color: AppTheme.primaryBlue.withOpacity(0.08),
+                  color: AppTheme.primaryBlue.withValues(alpha: 0.08),
                   shape: BoxShape.circle,
                 ),
                 child: Icon(
                   Icons.notifications_none_outlined,
                   size: 52,
-                  color: AppTheme.primaryBlue.withOpacity(0.5),
+                  color: AppTheme.primaryBlue.withValues(alpha: 0.5),
                 ),
               ),
               const SizedBox(height: 24),

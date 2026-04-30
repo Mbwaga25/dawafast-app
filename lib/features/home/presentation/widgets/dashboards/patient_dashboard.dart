@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:afyalink/core/widgets/afyalink_loader.dart';
 import 'package:intl/intl.dart';
 import 'package:afyalink/core/theme.dart';
 import 'package:afyalink/features/auth/data/models/user_model.dart';
@@ -44,7 +46,7 @@ class PatientDashboard extends ConsumerWidget {
               children: [
                 IconButton(
                   icon: const Icon(Icons.notifications_none, color: Colors.white),
-                  onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const NotificationPage())),
+                  onPressed: () => context.push('/notifications'),
                 ),
                 if (count > 0)
                   Positioned(
@@ -70,16 +72,16 @@ class PatientDashboard extends ConsumerWidget {
                   ref.read(tabIndexProvider.notifier).state = 4;
                   break;
                 case 'appointments':
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const PatientAppointmentsPage()));
+                  context.push('/appointments');
                   break;
                 case 'orders':
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const PatientOrdersPage()));
+                  context.push('/orders');
                   break;
                 case 'referrals':
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const PatientReferralsPage()));
+                  context.push('/referrals');
                   break;
                 case 'settings':
-                  Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsPage()));
+                  context.push('/settings');
                   break;
                 case 'logout':
                   final confirmed = await showDialog<bool>(
@@ -186,19 +188,19 @@ class PatientDashboard extends ConsumerWidget {
                 title: 'Doctor', 
                 icon: Icons.person_search_outlined, 
                 color: Colors.indigo,
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const TelemedicinePage())),
+                onTap: () => context.push('/telemedicine'),
               ),
               _buildServiceButton(context, 
                 title: 'Health Services', 
                 icon: Icons.science_outlined, 
                 color: Colors.teal,
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const HealthcarePage())),
+                onTap: () => context.push('/healthcare'),
               ),
               _buildServiceButton(context, 
                 title: 'Pharmacy', 
                 icon: Icons.local_pharmacy_outlined, 
                 color: Colors.purple,
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PharmaciesPage())),
+                onTap: () => context.push('/pharmacies'),
               ),
               _buildServiceButton(context, 
                 title: 'Medicines', 
@@ -212,7 +214,7 @@ class PatientDashboard extends ConsumerWidget {
                 title: 'Referrals', 
                 icon: Icons.assignment_outlined, 
                 color: Colors.blueGrey,
-                onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PatientReferralsPage())),
+                onTap: () => context.push('/referrals'),
               ),
             ],
           ),
@@ -231,7 +233,7 @@ class PatientDashboard extends ConsumerWidget {
             width: 60,
             height: 60,
             decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
+              color: color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Icon(icon, color: color, size: 28),
@@ -257,7 +259,7 @@ class PatientDashboard extends ConsumerWidget {
             children: [
               const Text('My Appointments', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
               TextButton(
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PatientAppointmentsPage())),
+                onPressed: () => context.push('/appointments'),
                 child: const Text('View All', style: TextStyle(color: AppTheme.primaryTeal)),
               ),
             ],
@@ -275,7 +277,7 @@ class PatientDashboard extends ConsumerWidget {
                 children: appts.map((a) => _buildAppointmentCard(context, a)).toList(),
               );
             },
-            loading: () => const Center(child: Padding(padding: EdgeInsets.all(16), child: CircularProgressIndicator())),
+            loading: () => const Padding(padding: EdgeInsets.all(16), child: AfyaLinkLoader(size: 60, message: '')),
             error: (err, stack) => const Text('Failed to load appointments', style: TextStyle(color: Colors.red)),
           ),
 
@@ -310,7 +312,7 @@ class PatientDashboard extends ConsumerWidget {
       ),
       child: Column(
         children: [
-          Icon(icon, color: AppTheme.textSecondary.withOpacity(0.5), size: 32),
+          Icon(icon, color: AppTheme.textSecondary.withValues(alpha: 0.5), size: 32),
           const SizedBox(height: 8),
           Text(message, style: const TextStyle(color: AppTheme.textSecondary)),
         ],
@@ -330,7 +332,7 @@ class PatientDashboard extends ConsumerWidget {
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: AppTheme.borderColor),
         boxShadow: isPast ? [] : [
-          BoxShadow(color: Colors.black.withOpacity(0.04), blurRadius: 10, offset: const Offset(0, 4))
+          BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 10, offset: const Offset(0, 4))
         ]
       ),
       child: Row(
@@ -339,7 +341,7 @@ class PatientDashboard extends ConsumerWidget {
             width: 50,
             height: 50,
             decoration: BoxDecoration(
-              color: isVideo ? Colors.blue.withOpacity(0.1) : Colors.teal.withOpacity(0.1),
+              color: isVideo ? Colors.blue.withValues(alpha: 0.1) : Colors.teal.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: Icon(
@@ -378,7 +380,7 @@ class PatientDashboard extends ConsumerWidget {
             else if (a.status.toLowerCase() == 'confirmed')
               IconButton(
                 icon: const Icon(Icons.chat_outlined, color: AppTheme.primaryTeal),
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => ChatPage(appointmentId: a.id))),
+                onPressed: () => context.push('/chat/${a.id}'),
               ),
           ],
         ],
@@ -399,7 +401,7 @@ class PatientDashboard extends ConsumerWidget {
             children: [
               const Text('Recent Orders', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.textPrimary)),
               TextButton(
-                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const PatientOrdersPage())),
+                onPressed: () => context.push('/orders'),
                 child: const Text('View All', style: TextStyle(color: AppTheme.primaryTeal)),
               ),
             ],
@@ -415,7 +417,7 @@ class PatientDashboard extends ConsumerWidget {
                 children: recent.map((o) => _buildOrderTile(o)).toList(),
               );
             },
-            loading: () => const Center(child: CircularProgressIndicator()),
+            loading: () => const AfyaLinkLoader(size: 60, message: ''),
             error: (err, stack) => _buildEmptyState('Could not load orders', Icons.error_outline),
           ),
         ],
@@ -443,7 +445,7 @@ class PatientDashboard extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.orange.withOpacity(0.1),
+              color: Colors.orange.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
             child: const Icon(Icons.inbox_outlined, color: Colors.orange),
@@ -484,7 +486,7 @@ class PatientDashboard extends ConsumerWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-      decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(4)),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(4)),
       child: Text(status.toUpperCase(), style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold)),
     );
   }

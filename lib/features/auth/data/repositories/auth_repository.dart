@@ -1,6 +1,6 @@
 import 'package:graphql_flutter/graphql_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../core/services/secure_storage.dart';
 import '../../../../core/api_client.dart';
 
 final authRepositoryProvider = Provider((ref) => AuthRepository());
@@ -71,10 +71,9 @@ class AuthRepository {
     final String? refreshToken = result.data?['login']?['refreshToken'];
     
     if (token != null) {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setString('auth_token', token);
+      await SecureStorage.write('auth_token', token);
       if (refreshToken != null) {
-        await prefs.setString('refresh_token', refreshToken);
+        await SecureStorage.write('refresh_token', refreshToken);
       }
       ApiClient.resetClient();
     }
@@ -82,8 +81,7 @@ class AuthRepository {
   }
 
   Future<String?> refreshToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    final currentRefreshToken = prefs.getString('refresh_token');
+    final currentRefreshToken = await SecureStorage.read('refresh_token');
     
     if (currentRefreshToken == null) return null;
 
@@ -105,9 +103,9 @@ class AuthRepository {
     final String? newRefreshToken = result.data?['refreshToken']?['refreshToken'];
 
     if (newToken != null) {
-      await prefs.setString('auth_token', newToken);
+      await SecureStorage.write('auth_token', newToken);
       if (newRefreshToken != null) {
-        await prefs.setString('refresh_token', newRefreshToken);
+        await SecureStorage.write('refresh_token', newRefreshToken);
       }
       ApiClient.resetClient();
     }
@@ -152,14 +150,12 @@ class AuthRepository {
   }
 
   Future<void> logout() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove('auth_token');
-    await prefs.remove('refresh_token');
+    await SecureStorage.delete('auth_token');
+    await SecureStorage.delete('refresh_token');
     ApiClient.resetClient();
   }
 
   Future<String?> getToken() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getString('auth_token');
+    return await SecureStorage.read('auth_token');
   }
 }

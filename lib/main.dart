@@ -11,9 +11,11 @@ import 'core/notifications/notification_models.dart';
 import 'firebase_options.dart';
 import 'features/home/presentation/pages/home_page.dart';
 import 'features/notifications/presentation/pages/notifications_page.dart';
+import 'core/router.dart';
+import 'package:go_router/go_router.dart';
 
-// Global navigator key for routing from notification taps
-final navigatorKey = GlobalKey<NavigatorState>();
+// Global navigator key is now in core/router.dart
+// final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,14 +48,14 @@ void main() async {
   );
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends ConsumerStatefulWidget {
   const MyApp({super.key});
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  ConsumerState<MyApp> createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _MyAppState extends ConsumerState<MyApp> {
   @override
   void initState() {
     super.initState();
@@ -62,7 +64,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _handleNotificationTap(AppNotification notif) {
-    final context = navigatorKey.currentContext;
+    final context = rootNavigatorKey.currentContext;
     if (context == null) return;
 
     switch (notif.type) {
@@ -84,19 +86,18 @@ class _MyAppState extends State<MyApp> {
   }
 
   void _pushNotificationsPage(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (_) => const NotificationsPage()),
-    );
+    context.push('/notifications');
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    final router = ref.watch(routerProvider);
+    
+    return MaterialApp.router(
       title: 'AfyaLink',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
-      navigatorKey: navigatorKey,
-      home: const HomePage(),
+      routerConfig: router,
     );
   }
 }

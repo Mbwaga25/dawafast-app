@@ -208,7 +208,7 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: 10, crossAxisSpacing: 10, childAspectRatio: 2.5),
       itemCount: categories.length,
       itemBuilder: (context, i) => Container(
-        decoration: BoxDecoration(color: AppTheme.primaryTeal.withOpacity(0.05), borderRadius: BorderRadius.circular(12), border: Border.all(color: AppTheme.primaryTeal.withOpacity(0.1))),
+        decoration: BoxDecoration(color: AppTheme.primaryTeal.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(12), border: Border.all(color: AppTheme.primaryTeal.withValues(alpha: 0.1))),
         child: Center(child: Text(categories[i], style: const TextStyle(fontWeight: FontWeight.w600, color: AppTheme.primaryTeal))),
       ),
     );
@@ -219,7 +219,7 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.search_off, size: 64, color: AppTheme.textSecondary.withOpacity(0.5)),
+          Icon(Icons.search_off, size: 64, color: AppTheme.textSecondary.withValues(alpha: 0.5)),
           const SizedBox(height: 16),
           const Text('No products found matching your search', style: TextStyle(color: AppTheme.textSecondary)),
         ],
@@ -235,7 +235,7 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(color: AppTheme.borderColor),
-          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 4, offset: const Offset(0, 2))],
+          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.03), blurRadius: 4, offset: const Offset(0, 2))],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -323,7 +323,7 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
           itemBuilder: (context, index) {
             final d = filtered[index];
             return ListTile(
-              leading: CircleAvatar(backgroundColor: AppTheme.primaryTeal.withOpacity(0.1), child: const Icon(Icons.person, color: AppTheme.primaryTeal)),
+              leading: CircleAvatar(backgroundColor: AppTheme.primaryTeal.withValues(alpha: 0.1), child: const Icon(Icons.person, color: AppTheme.primaryTeal)),
               title: Text('Dr. ${d.fullName}'),
               subtitle: Text(d.specialty ?? 'General Physician'),
               onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DoctorDetailPage(doctorId: d.id))),

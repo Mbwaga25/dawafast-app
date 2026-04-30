@@ -61,7 +61,7 @@ class AddressesPage extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isDefault ? AppTheme.primaryTeal.withOpacity(0.1) : Colors.grey.shade100,
+                color: isDefault ? AppTheme.primaryTeal.withValues(alpha: 0.1) : Colors.grey.shade100,
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, color: isDefault ? AppTheme.primaryTeal : Colors.grey),

@@ -89,7 +89,7 @@ class _HospitalDashboardState extends ConsumerState<HospitalDashboard> with Sing
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('Hospital Administration', style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 14)),
+                  Text('Hospital Administration', style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 14)),
                   const SizedBox(height: 4),
                   Text(widget.user.fullName, style: const TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold)),
                 ],
@@ -114,13 +114,13 @@ class _HospitalDashboardState extends ConsumerState<HospitalDashboard> with Sing
   Widget _buildStatChip(String label, String value, IconData icon) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), borderRadius: BorderRadius.circular(16)),
+      decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.15), borderRadius: BorderRadius.circular(16)),
       child: Column(
         children: [
           Icon(icon, color: Colors.white, size: 20),
           const SizedBox(height: 8),
           Text(value, style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
-          Text(label, style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 10)),
+          Text(label, style: TextStyle(color: Colors.white.withValues(alpha: 0.7), fontSize: 10)),
         ],
       ),
     );
@@ -137,10 +137,10 @@ class _HospitalDashboardState extends ConsumerState<HospitalDashboard> with Sing
            return Container(
              margin: const EdgeInsets.only(bottom: 16),
              padding: const EdgeInsets.all(16),
-             decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppTheme.borderColor.withOpacity(0.5))),
+             decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppTheme.borderColor.withValues(alpha: 0.5))),
              child: Row(
                children: [
-                 CircleAvatar(backgroundColor: AppTheme.primaryTeal.withOpacity(0.1), child: const Icon(Icons.person, color: AppTheme.primaryTeal)),
+                 CircleAvatar(backgroundColor: AppTheme.primaryTeal.withValues(alpha: 0.1), child: const Icon(Icons.person, color: AppTheme.primaryTeal)),
                  const SizedBox(width: 16),
                  Expanded(
                    child: Column(
@@ -173,7 +173,7 @@ class _HospitalDashboardState extends ConsumerState<HospitalDashboard> with Sing
             return Container(
               margin: const EdgeInsets.only(bottom: 16),
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppTheme.borderColor.withOpacity(0.5))),
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppTheme.borderColor.withValues(alpha: 0.5))),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -207,7 +207,7 @@ class _HospitalDashboardState extends ConsumerState<HospitalDashboard> with Sing
           return Container(
             margin: const EdgeInsets.only(bottom: 16),
             padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppTheme.borderColor.withOpacity(0.5))),
+            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16), border: Border.all(color: AppTheme.borderColor.withValues(alpha: 0.5))),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -215,7 +215,7 @@ class _HospitalDashboardState extends ConsumerState<HospitalDashboard> with Sing
                   children: [
                     const Icon(Icons.biotech_rounded, color: AppTheme.primaryTeal, size: 20),
                     const SizedBox(width: 8),
-                    Text('Diagnostic Request', style: TextStyle(color: AppTheme.primaryTeal.withOpacity(0.8), fontWeight: FontWeight.bold, fontSize: 12)),
+                    Text('Diagnostic Request', style: TextStyle(color: AppTheme.primaryTeal.withValues(alpha: 0.8), fontWeight: FontWeight.bold, fontSize: 12)),
                   ],
                 ),
                 const SizedBox(height: 12),
@@ -234,7 +234,7 @@ class _HospitalDashboardState extends ConsumerState<HospitalDashboard> with Sing
     if (status.toLowerCase().contains('proc') || status.toLowerCase().contains('ready')) color = Colors.green;
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(8)),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(8)),
       child: Text(status.toUpperCase(), style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold)),
     );
   }

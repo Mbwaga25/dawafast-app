@@ -1,0 +1,84 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 200" width="900" height="200">
+
+  <defs>
+    <linearGradient id="arcGH" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#E24B4A"/>
+      <stop offset="44%" stop-color="#BA7517"/>
+      <stop offset="58%" stop-color="#1D9E75"/>
+      <stop offset="100%" stop-color="#085041"/>
+    </linearGradient>
+  </defs>
+
+  <!-- White bg -->
+  <rect width="900" height="200" fill="white"/>
+
+  <!-- Subtle grid -->
+  <line x1="20" y1="40" x2="20" y2="165" stroke="#E1F5EE" stroke-width="1"/>
+  <line x1="60" y1="40" x2="60" y2="165" stroke="#E1F5EE" stroke-width="1"/>
+  <line x1="100" y1="40" x2="100" y2="165" stroke="#E1F5EE" stroke-width="1"/>
+  <line x1="140" y1="40" x2="140" y2="165" stroke="#E1F5EE" stroke-width="1"/>
+  <line x1="180" y1="40" x2="180" y2="165" stroke="#E1F5EE" stroke-width="1"/>
+  <line x1="220" y1="40" x2="220" y2="165" stroke="#E1F5EE" stroke-width="1"/>
+  <line x1="20" y1="165" x2="225" y2="165" stroke="#E1F5EE" stroke-width="1"/>
+  <line x1="20" y1="120" x2="225" y2="120" stroke="#E1F5EE" stroke-width="1"/>
+  <line x1="20" y1="75"  x2="225" y2="75"  stroke="#E1F5EE" stroke-width="1"/>
+
+  <!-- LEFT erratic ECG -->
+  <polyline
+    points="22,148 38,148 43,132 49,162 54,118 60,165 65,148 78,148 86,148 91,130 97,158 101,143 115,143"
+    fill="none" stroke="#E24B4A" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Rising arc -->
+  <path d="M115,143 Q148,128 170,95"
+        fill="none" stroke="url(#arcGH)" stroke-width="5.5" stroke-linecap="round"/>
+
+  <!-- RIGHT stable ECG -->
+  <path d="M170,95 Q192,64 215,58"
+        fill="none" stroke="#1D9E75" stroke-width="5.5" stroke-linecap="round"/>
+  <polyline
+    points="215,58 228,58 234,44 240,72 245,58 262,58 270,58 275,47 280,69 285,58 305,58 320,58"
+    fill="none" stroke="#1D9E75" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Start dot -->
+  <circle cx="22" cy="148" r="6" fill="#E24B4A"/>
+  <!-- End dot -->
+  <circle cx="320" cy="58" r="6" fill="#085041"/>
+
+  <!-- CHAIN LINK at turning point -->
+  <circle cx="170" cy="95" r="42" fill="#E1F5EE" opacity="0.7"/>
+  <circle cx="170" cy="95" r="34" fill="white"/>
+
+  <!-- Left ring -->
+  <rect x="130" y="74" width="38" height="42" rx="21"
+        fill="none" stroke="#D85A30" stroke-width="6"/>
+  <rect x="139" y="83" width="20" height="24" rx="12" fill="white"/>
+
+  <!-- Right ring -->
+  <rect x="162" y="74" width="38" height="42" rx="21"
+        fill="none" stroke="#1D9E75" stroke-width="6"/>
+  <rect x="171" y="83" width="20" height="24" rx="12" fill="white"/>
+
+  <!-- Interlock -->
+  <rect x="148" y="76" width="28" height="38" fill="white"/>
+  <path d="M148,95 Q148,116 170,116 Q192,116 192,95"
+        fill="none" stroke="#D85A30" stroke-width="6" stroke-linecap="round"/>
+  <path d="M148,95 Q148,74 170,74 Q192,74 192,95"
+        fill="none" stroke="#1D9E75" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Heart above chain -->
+  <path d="M170 70 C167 67 161 63 161 58 C161 55 163.5 53 166.5 53 C168 53 169.5 54 170 55.5 C170.5 54 172 53 173.5 53 C176.5 53 179 55 179 58 C179 63 173 67 170 70Z"
+        fill="#1D9E75"/>
+
+  <!-- ── WORDMARK ── -->
+  <text x="360" y="130" font-family="'Segoe UI',Arial,sans-serif" font-size="96" font-weight="900" letter-spacing="-3">
+    <tspan fill="#D85A30">Afya</tspan><tspan fill="#1D9E75">Link</tspan>
+  </text>
+
+  <!-- Two-color underline -->
+  <line x1="360" y1="148" x2="617" y2="148" stroke="#D85A30" stroke-width="3.5" stroke-linecap="round"/>
+  <line x1="617" y1="148" x2="876" y2="148" stroke="#1D9E75" stroke-width="3.5" stroke-linecap="round"/>
+
+  <!-- Tagline -->
+  <text x="617" y="172" text-anchor="middle" font-family="'Segoe UI',Arial,sans-serif" font-size="13" fill="#888780" letter-spacing="2.5">YOUR HEALTH · CONNECTED · STABLE</text>
+
+</svg>

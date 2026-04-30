@@ -262,6 +262,7 @@ class CheckoutPage extends ConsumerWidget {
 
     Future.delayed(const Duration(seconds: 2), () {
       ref.read(cartProvider.notifier).clear();
+      if (!context.mounted) return;
       Navigator.pop(context); // Pop loading dialog
       Navigator.pushReplacement(
         context,

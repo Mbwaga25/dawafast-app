@@ -54,12 +54,12 @@ class NotificationCard extends ConsumerWidget {
             border: Border.all(
               color: notification.isRead
                   ? AppTheme.borderColor
-                  : config.accentColor.withOpacity(0.35),
+                  : config.accentColor.withValues(alpha: 0.35),
               width: notification.isRead ? 1 : 1.5,
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.04),
+                color: Colors.black.withValues(alpha: 0.04),
                 blurRadius: 6,
                 offset: const Offset(0, 2),
               ),
@@ -75,7 +75,7 @@ class NotificationCard extends ConsumerWidget {
                   width: 44,
                   height: 44,
                   decoration: BoxDecoration(
-                    color: config.accentColor.withOpacity(0.15),
+                    color: config.accentColor.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(config.icon, color: config.accentColor, size: 22),
@@ -131,7 +131,7 @@ class NotificationCard extends ConsumerWidget {
                           Container(
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
-                              color: config.accentColor.withOpacity(0.1),
+                              color: config.accentColor.withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(20),
                             ),
                             child: Text(

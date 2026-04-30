@@ -100,7 +100,7 @@ class _OrderCard extends ConsumerWidget {
                       icon: const Icon(Icons.support_agent, size: 18),
                       label: const Text('Contact Pharmacy'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AppTheme.primaryTeal.withOpacity(0.1),
+                        backgroundColor: AppTheme.primaryTeal.withValues(alpha: 0.1),
                         foregroundColor: AppTheme.primaryTeal,
                         elevation: 0,
                       ),
@@ -130,7 +130,7 @@ class _OrderCard extends ConsumerWidget {
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(20)),
+      decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(20)),
       child: Text(status.toUpperCase(), style: TextStyle(color: color, fontSize: 10, fontWeight: FontWeight.bold)),
     );
   }

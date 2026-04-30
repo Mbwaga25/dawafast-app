@@ -37,7 +37,7 @@ class WishlistPage extends ConsumerWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(Icons.favorite_outline, size: 80, color: AppTheme.textSecondary.withOpacity(0.3)),
+          Icon(Icons.favorite_outline, size: 80, color: AppTheme.textSecondary.withValues(alpha: 0.3)),
           const SizedBox(height: 24),
           const Text('Your wishlist is empty', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           const SizedBox(height: 12),

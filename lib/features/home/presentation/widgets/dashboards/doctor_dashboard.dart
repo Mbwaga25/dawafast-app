@@ -213,7 +213,7 @@ class _DoctorDashboardState extends ConsumerState<DoctorDashboard> with TickerPr
                 onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => DoctorProfilePage(user: widget.user))),
                 child: CircleAvatar(
                   radius: 25, 
-                  backgroundColor: Colors.white.withOpacity(0.2), 
+                  backgroundColor: Colors.white.withValues(alpha: 0.2), 
                   child: const Icon(Icons.person, color: Colors.white)
                 ),
               )
@@ -280,7 +280,7 @@ class _DoctorDashboardState extends ConsumerState<DoctorDashboard> with TickerPr
       onTap: onTap, borderRadius: BorderRadius.circular(16),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
-        decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(16), border: Border.all(color: color.withOpacity(0.3))),
+        decoration: BoxDecoration(color: color.withValues(alpha: 0.1), borderRadius: BorderRadius.circular(16), border: Border.all(color: color.withValues(alpha: 0.3))),
         child: Column(children: [Icon(icon, color: color, size: 28), const SizedBox(height: 8), Text(title, style: TextStyle(color: color, fontWeight: FontWeight.bold, fontSize: 13))]),
       ),
     );
@@ -319,7 +319,7 @@ class _DoctorDashboardState extends ConsumerState<DoctorDashboard> with TickerPr
       child: Row(
         children: [
           CircleAvatar(
-            backgroundColor: isVideo ? Colors.blue.withOpacity(0.1) : Colors.teal.withOpacity(0.1), 
+            backgroundColor: isVideo ? Colors.blue.withValues(alpha: 0.1) : Colors.teal.withValues(alpha: 0.1), 
             child: Icon(isVideo ? Icons.video_camera_front : Icons.local_hospital, color: isVideo ? Colors.blue : Colors.teal)
           ),
           const SizedBox(width: 16),

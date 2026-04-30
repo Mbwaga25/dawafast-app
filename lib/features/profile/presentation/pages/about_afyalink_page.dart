@@ -16,7 +16,7 @@ class AboutAfyalinkPage extends StatelessWidget {
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(40),
-              color: AppTheme.primaryTeal.withOpacity(0.05),
+              color: AppTheme.primaryTeal.withValues(alpha: 0.05),
               child: Column(
                 children: [
                   const Icon(Icons.favorite, size: 64, color: AppTheme.primaryTeal),
@@ -87,7 +87,7 @@ class AboutAfyalinkPage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: AppTheme.accentTeal.withOpacity(0.1),
+              color: AppTheme.accentTeal.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: AppTheme.accentTeal),

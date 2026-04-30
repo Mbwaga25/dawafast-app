@@ -170,7 +170,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
               const SizedBox(height: 24),
               Text(
                 'Initializing Secure Connection...',
-                style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 16),
+                style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 16),
               ),
             ],
           ),
@@ -197,7 +197,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
               Text(
                 'For your security, this specialized consultation session must be conducted on a desktop browser.',
                 textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 16),
+                style: TextStyle(color: Colors.white.withValues(alpha: 0.6), fontSize: 16),
               ),
               const SizedBox(height: 40),
               ElevatedButton(
@@ -219,7 +219,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
             children: [
               CircleAvatar(
                 radius: 50,
-                backgroundColor: Colors.white.withOpacity(0.05),
+                backgroundColor: Colors.white.withValues(alpha: 0.05),
                 child: const Icon(Icons.timer_outlined, color: Colors.blueAccent, size: 40),
               ),
               const SizedBox(height: 24),
@@ -228,7 +228,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                 child: Text(
                   _error!,
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 16),
+                  style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 16),
                 ),
               ),
               const SizedBox(height: 40),
@@ -269,7 +269,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                   children: [
                     CircleAvatar(
                       radius: 64,
-                      backgroundColor: Colors.blueAccent.withOpacity(0.05),
+                      backgroundColor: Colors.blueAccent.withValues(alpha: 0.05),
                       child: const Icon(Icons.person, color: Colors.blueAccent, size: 60),
                     ),
                     const SizedBox(height: 24),
@@ -281,12 +281,12 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                     Container(
                       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.05),
+                        color: Colors.white.withValues(alpha: 0.05),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         _doctor?.specialty ?? 'Medical Consultation',
-                        style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 13),
+                        style: TextStyle(color: Colors.white.withValues(alpha: 0.5), fontSize: 13),
                       ),
                     ),
                   ],
@@ -306,7 +306,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                 color: Colors.black38,
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(color: Colors.white10),
-                boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.3), blurRadius: 10)],
+                boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.3), blurRadius: 10)],
               ),
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(16),
@@ -328,7 +328,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                       child: Container(
                         padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
                         decoration: BoxDecoration(color: Colors.black45, borderRadius: BorderRadius.circular(4)),
-                        child: Text('You', style: TextStyle(color: Colors.white.withOpacity(0.8), fontSize: 10)),
+                        child: Text('You', style: TextStyle(color: Colors.white.withValues(alpha: 0.8), fontSize: 10)),
                       ),
                     ),
                     if (_isMuted)
@@ -352,7 +352,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
               decoration: BoxDecoration(
                 color: Colors.black26,
                 borderRadius: BorderRadius.circular(12),
-                border: Border.all(color: Colors.white.withOpacity(0.05)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.05)),
               ),
               child: Row(
                 children: [
@@ -379,9 +379,9 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 20),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.05),
+                color: Colors.white.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(32),
-                border: Border.all(color: Colors.white.withOpacity(0.1)),
+                border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -391,7 +391,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                     icon: _isMuted ? Icons.mic_off : Icons.mic,
                     isActive: !_isMuted,
                     activeColor: Colors.white12,
-                    inactiveColor: Colors.redAccent.withOpacity(0.8),
+                    inactiveColor: Colors.redAccent.withValues(alpha: 0.8),
                   ),
                   _buildControlButton(
                     onPressed: () => setState(() {
@@ -403,7 +403,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                     icon: _isVideoOff ? Icons.videocam_off : Icons.videocam,
                     isActive: !_isVideoOff,
                     activeColor: Colors.white12,
-                    inactiveColor: Colors.redAccent.withOpacity(0.8),
+                    inactiveColor: Colors.redAccent.withValues(alpha: 0.8),
                   ),
                   _buildControlButton(
                     onPressed: () => Navigator.pop(context),
@@ -417,14 +417,14 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
                     icon: _isScreenSharing ? Icons.stop_screen_share : Icons.screen_share,
                     isActive: !_isScreenSharing,
                     activeColor: Colors.white12,
-                    inactiveColor: Colors.blueAccent.withOpacity(0.8),
+                    inactiveColor: Colors.blueAccent.withValues(alpha: 0.8),
                   ),
                   _buildControlButton(
                     onPressed: () => setState(() => _isChatOpen = !_isChatOpen),
                     icon: Icons.chat_bubble_outline,
                     isActive: !_isChatOpen,
                     activeColor: Colors.white12,
-                    inactiveColor: AppTheme.primaryTeal.withOpacity(0.8),
+                    inactiveColor: AppTheme.primaryTeal.withValues(alpha: 0.8),
                   ),
                   _buildControlButton(
                     onPressed: _showMeetingDetailsSheet,
@@ -513,7 +513,7 @@ class _MeetingPageState extends ConsumerState<MeetingPage> {
             Container(
               margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
               padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(color: Colors.blue.withOpacity(0.05), borderRadius: BorderRadius.circular(8)),
+              decoration: BoxDecoration(color: Colors.blue.withValues(alpha: 0.05), borderRadius: BorderRadius.circular(8)),
               child: const Text(
                 'Messages can only be seen by people in the call and are deleted when the call ends.',
                 style: TextStyle(fontSize: 12, color: Colors.blueAccent),

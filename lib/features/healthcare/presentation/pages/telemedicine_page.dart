@@ -55,7 +55,7 @@ class _TelemedicinePageState extends ConsumerState<TelemedicinePage> {
                 Text(
                   'Connect with doctors instantly from home. Secure, private, and convenient.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 14),
+                  style: TextStyle(color: Colors.white.withValues(alpha: 0.9), fontSize: 14),
                 ),
               ],
             ),
@@ -135,9 +135,9 @@ class _TelemedicinePageState extends ConsumerState<TelemedicinePage> {
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppTheme.accentTeal.withOpacity(0.05),
+        color: AppTheme.accentTeal.withValues(alpha: 0.05),
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppTheme.accentTeal.withOpacity(0.2)),
+        border: Border.all(color: AppTheme.accentTeal.withValues(alpha: 0.2)),
       ),
       child: Row(
         children: [
@@ -287,7 +287,7 @@ class _TeleDoctorCardState extends ConsumerState<_TeleDoctorCard> {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       elevation: 2,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: BorderSide(color: Colors.blue.withOpacity(0.1))),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16), side: BorderSide(color: Colors.blue.withValues(alpha: 0.1))),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -296,7 +296,7 @@ class _TeleDoctorCardState extends ConsumerState<_TeleDoctorCard> {
               children: [
                 CircleAvatar(
                   radius: 30,
-                  backgroundColor: Colors.blue.withOpacity(0.1),
+                  backgroundColor: Colors.blue.withValues(alpha: 0.1),
                   child: const Icon(Icons.person, color: Colors.blue, size: 30),
                 ),
                 const SizedBox(width: 16),

@@ -42,9 +42,9 @@ class DoctorScheduleTab extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: AppTheme.primaryTeal.withOpacity(0.05),
+                  color: AppTheme.primaryTeal.withValues(alpha: 0.05),
                   borderRadius: BorderRadius.circular(16),
-                  border: Border.all(color: AppTheme.primaryTeal.withOpacity(0.1)),
+                  border: Border.all(color: AppTheme.primaryTeal.withValues(alpha: 0.1)),
                 ),
                 child: Column(
                   children: [
@@ -87,7 +87,7 @@ class DoctorScheduleTab extends ConsumerWidget {
       child: ListTile(
         contentPadding: const EdgeInsets.all(16),
         leading: CircleAvatar(
-          backgroundColor: AppTheme.primaryTeal.withOpacity(0.1),
+          backgroundColor: AppTheme.primaryTeal.withValues(alpha: 0.1),
           child: const Icon(Icons.video_call, color: AppTheme.primaryTeal),
         ),
         title: Text(a.patientName ?? 'Unknown Patient', style: const TextStyle(fontWeight: FontWeight.bold)),

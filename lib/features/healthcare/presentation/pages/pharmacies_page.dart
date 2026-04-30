@@ -31,7 +31,7 @@ class _PharmaciesPageState extends ConsumerState<PharmaciesPage> {
             width: double.infinity,
             decoration: BoxDecoration(
               gradient: LinearGradient(
-                colors: [AppTheme.primaryTeal, AppTheme.primaryTeal.withOpacity(0.7)],
+                colors: [AppTheme.primaryTeal, AppTheme.primaryTeal.withValues(alpha: 0.7)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -48,7 +48,7 @@ class _PharmaciesPageState extends ConsumerState<PharmaciesPage> {
                 Text(
                   'Locate trusted pharmacies near you for all your medication needs.',
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white.withOpacity(0.9), fontSize: 14),
+                  style: TextStyle(color: Colors.white.withValues(alpha: 0.9), fontSize: 14),
                 ),
               ],
             ),

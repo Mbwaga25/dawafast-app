@@ -33,7 +33,7 @@ class ProfilePage extends ConsumerWidget {
                     gradient: LinearGradient(
                       begin: Alignment.topLeft,
                       end: Alignment.bottomRight,
-                      colors: [AppTheme.primaryTeal, AppTheme.primaryTeal.withOpacity(0.8)],
+                      colors: [AppTheme.primaryTeal, AppTheme.primaryTeal.withValues(alpha: 0.8)],
                     ),
                   ),
                   child: Column(

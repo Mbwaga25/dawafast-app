@@ -150,9 +150,9 @@ class _LocationPickerSheetState extends ConsumerState<LocationPickerSheet> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: AppTheme.primaryTeal.withOpacity(0.05),
+                color: AppTheme.primaryTeal.withValues(alpha: 0.05),
                 borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: AppTheme.primaryTeal.withOpacity(0.2)),
+                border: Border.all(color: AppTheme.primaryTeal.withValues(alpha: 0.2)),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,7 +218,7 @@ class _LocationPickerSheetState extends ConsumerState<LocationPickerSheet> {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: AppTheme.primaryTeal.withOpacity(0.1),
+                      color: AppTheme.primaryTeal.withValues(alpha: 0.1),
                       shape: BoxShape.circle,
                     ),
                     child: _isLocating 

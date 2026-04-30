@@ -83,7 +83,7 @@ class PatientLabReportsPage extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: isReady ? Colors.green.withOpacity(0.1) : Colors.orange.withOpacity(0.1), 
+                    color: isReady ? Colors.green.withValues(alpha: 0.1) : Colors.orange.withValues(alpha: 0.1), 
                     borderRadius: BorderRadius.circular(20)
                   ),
                   child: Text(
@@ -126,7 +126,7 @@ class PatientLabReportsPage extends StatelessWidget {
                     icon: const Icon(Icons.download_rounded, size: 18),
                     label: const Text('Download PDF'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: isReady ? AppTheme.primaryTeal.withOpacity(0.1) : Colors.grey.withOpacity(0.1),
+                      backgroundColor: isReady ? AppTheme.primaryTeal.withValues(alpha: 0.1) : Colors.grey.withValues(alpha: 0.1),
                       foregroundColor: isReady ? AppTheme.primaryTeal : Colors.grey,
                       elevation: 0,
                     ),

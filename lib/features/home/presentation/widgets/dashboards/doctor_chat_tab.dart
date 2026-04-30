@@ -92,7 +92,7 @@ class _DoctorChatTabState extends ConsumerState<DoctorChatTab> {
                       final user = _searchResults[index];
                       return ListTile(
                         leading: CircleAvatar(
-                          backgroundColor: AppTheme.primaryTeal.withOpacity(0.1),
+                          backgroundColor: AppTheme.primaryTeal.withValues(alpha: 0.1),
                           child: Text(user.firstName?[0] ?? '?', style: const TextStyle(color: AppTheme.primaryTeal)),
                         ),
                         title: Text('${user.firstName ?? ''} ${user.lastName ?? ''}'),

@@ -168,7 +168,7 @@ class DoctorDetailPage extends ConsumerWidget {
         color: AppTheme.surfaceWhite,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 10,
             offset: const Offset(0, -5),
           ),
@@ -343,14 +343,14 @@ class _BookingBottomSheetState extends ConsumerState<BookingBottomSheet> {
                     child: Container(
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
                       decoration: BoxDecoration(
-                        color: isSelected ? AppTheme.primaryTeal : (isBooked ? AppTheme.backgroundWhite.withOpacity(0.5) : AppTheme.backgroundWhite),
+                        color: isSelected ? AppTheme.primaryTeal : (isBooked ? AppTheme.backgroundWhite.withValues(alpha: 0.5) : AppTheme.backgroundWhite),
                         borderRadius: BorderRadius.circular(10),
                         border: isSelected ? null : Border.all(color: AppTheme.borderColor),
                       ),
                       child: Text(
                         DateFormat('hh:mm a').format(DateTime.parse(slot['startTime'])),
                         style: TextStyle(
-                          color: isSelected ? Colors.white : (isBooked ? AppTheme.textSecondary.withOpacity(0.5) : Colors.black),
+                          color: isSelected ? Colors.white : (isBooked ? AppTheme.textSecondary.withValues(alpha: 0.5) : Colors.black),
                           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
                           decoration: isBooked ? TextDecoration.lineThrough : null,
                         ),
@@ -387,7 +387,7 @@ class _BookingBottomSheetState extends ConsumerState<BookingBottomSheet> {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
         decoration: BoxDecoration(
-          color: isSelected ? AppTheme.primaryTeal.withOpacity(0.1) : Colors.transparent,
+          color: isSelected ? AppTheme.primaryTeal.withValues(alpha: 0.1) : Colors.transparent,
           borderRadius: BorderRadius.circular(10),
           border: Border.all(color: isSelected ? AppTheme.primaryTeal : AppTheme.borderColor),
         ),
@@ -417,11 +417,13 @@ class _BookingBottomSheetState extends ConsumerState<BookingBottomSheet> {
         appointmentType: _appointmentType,
       );
       
+      if (!mounted) return;
       Navigator.pop(context); // Pop loading
       Navigator.pop(context); // Pop bottom sheet
       
       _showSuccessDialog(result);
     } catch (e) {
+      if (!mounted) return;
       Navigator.pop(context); // Pop loading
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Booking failed: $e'), backgroundColor: AppTheme.accentTeal));
     }

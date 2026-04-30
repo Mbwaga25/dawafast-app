@@ -55,7 +55,7 @@ class _NotificationTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Container(
-      color: notification.isRead ? Colors.transparent : Colors.blue.withOpacity(0.05),
+      color: notification.isRead ? Colors.transparent : Colors.blue.withValues(alpha: 0.05),
       child: ListTile(
         onTap: () {
           ref.read(notificationRepositoryProvider).markAsRead(notification.id);
@@ -67,7 +67,7 @@ class _NotificationTile extends ConsumerWidget {
           }
         },
         leading: CircleAvatar(
-          backgroundColor: _getCategoryColor().withOpacity(0.1),
+          backgroundColor: _getCategoryColor().withValues(alpha: 0.1),
           child: Icon(_getCategoryIcon(), color: _getCategoryColor(), size: 20),
         ),
         title: Text(
