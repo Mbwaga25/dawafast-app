@@ -270,7 +270,7 @@ class GuestHomeContent extends ConsumerWidget {
 
   Widget _buildProductStrip(BuildContext context, WidgetRef ref, List<Product> products, {bool showDiscount = false}) {
     return SizedBox(
-      height: 232,
+      height: 260,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -293,7 +293,7 @@ class GuestHomeContent extends ConsumerWidget {
           crossAxisCount: 2,
           mainAxisSpacing: 12,
           crossAxisSpacing: 12,
-          childAspectRatio: 0.68,
+          childAspectRatio: 0.55,
         ),
         itemCount: products.length > 20 ? 20 : products.length,
         itemBuilder: (context, index) {

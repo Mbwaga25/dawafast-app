@@ -64,7 +64,16 @@ class NotificationService {
 
     // Init local notifications
     const initAndroid = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const initSettings = InitializationSettings(android: initAndroid);
+    const initDarwin = DarwinInitializationSettings(
+      requestAlertPermission: false,
+      requestBadgePermission: false,
+      requestSoundPermission: false,
+    );
+    const initSettings = InitializationSettings(
+      android: initAndroid,
+      iOS: initDarwin,
+      macOS: initDarwin,
+    );
     await _localNotif.initialize(
       initSettings,
       onDidReceiveNotificationResponse: (details) {
@@ -87,8 +96,21 @@ class NotificationService {
     );
 
     // Get & cache FCM token
-    _fcmToken = await _fcm.getToken();
-    if (kDebugMode) print('[FCM] Token: $_fcmToken');
+    try {
+      if (defaultTargetPlatform == TargetPlatform.iOS) {
+        final apnsToken = await _fcm.getAPNSToken();
+        if (apnsToken != null) {
+          _fcmToken = await _fcm.getToken();
+        } else {
+          if (kDebugMode) print('[FCM] APNS token not yet available. Skipping FCM token retrieval.');
+        }
+      } else {
+        _fcmToken = await _fcm.getToken();
+      }
+      if (kDebugMode && _fcmToken != null) print('[FCM] Token: $_fcmToken');
+    } catch (e) {
+      if (kDebugMode) print('[FCM] Error getting token: $e');
+    }
 
     // Listen for token refreshes
     _fcm.onTokenRefresh.listen((token) {
@@ -139,7 +161,14 @@ class NotificationService {
       notif.id.hashCode,
       notif.title,
       notif.body,
-      NotificationDetails(android: androidDetails),
+      NotificationDetails(
+        android: androidDetails,
+        iOS: const DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      ),
       payload: notif.toJsonString(),
     );
   }

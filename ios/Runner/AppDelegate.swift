@@ -12,7 +12,7 @@ import UserNotifications
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
     // Configure Firebase
-    FirebaseApp.configure()
+    // FirebaseApp.configure()
 
     // Set messaging delegate
     Messaging.messaging().delegate = self

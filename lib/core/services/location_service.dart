@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter/foundation.dart';
@@ -7,6 +8,8 @@ class LocationService {
   factory LocationService() => _instance;
   LocationService._internal();
 
+  Completer<LocationPermission>? _permissionCompleter;
+  
   Future<Position?> getCurrentPosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -15,8 +18,36 @@ class LocationService {
     if (!serviceEnabled) return null;
 
     permission = await Geolocator.checkPermission();
+    
+    // If permission is denied, handle it with a shared completer to prevent concurrent UI dialogs
     if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
+      if (_permissionCompleter != null && !_permissionCompleter!.isCompleted) {
+        try {
+          permission = await _permissionCompleter!.future;
+        } catch (_) {
+          permission = await Geolocator.checkPermission();
+        }
+      } else {
+        _permissionCompleter = Completer<LocationPermission>();
+        try {
+          final result = await Geolocator.requestPermission();
+          if (!_permissionCompleter!.isCompleted) {
+            _permissionCompleter!.complete(result);
+          }
+          permission = result;
+        } catch (e) {
+          if (!_permissionCompleter!.isCompleted) {
+            _permissionCompleter!.completeError(e);
+          }
+          permission = await Geolocator.checkPermission();
+        } finally {
+          // Keep the completer for a while to avoid immediate re-triggering
+          Future.delayed(const Duration(seconds: 5), () {
+            _permissionCompleter = null;
+          });
+        }
+      }
+      
       if (permission == LocationPermission.denied) return null;
     }
 

@@ -18,18 +18,25 @@ import 'package:go_router/go_router.dart';
 // final navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
+  debugPrint('[Main] Starting main()...');
   WidgetsFlutterBinding.ensureInitialized();
+  debugPrint('[Main] WidgetsFlutterBinding initialized.');
 
   // ── Firebase init ────────────────────────────────────────────────────────
+  debugPrint('[Main] Initializing Firebase...');
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  debugPrint('[Main] Firebase initialized.');
 
   // ── Hive init for GraphQL ───────────────────────────────────────────────
+  debugPrint('[Main] Initializing Hive...');
   await initHiveForFlutter();
+  debugPrint('[Main] Hive initialized.');
   
   // ── Crashlytics init (skip on Web) ──────────────────────────────────────
   if (!kIsWeb) {
+    debugPrint('[Main] Configuring Crashlytics...');
     FlutterError.onError = (errorDetails) {
       FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
     };
@@ -37,10 +44,14 @@ void main() async {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       return true;
     };
+    debugPrint('[Main] Crashlytics configured.');
   }
 
-  await NotificationService.instance.initialize();
+  // Initialize notifications without blocking launch
+  debugPrint('[Main] Initializing NotificationService (async)...');
+  NotificationService.instance.initialize();
 
+  debugPrint('[Main] Running runApp...');
   runApp(
     const ProviderScope(
       child: MyApp(),
