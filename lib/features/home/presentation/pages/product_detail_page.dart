@@ -303,7 +303,7 @@ class ProductDetailPage extends ConsumerWidget {
             Text(title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 16),
             SizedBox(
-              height: 220,
+              height: 260, // Increased height to prevent overflow
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: filtered.length,
@@ -328,46 +328,62 @@ class ProductDetailPage extends ConsumerWidget {
       child: Container(
         width: 150,
         margin: const EdgeInsets.only(right: 16),
-        child: Card(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Container(
-                  width: double.infinity,
-                  decoration: const BoxDecoration(
-                    color: AppTheme.backgroundWhite,
-                    borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
-                  ),
-                  child: ClipRRect(
-                    borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                    child: product.images.isNotEmpty 
-                      ? CachedNetworkImage(
-                          imageUrl: product.images.first, 
-                          fit: BoxFit.cover,
-                          errorWidget: (context, url, err) => Image.asset('lib/assets/images/product_placeholder.png', fit: BoxFit.cover),
-                        )
-                      : Image.asset('lib/assets/images/product_placeholder.png', fit: BoxFit.cover),
-                  ),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            )
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              flex: 3,
+              child: Container(
+                width: double.infinity,
+                decoration: const BoxDecoration(
+                  color: AppTheme.backgroundWhite,
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                ),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                  child: product.images.isNotEmpty 
+                    ? CachedNetworkImage(
+                        imageUrl: product.images.first, 
+                        fit: BoxFit.cover,
+                        errorWidget: (context, url, err) => Image.asset('lib/assets/images/product_placeholder.png', fit: BoxFit.cover),
+                      )
+                    : Image.asset('lib/assets/images/product_placeholder.png', fit: BoxFit.cover),
                 ),
               ),
-              Padding(
+            ),
+            Expanded(
+              flex: 2,
+              child: Padding(
                 padding: const EdgeInsets.all(12),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(product.name, 
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold), 
-                      maxLines: 1, 
-                      overflow: TextOverflow.ellipsis,
+                    Expanded(
+                      child: Text(
+                        product.name, 
+                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold, height: 1.2), 
+                        maxLines: 2, 
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
                     const SizedBox(height: 4),
-                    Text('Tsh ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: AppTheme.primaryTeal)),
+                    Text('Tsh ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppTheme.primaryTeal)),
                   ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

@@ -22,6 +22,23 @@ class CurrencySettings {
   }
 }
 
+class MapSettings {
+  final String? mapboxToken;
+  final String? googleMapsKey;
+
+  MapSettings({
+    this.mapboxToken,
+    this.googleMapsKey,
+  });
+
+  factory MapSettings.fromJson(Map<String, dynamic> json) {
+    return MapSettings(
+      mapboxToken: json['mapboxToken'],
+      googleMapsKey: json['googleMapsKey'],
+    );
+  }
+}
+
 class SettingsRepository {
   Future<CurrencySettings?> fetchCurrencySettings() async {
     const String query = r'''
@@ -50,6 +67,38 @@ class SettingsRepository {
     if (data == null) return null;
     return CurrencySettings.fromJson(data);
   }
+
+  Future<MapSettings?> fetchMapSettings() async {
+    const String query = r'''
+      query GetMapSettings {
+        geo {
+          mapSettings {
+            mapboxToken
+            googleMapsKey
+          }
+        }
+      }
+    ''';
+
+    final QueryOptions options = QueryOptions(
+      document: gql(query),
+      fetchPolicy: FetchPolicy.cacheFirst,
+    );
+
+    try {
+      final QueryResult result = await ApiClient.publicClient.value.query(options);
+
+      if (result.hasException) {
+        return null;
+      }
+
+      final data = result.data?['geo']?['mapSettings'];
+      if (data == null) return null;
+      return MapSettings.fromJson(data);
+    } catch (e) {
+      return null;
+    }
+  }
 }
 
 final settingsRepositoryProvider = Provider((ref) => SettingsRepository());
@@ -57,4 +106,9 @@ final settingsRepositoryProvider = Provider((ref) => SettingsRepository());
 final currencySettingsProvider = FutureProvider<CurrencySettings?>((ref) async {
   final repository = ref.watch(settingsRepositoryProvider);
   return repository.fetchCurrencySettings();
+});
+
+final mapSettingsProvider = FutureProvider<MapSettings?>((ref) async {
+  final repository = ref.watch(settingsRepositoryProvider);
+  return repository.fetchMapSettings();
 });

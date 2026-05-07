@@ -50,3 +50,6 @@ GoogleService-Info.plist
 *.p12
 .env
 .env.*
+
+# Local Android properties
+android/local.properties

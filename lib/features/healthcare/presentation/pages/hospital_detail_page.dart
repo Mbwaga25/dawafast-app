@@ -7,7 +7,7 @@ import 'package:afyalink/features/healthcare/data/models/hospital_model.dart';
 import 'package:afyalink/features/appointments/presentation/pages/chat_page.dart';
 import 'package:afyalink/features/appointments/data/repositories/appointment_repository.dart';
 
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:mapbox_maps_flutter/mapbox_maps_flutter.dart' as mbx;
 import 'package:afyalink/core/services/location_service.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -360,38 +360,50 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
       return const Center(child: Text('Coordinates not available for this facility'));
     }
 
-    final destination = LatLng(hospital.latitude!, hospital.longitude!);
-    final userPos = _userPosition != null ? LatLng(_userPosition!.latitude, _userPosition!.longitude) : null;
+    final destination = mbx.Position(hospital.longitude!, hospital.latitude!);
+    final userPos = _userPosition != null ? mbx.Position(_userPosition!.longitude, _userPosition!.latitude) : null;
 
     // Use a Stack to overlay the HUD
     return Stack(
       children: [
-        GoogleMap(
-          initialCameraPosition: CameraPosition(target: destination, zoom: 14),
-          markers: {
-            Marker(markerId: MarkerId('destination'), position: destination, infoWindow: InfoWindow(title: hospital.name)),
-            if (userPos != null) 
-              Marker(
-                markerId: MarkerId('me'), 
-                position: userPos, 
-                icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueAzure),
-                infoWindow: const InfoWindow(title: 'Your Location'),
-              ),
+        mbx.MapWidget(
+          key: const ValueKey('mapbox_map'),
+          onMapCreated: (controller) async {
+            final manager = await controller.annotations.createPointAnnotationManager();
+            
+            // Add Hospital Marker
+            manager.create(mbx.PointAnnotationOptions(
+              geometry: mbx.Point(coordinates: mbx.Position(hospital.longitude!, hospital.latitude!)),
+              textField: hospital.name,
+              textColor: AppTheme.primaryTeal.value,
+              textOffset: [0, 2],
+            ));
+
+            if (_userPosition != null) {
+              // Add User Marker
+              manager.create(mbx.PointAnnotationOptions(
+                geometry: mbx.Point(coordinates: mbx.Position(_userPosition!.longitude, _userPosition!.latitude)),
+                textField: "You",
+                textColor: Colors.blue.value,
+                textOffset: [0, 2],
+              ));
+
+              // Add Polyline
+              final polylineManager = await controller.annotations.createPolylineAnnotationManager();
+              polylineManager.create(mbx.PolylineAnnotationOptions(
+                geometry: mbx.LineString(coordinates: [
+                  mbx.Position(_userPosition!.longitude, _userPosition!.latitude),
+                  mbx.Position(hospital.longitude!, hospital.latitude!),
+                ]),
+                lineColor: AppTheme.primaryTeal.value,
+                lineWidth: 4,
+              ));
+            }
           },
-          polylines: userPos != null ? {
-            Polyline(
-              polylineId: const PolylineId('path'),
-              points: [userPos, destination],
-              color: AppTheme.primaryTeal,
-              width: 4,
-              jointType: JointType.round,
-              patterns: [PatternItem.dash(20), PatternItem.gap(10)], // Styled as dots for "direction" feel
-            ),
-          } : {},
-          myLocationEnabled: true,
-          myLocationButtonEnabled: true,
-          zoomControlsEnabled: true,
-          mapToolbarEnabled: true,
+          cameraOptions: mbx.CameraOptions(
+            center: mbx.Point(coordinates: mbx.Position(hospital.longitude!, hospital.latitude!)),
+            zoom: 13,
+          ),
         ),
         
         // Floating HUD for Directivity
@@ -442,13 +454,13 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
     );
   }
 
-  Widget _buildDistanceInfo(LatLng p1, LatLng p2) {
+  Widget _buildDistanceInfo(mbx.Position p1, mbx.Position p2) {
     // Haversine formula to calculate distance
     const double r = 6371; // Earth's radius in km
-    final double dLat = (p2.latitude - p1.latitude) * pi / 180;
-    final double dLon = (p2.longitude - p1.longitude) * pi / 180;
+    final double dLat = (p2.lat - p1.lat) * pi / 180;
+    final double dLon = (p2.lng - p1.lng) * pi / 180;
     final double a = sin(dLat / 2) * sin(dLat / 2) +
-        cos(p1.latitude * pi / 180) * cos(p2.latitude * pi / 180) *
+        cos(p1.lat * pi / 180) * cos(p2.lat * pi / 180) *
         sin(dLon / 2) * sin(dLon / 2);
     final double c = 2 * atan2(sqrt(a), sqrt(1 - a));
     final double distance = r * c;

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:flutter/foundation.dart';
+import 'mapbox_service.dart';
 
 class LocationService {
   static final LocationService _instance = LocationService._internal();
@@ -68,6 +69,14 @@ class LocationService {
       }
       return null;
     }
+  }
+
+  final MapboxService _mapboxService = MapboxService();
+
+  Future<String?> getAddressFromCurrentPosition() async {
+    final position = await getCurrentPosition();
+    if (position == null) return null;
+    return await _mapboxService.getAddressFromCoordinates(position.latitude, position.longitude);
   }
 
   double calculateDistance(double startLat, double startLng, double endLat, double endLng) {

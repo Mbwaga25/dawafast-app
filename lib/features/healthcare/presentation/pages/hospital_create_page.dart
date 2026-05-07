@@ -112,10 +112,35 @@ class _HospitalCreatePageState extends ConsumerState<HospitalCreatePage> {
               const SizedBox(height: 32),
               const Text('Contact & Location', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
-              TextFormField(
-                controller: _addressController,
-                decoration: const InputDecoration(labelText: 'Full Address', prefixIcon: Icon(Icons.location_on)),
-                validator: (v) => v?.isEmpty == true ? 'Required' : null,
+              Row(
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _addressController,
+                      decoration: const InputDecoration(labelText: 'Full Address', prefixIcon: Icon(Icons.location_on)),
+                      validator: (v) => v?.isEmpty == true ? 'Required' : null,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  IconButton(
+                    onPressed: () async {
+                      setState(() => _isLoading = true);
+                      final address = await _locationService.getAddressFromCurrentPosition();
+                      setState(() => _isLoading = false);
+                      if (address != null) {
+                        _addressController.text = address;
+                      } else {
+                        if (mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Could not resolve address')),
+                          );
+                        }
+                      }
+                    },
+                    tooltip: 'Autofill from current location',
+                    icon: const Icon(Icons.my_location, color: AppTheme.primaryTeal),
+                  ),
+                ],
               ),
               const SizedBox(height: 16),
               TextFormField(

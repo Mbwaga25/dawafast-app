@@ -58,6 +58,8 @@ dependencies:
   permission_handler: ^12.0.1
   image_picker: ^1.2.1
   url_launcher: ^6.3.2
+  mapbox_maps_flutter: ^2.23.0
+  http: ^1.6.0
 
 
 dev_dependencies:
@@ -71,6 +73,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
   flutter_launcher_icons: ^0.13.1
+  flutter_native_splash: ^2.4.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -123,5 +126,14 @@ flutter:
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/afyalink-logo-horizontal.png"
+  image_path: "assets/afyalink-app-icon-512px.png"
   min_sdk_android: 21
+  remove_alpha_ios: true
+
+flutter_native_splash:
+  color: "#ffffff"
+  image: assets/afyalink-logo-horizontal.png
+  android_12:
+    image: assets/afyalink-logo-horizontal.png
+    color: "#ffffff"
+  ios: true

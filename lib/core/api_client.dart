@@ -8,11 +8,23 @@ class ApiClient {
   static String get _baseUrl => AppConfig.baseUrl;
   static String get _apiKey => AppConfig.apiKey;
 
-  static final ValueNotifier<GraphQLClient> _clientNotifier = ValueNotifier(_buildClient(useAuth: true));
-  static final ValueNotifier<GraphQLClient> _publicClientNotifier = ValueNotifier(_buildClient(useAuth: false));
+  static GraphQLClient? _client;
+  static GraphQLClient? _publicClient;
+
+  static final ValueNotifier<GraphQLClient> _clientNotifier = ValueNotifier<GraphQLClient>(
+    GraphQLClient(link: HttpLink('http://localhost'), cache: GraphQLCache())
+  );
+  static final ValueNotifier<GraphQLClient> _publicClientNotifier = ValueNotifier<GraphQLClient>(
+    GraphQLClient(link: HttpLink('http://localhost'), cache: GraphQLCache())
+  );
 
   static ValueNotifier<GraphQLClient> get client => _clientNotifier;
   static ValueNotifier<GraphQLClient> get publicClient => _publicClientNotifier;
+
+  static void init() {
+    _clientNotifier.value = _buildClient(useAuth: true);
+    _publicClientNotifier.value = _buildClient(useAuth: false);
+  }
 
   static Future<String?>? _refreshingFuture;
 

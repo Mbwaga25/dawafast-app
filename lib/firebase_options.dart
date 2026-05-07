@@ -67,7 +67,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '697790023667',
     projectId: 'afyalink-app-cba6f',
     storageBucket: 'afyalink-app-cba6f.firebasestorage.app',
-    iosBundleId: 'com.afyalink.app',
+    iosBundleId: 'com.afyfalink.app',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
@@ -76,6 +76,6 @@ class DefaultFirebaseOptions {
     messagingSenderId: '697790023667',
     projectId: 'afyalink-app-cba6f',
     storageBucket: 'afyalink-app-cba6f.firebasestorage.app',
-    iosBundleId: 'com.afyalink.app',
+    iosBundleId: 'com.afyfalink.app',
   );
 }

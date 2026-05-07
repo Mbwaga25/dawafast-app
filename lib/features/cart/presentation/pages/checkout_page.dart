@@ -97,6 +97,8 @@ final geoAddressProvider = FutureProvider<GeoAddress?>((ref) async {
   }
 });
 
+final paymentMethodProvider = StateProvider<String>((ref) => 'cash');
+
 // ---- Checkout Page ----
 
 class CheckoutPage extends ConsumerWidget {
@@ -129,7 +131,7 @@ class CheckoutPage extends ConsumerWidget {
             const SizedBox(height: 24),
             _buildSectionHeader('Payment Method'),
             const SizedBox(height: 12),
-            _buildPaymentCard(),
+            _buildPaymentCard(context, ref),
             const SizedBox(height: 24),
             _buildSectionHeader('Order Summary'),
             const SizedBox(height: 12),
@@ -196,13 +198,43 @@ class CheckoutPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildPaymentCard() {
+  Widget _buildPaymentCard(BuildContext context, WidgetRef ref) {
+    final method = ref.watch(paymentMethodProvider);
     return Card(
-      child: ListTile(
-        leading: const Icon(Icons.account_balance_wallet_outlined, color: AppTheme.primaryTeal),
-        title: const Text('Mobile Money (M-Pesa)'),
-        subtitle: const Text('**** **** **** 4567'),
-        trailing: TextButton(onPressed: () {}, child: const Text('Edit')),
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide(color: AppTheme.borderColor)),
+      child: Column(
+        children: [
+          RadioListTile<String>(
+            title: const Text('Cash on Delivery', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+            subtitle: const Text('Pay with cash when your order arrives', style: TextStyle(fontSize: 12)),
+            secondary: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(color: AppTheme.primaryTeal.withValues(alpha: 0.1), shape: BoxShape.circle),
+              child: const Icon(Icons.payments_outlined, color: AppTheme.primaryTeal),
+            ),
+            value: 'cash',
+            groupValue: method,
+            onChanged: (val) => ref.read(paymentMethodProvider.notifier).state = val!,
+            activeColor: AppTheme.primaryTeal,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          ),
+          const Divider(height: 1, indent: 64),
+          RadioListTile<String>(
+            title: const Text('Credit / Debit Card', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 15)),
+            subtitle: const Text('Pay securely with your card', style: TextStyle(fontSize: 12)),
+            secondary: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(color: Colors.blue.withValues(alpha: 0.1), shape: BoxShape.circle),
+              child: const Icon(Icons.credit_card_outlined, color: Colors.blue),
+            ),
+            value: 'card',
+            groupValue: method,
+            onChanged: (val) => ref.read(paymentMethodProvider.notifier).state = val!,
+            activeColor: AppTheme.primaryTeal,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          ),
+        ],
       ),
     );
   }

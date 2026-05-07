@@ -270,7 +270,7 @@ class GuestHomeContent extends ConsumerWidget {
 
   Widget _buildProductStrip(BuildContext context, WidgetRef ref, List<Product> products, {bool showDiscount = false}) {
     return SizedBox(
-      height: 260,
+      height: 290, // Increased height to prevent overflow
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 12),
@@ -317,7 +317,13 @@ class GuestHomeContent extends ConsumerWidget {
           color: Colors.white,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(color: AppTheme.borderColor),
-          boxShadow: [BoxShadow(color: Colors.black.withValues(alpha: 0.04), blurRadius: 6, offset: const Offset(0, 2))],
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.06), 
+              blurRadius: 10, 
+              offset: const Offset(0, 4)
+            )
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -339,46 +345,61 @@ class GuestHomeContent extends ConsumerWidget {
                     Positioned(
                       top: 8, left: 8,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(color: Colors.red.shade600, borderRadius: BorderRadius.circular(6)),
+                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.red.shade600, 
+                          borderRadius: BorderRadius.circular(8),
+                          boxShadow: [BoxShadow(color: Colors.red.withValues(alpha: 0.4), blurRadius: 4, offset: const Offset(0, 2))],
+                        ),
                         child: Text('${product.discountPercentage.toInt()}% OFF', style: const TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold)),
                       ),
                     ),
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(product.name, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600, height: 1.3)),
-                  const SizedBox(height: 4),
-                  Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700, color: AppTheme.primaryTeal)),
-                  if (product.originalPrice != null && product.originalPrice! > product.price)
-                    Text('$symbol ${product.originalPrice!.toStringAsFixed(0)}',
-                        style: const TextStyle(fontSize: 11, decoration: TextDecoration.lineThrough, color: AppTheme.textSecondary)),
-                  const SizedBox(height: 8),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton(
-                      onPressed: () {
-                        ref.read(cartProvider.notifier).addItem(CartItem(
-                          productId: product.id,
-                          name: product.name,
-                          price: product.price,
-                          image: product.images.isNotEmpty ? product.images.first : null,
-                        ));
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 6),
-                        minimumSize: const Size(0, 28),
-                        textStyle: const TextStyle(fontSize: 11),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        product.name, 
+                        maxLines: 2, 
+                        overflow: TextOverflow.ellipsis, 
+                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w600, height: 1.2, color: AppTheme.textPrimary)
                       ),
-                      child: const Text('Add to Cart'),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 4),
+                    Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppTheme.primaryTeal)),
+                    if (product.originalPrice != null && product.originalPrice! > product.price)
+                      Text('$symbol ${product.originalPrice!.toStringAsFixed(0)}',
+                          style: const TextStyle(fontSize: 11, decoration: TextDecoration.lineThrough, color: AppTheme.textSecondary)),
+                    const SizedBox(height: 8),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          ref.read(cartProvider.notifier).addItem(CartItem(
+                            productId: product.id,
+                            name: product.name,
+                            price: product.price,
+                            image: product.images.isNotEmpty ? product.images.first : null,
+                          ));
+                        },
+                        style: ElevatedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          minimumSize: const Size(0, 32),
+                          textStyle: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        ),
+                        child: const Text('Add to Cart'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],
@@ -482,7 +503,7 @@ class _PromoBannerCarouselState extends State<PromoBannerCarousel> {
     return Column(
       children: [
         SizedBox(
-          height: 160,
+          height: 180, // Increased to prevent vertical overflow
           child: PageView.builder(
             controller: _controller,
             itemCount: _banners.length,
@@ -495,7 +516,7 @@ class _PromoBannerCarouselState extends State<PromoBannerCarousel> {
                   gradient: LinearGradient(colors: b.gradient, begin: Alignment.topLeft, end: Alignment.bottomRight),
                   borderRadius: BorderRadius.circular(16),
                 ),
-                padding: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(16),
                 child: Row(
                   children: [
                     Expanded(
