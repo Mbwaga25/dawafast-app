@@ -6,6 +6,8 @@ import 'package:afyalink/features/orders/data/repositories/order_repository.dart
 import 'package:afyalink/features/orders/data/models/order_model.dart';
 import 'package:afyalink/features/appointments/data/repositories/appointment_repository.dart';
 import 'package:afyalink/features/appointments/presentation/pages/chat_page.dart';
+import 'package:afyalink/features/profile/data/repositories/settings_repository.dart';
+import 'package:afyalink/core/ui_utils.dart';
 
 class PatientOrdersPage extends ConsumerWidget {
   const PatientOrdersPage({super.key});
@@ -89,8 +91,16 @@ class _OrderCard extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('Total Amount', style: TextStyle(color: Colors.grey, fontSize: 11)),
-                    Text('Tsh ${NumberFormat('#,###').format(order.totalAmount)}', 
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: AppTheme.primaryTeal)),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final currencyConf = ref.watch(currencySettingsProvider).value;
+                        final symbol = currencyConf?.symbol ?? 'Tsh';
+                        return Text(
+                          UIUtils.formatPrice(order.totalAmount, symbol),
+                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: AppTheme.primaryTeal),
+                        );
+                      },
+                    ),
                   ],
                 ),
                 Row(

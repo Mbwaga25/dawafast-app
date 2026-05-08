@@ -7,6 +7,7 @@ import 'package:afyalink/core/api_client.dart';
 import 'package:afyalink/features/cart/presentation/pages/order_success_page.dart';
 import 'package:afyalink/features/cart/presentation/providers/cart_provider.dart';
 import 'package:afyalink/features/profile/data/repositories/settings_repository.dart';
+import 'package:afyalink/core/ui_utils.dart';
 
 // --- Riverpod providers for geo location ---
 
@@ -251,7 +252,7 @@ class CheckoutPage extends ConsumerWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                    Text('${item.quantity}x ${item.name}', style: const TextStyle(color: AppTheme.textSecondary)),
-                  Text('$symbol ${(item.price * item.quantity).toStringAsFixed(0)}'),
+                  Text(UIUtils.formatPrice(item.price * item.quantity, symbol)),
                 ],
               ),
             )).toList(),
@@ -260,7 +261,7 @@ class CheckoutPage extends ConsumerWidget {
                mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Subtotal', style: TextStyle(color: AppTheme.textSecondary)),
-                Text('$symbol ${cartState.subtotal.toStringAsFixed(0)}'),
+                Text(UIUtils.formatPrice(cartState.subtotal, symbol)),
               ],
             ),
             const SizedBox(height: 8),
@@ -268,7 +269,7 @@ class CheckoutPage extends ConsumerWidget {
                mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Delivery', style: TextStyle(color: AppTheme.textSecondary)),
-                Text('$symbol ${cartState.deliveryFee.toStringAsFixed(0)}'),
+                Text(UIUtils.formatPrice(cartState.deliveryFee, symbol)),
               ],
             ),
             const SizedBox(height: 8),
@@ -276,7 +277,7 @@ class CheckoutPage extends ConsumerWidget {
                mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Total', style: TextStyle(fontWeight: FontWeight.bold)),
-                Text('$symbol ${cartState.total.toStringAsFixed(0)}', style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.primaryTeal)),
+                Text(UIUtils.formatPrice(cartState.total, symbol), style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.primaryTeal)),
               ],
             ),
           ],

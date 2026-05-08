@@ -36,7 +36,7 @@ class OrderSuccessPage extends StatelessWidget {
               ),
               const SizedBox(height: 16),
               Text(
-                'Thank you for chosen DawaFast. Your order #$orderId has been placed and is being processed.',
+                'Thank you for chosen AfyaLink. Your order #$orderId has been placed and is being processed.',
                 textAlign: TextAlign.center,
                 style: const TextStyle(color: AppTheme.textSecondary, fontSize: 16),
               ),

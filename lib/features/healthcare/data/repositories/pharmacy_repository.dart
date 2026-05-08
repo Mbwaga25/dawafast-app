@@ -48,21 +48,6 @@ class PharmacyReport {
   }
 }
 
-class CurrencySettings {
-  final String code;
-  final String symbol;
-
-  CurrencySettings({required this.code, required this.symbol});
-
-  factory CurrencySettings.fromJson(Map<String, dynamic> json) {
-    final code = json['baseCurrency'] ?? 'TZS';
-    final symbols = {'TZS': '/=', 'USD': '\$', 'KES': 'KSh', 'UGX': 'USh', 'EUR': '€', 'GBP': '£'};
-    return CurrencySettings(
-      code: code,
-      symbol: symbols[code] ?? code,
-    );
-  }
-}
 
 final pharmacyRepositoryProvider = Provider((ref) => PharmacyRepository());
 
@@ -208,15 +193,6 @@ class PharmacyRepository {
     }
   ''';
 
-  static const String _activeCurrencyQuery = r'''
-    query GetActiveCurrency {
-      stores {
-        activeCurrency {
-          baseCurrency
-        }
-      }
-    }
-  ''';
 
   static const String _updateProfileMutation = r'''
     mutation UpdateStoreProfile($id: ID!, $description: String, $image: String, $isSmart: Boolean) {
@@ -447,12 +423,6 @@ class PharmacyRepository {
     return PharmacyReport.fromJson(result.data?['stores']?['pharmacyReport'] ?? {});
   }
 
-  Future<CurrencySettings> getActiveCurrency() async {
-    final options = QueryOptions(document: gql(_activeCurrencyQuery));
-    final result = await ApiClient.client.value.query(options);
-    if (result.hasException) return CurrencySettings(code: 'TZS', symbol: '/=');
-    return CurrencySettings.fromJson(result.data?['stores']?['activeCurrency'] ?? {});
-  }
 
   Future<MutationResult> updateProfile(String id, {String? description, String? imageBase64, bool? isSmart}) async {
     final options = MutationOptions(
@@ -715,6 +685,3 @@ final pharmacyReportProvider = FutureProvider.family<PharmacyReport, String>((re
   return ref.watch(pharmacyRepositoryProvider).getPharmacyReport(storeId);
 });
 
-final activeCurrencyProvider = FutureProvider<CurrencySettings>((ref) async {
-  return ref.watch(pharmacyRepositoryProvider).getActiveCurrency();
-});

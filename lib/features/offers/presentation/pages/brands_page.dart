@@ -41,7 +41,7 @@ class BrandsPage extends ConsumerWidget {
                 child: Container(
                   decoration: BoxDecoration(
                     color: AppTheme.surfaceWhite,
-                    borderRadius: BorderRadius.circular(10), // Matches dawafast-front 10px radius
+                    borderRadius: BorderRadius.circular(10), // Matches afyalink-front 10px radius
                     border: Border.all(color: AppTheme.borderColor),
                   ),
                   child: Column(

@@ -128,8 +128,8 @@ class _LabDashboardState extends ConsumerState<LabDashboard> with SingleTickerPr
                   ? const Center(child: Text('Type to search global lab directory...'))
                   : ListView(
                      children: [
-                        _buildGlobalTestResult(ctx, 'COVID-19 RT-PCR', 'DawaFast Diagnostics'),
-                        _buildGlobalTestResult(ctx, 'Malaria Antigen Test', 'DawaFast Diagnostics'),
+                        _buildGlobalTestResult(ctx, 'COVID-19 RT-PCR', 'AfyaLink Diagnostics'),
+                        _buildGlobalTestResult(ctx, 'Malaria Antigen Test', 'AfyaLink Diagnostics'),
                      ],
                   ),
               )

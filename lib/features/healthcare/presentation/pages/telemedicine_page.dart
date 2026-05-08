@@ -152,7 +152,7 @@ class _TelemedicinePageState extends ConsumerState<TelemedicinePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('Own a Facility?', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
-                const Text('Register your Hospital, Lab, or Pharmacy on DawaFast.', style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
+                const Text('Register your Hospital, Lab, or Pharmacy on AfyaLink.', style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
               ],
             ),
           ),
@@ -221,11 +221,15 @@ class _TeleDoctorCardState extends ConsumerState<_TeleDoctorCard> {
   }
 
   void _showInstantBookingDialog(BuildContext context, WidgetRef ref) {
+    final currencyConf = ref.watch(currencySettingsProvider).value;
+    final symbol = currencyConf?.symbol ?? 'Tsh';
+    final priceStr = UIUtils.formatPrice(30000, symbol);
+    
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         title: const Text('Instant Consultation'),
-        content: Text('You don\'t have a confirmed appointment with Dr. ${widget.doctor.fullName} right now. Would you like to request an instant video consultation for Tsh 30,000?'),
+        content: Text('You don\'t have a confirmed appointment with Dr. ${widget.doctor.fullName} right now. Would you like to request an instant video consultation for $priceStr?'),
         actions: [
           TextButton(onPressed: () => Navigator.pop(ctx), child: const Text('Cancel')),
           ElevatedButton(
@@ -336,7 +340,16 @@ class _TeleDoctorCardState extends ConsumerState<_TeleDoctorCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text('Video Fee', style: TextStyle(fontSize: 12, color: AppTheme.textSecondary)),
-                    const Text('Tsh 30,000', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryTeal)),
+                    Consumer(
+                      builder: (context, ref, child) {
+                        final currencyConf = ref.watch(currencySettingsProvider).value;
+                        final symbol = currencyConf?.symbol ?? 'Tsh';
+                        return Text(
+                          UIUtils.formatPrice(30000, symbol),
+                          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryTeal),
+                        );
+                      },
+                    ),
                   ],
                 ),
                 Row(

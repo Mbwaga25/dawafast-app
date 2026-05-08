@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/compare_provider.dart';
-import '../../../../core/theme.dart';
+import 'package:afyalink/features/profile/data/repositories/settings_repository.dart';
+import 'package:afyalink/core/ui_utils.dart';
+import 'package:afyalink/core/theme.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class ComparePage extends ConsumerWidget {
@@ -20,7 +22,7 @@ class ComparePage extends ConsumerWidget {
               onPressed: () {
                 ref.read(compareProvider.notifier).clearList();
               },
-              child: const Text('Clear All', style: TextStyle(color: AppTheme.primaryTeal)),
+              child: Text('Clear All', style: TextStyle(color: AppTheme.primaryTeal)),
             )
         ],
       ),
@@ -76,7 +78,7 @@ class ComparePage extends ConsumerWidget {
       alignment: Alignment.centerLeft,
       child: Text(
         title,
-        style: const TextStyle(
+        style: TextStyle(
           fontWeight: FontWeight.bold,
           color: AppTheme.textPrimary,
         ),
@@ -107,7 +109,7 @@ class ComparePage extends ConsumerWidget {
                           fit: BoxFit.cover,
                           errorWidget: (context, url, error) => const Icon(Icons.broken_image),
                         )
-                      : const Icon(Icons.image, size: 40, color: AppTheme.textSecondary),
+                      : Icon(Icons.image, size: 40, color: AppTheme.textSecondary),
                 ),
               ),
               Positioned(
@@ -129,7 +131,13 @@ class ComparePage extends ConsumerWidget {
             ],
           ),
           _buildRowValue(product.name, maxLines: 2),
-          _buildRowValue('Tsh ${product.price.toStringAsFixed(0)}', color: AppTheme.primaryTeal, isBold: true),
+          Consumer(
+            builder: (context, ref, child) {
+              final currencyConf = ref.watch(currencySettingsProvider).value;
+              final symbol = currencyConf?.symbol ?? 'Tsh';
+              return _buildRowValue(UIUtils.formatPrice(product.price, symbol), color: AppTheme.primaryTeal, isBold: true);
+            },
+          ),
           _buildRowValue(product.brandName ?? 'N/A'),
           _buildRowValue(product.categoryName ?? 'N/A'),
           _buildRowValue(product.rating?.toString() ?? 'No rating'),

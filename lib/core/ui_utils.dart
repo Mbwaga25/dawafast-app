@@ -1,10 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 import 'package:afyalink/core/theme.dart';
 import 'package:afyalink/features/auth/presentation/pages/login_page.dart';
 import 'package:afyalink/features/auth/presentation/pages/signup_page.dart';
 
 class UIUtils {
+  static String formatPrice(double price, String symbol) {
+    final formatter = NumberFormat('#,###');
+    return '$symbol ${formatter.format(price)}';
+  }
+
   static void showAuthGuardDialog(BuildContext context, {String message = 'Please sign in to continue with this action.'}) {
     showDialog(
       context: context,

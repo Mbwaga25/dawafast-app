@@ -11,6 +11,7 @@ import '../../../offers/data/repositories/marketplace_repository.dart';
 import '../../../profile/data/repositories/settings_repository.dart';
 import '../../../cart/presentation/providers/cart_provider.dart';
 import '../../../cart/data/models/cart_model.dart';
+import '../../../../core/ui_utils.dart';
 
 class GuestHomeContent extends ConsumerWidget {
   const GuestHomeContent({super.key});
@@ -372,9 +373,9 @@ class GuestHomeContent extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppTheme.primaryTeal)),
+                    Text(UIUtils.formatPrice(product.price, symbol), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800, color: AppTheme.primaryTeal)),
                     if (product.originalPrice != null && product.originalPrice! > product.price)
-                      Text('$symbol ${product.originalPrice!.toStringAsFixed(0)}',
+                      Text(UIUtils.formatPrice(product.originalPrice!, symbol),
                           style: const TextStyle(fontSize: 11, decoration: TextDecoration.lineThrough, color: AppTheme.textSecondary)),
                     const SizedBox(height: 8),
                     SizedBox(

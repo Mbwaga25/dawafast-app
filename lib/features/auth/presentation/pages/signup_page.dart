@@ -47,7 +47,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
           
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('Registration successful! Welcome to DawaFast.')),
+              const SnackBar(content: Text('Registration successful! Welcome to AfyaLink.')),
             );
             
             // Redirect to Home and clear the navigation stack
@@ -87,7 +87,7 @@ class _SignupPageState extends ConsumerState<SignupPage> {
           children: [
             Text('Create Account', style: AppTheme.headingStyle),
             const SizedBox(height: 8),
-            const Text('Join DawaFast for better healthcare', style: TextStyle(color: AppTheme.textSecondary)),
+            const Text('Join AfyaLink for better healthcare', style: TextStyle(color: AppTheme.textSecondary)),
             const SizedBox(height: 48),
             TextField(
               controller: _nameController,

@@ -78,7 +78,7 @@ class NotificationService {
   Future<void> _showHighPriorityNotification(AppNotification notif) async {
     const AndroidNotificationDetails androidPlatformChannelSpecifics =
         AndroidNotificationDetails(
-      'dawafast_urgent_channel_id',
+      'afyalink_urgent_channel_id',
       'Urgent Notifications',
       channelDescription: 'Used for important alerts like calls, orders, and messages.',
       importance: Importance.max,
@@ -102,7 +102,7 @@ class NotificationService {
     final int notifId = DateTime.now().millisecondsSinceEpoch.remainder(100000);
 
     // Dynamic title/message formatting based on backend standardized types
-    String displayTitle = "DawaFast Alert";
+    String displayTitle = "AfyaLink Alert";
     final type = notif.type.toUpperCase();
     
     if (type.contains('APPOINTMENT')) {

@@ -5,6 +5,7 @@ import 'package:afyalink/features/cart/presentation/providers/cart_provider.dart
 import 'package:afyalink/features/profile/data/repositories/settings_repository.dart';
 import 'package:afyalink/features/cart/data/models/cart_model.dart';
 import 'package:afyalink/features/cart/presentation/pages/checkout_page.dart';
+import 'package:afyalink/core/ui_utils.dart';
 
 
 class CartPage extends ConsumerWidget {
@@ -86,7 +87,7 @@ class CartPage extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Subtotal', style: TextStyle(color: AppTheme.textSecondary)),
-                Text('$symbol ${cartState.subtotal.toStringAsFixed(0)}'),
+                Text(UIUtils.formatPrice(cartState.subtotal, symbol)),
               ],
             ),
             const SizedBox(height: 8),
@@ -94,7 +95,7 @@ class CartPage extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Delivery Fee', style: TextStyle(color: AppTheme.textSecondary)),
-                Text('$symbol ${cartState.deliveryFee.toStringAsFixed(0)}'),
+                Text(UIUtils.formatPrice(cartState.deliveryFee, symbol)),
               ],
             ),
             const Divider(height: 24),
@@ -102,7 +103,7 @@ class CartPage extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text('Total', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                Text('$symbol ${cartState.total.toStringAsFixed(0)}', style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryTeal)),
+                Text(UIUtils.formatPrice(cartState.total, symbol), style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: AppTheme.primaryTeal)),
               ],
             ),
             const SizedBox(height: 16),
@@ -162,7 +163,7 @@ class _CartItemTile extends ConsumerWidget {
               children: [
                 Text(item.name, style: const TextStyle(fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis),
                 const SizedBox(height: 4),
-                Text('$symbol ${item.price.toStringAsFixed(0)}', style: const TextStyle(color: AppTheme.primaryTeal)),
+                Text(UIUtils.formatPrice(item.price, symbol), style: const TextStyle(color: AppTheme.primaryTeal)),
               ],
             ),
           ),

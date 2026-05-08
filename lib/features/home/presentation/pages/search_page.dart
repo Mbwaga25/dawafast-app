@@ -14,6 +14,7 @@ import 'package:afyalink/features/cart/presentation/providers/cart_provider.dart
 import 'package:afyalink/features/cart/data/models/cart_model.dart';
 import 'package:afyalink/features/profile/presentation/providers/wishlist_provider.dart';
 import 'package:afyalink/features/profile/data/repositories/settings_repository.dart';
+import 'package:afyalink/core/ui_utils.dart';
 
 class SearchPage extends ConsumerStatefulWidget {
   const SearchPage({super.key});
@@ -262,14 +263,13 @@ class _SearchPageState extends ConsumerState<SearchPage> with SingleTickerProvid
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(color: AppTheme.primaryTeal, fontWeight: FontWeight.w700, fontSize: 14)),
+                      Text(UIUtils.formatPrice(product.price, symbol), style: const TextStyle(color: AppTheme.primaryTeal, fontWeight: FontWeight.w700, fontSize: 14)),
                       IconButton(
                         visualDensity: VisualDensity.compact,
                         padding: EdgeInsets.zero,
                         icon: const Icon(Icons.add_circle, color: AppTheme.primaryTeal),
                         onPressed: () {
                           ref.read(cartProvider.notifier).addItem(CartItem(productId: product.id, name: product.name, price: product.price, image: product.images.isNotEmpty ? product.images.first : null));
-                          ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Added to cart'), duration: Duration(seconds: 1)));
                         },
                       ),
                     ],

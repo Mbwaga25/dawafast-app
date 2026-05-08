@@ -5,6 +5,8 @@ import 'package:afyalink/features/auth/data/models/user_model.dart';
 import 'package:afyalink/features/orders/data/repositories/order_repository.dart';
 import 'package:afyalink/features/notifications/data/repositories/notification_repository.dart';
 import 'package:afyalink/features/notifications/presentation/pages/notification_page.dart';
+import 'package:afyalink/features/profile/data/repositories/settings_repository.dart';
+import 'package:afyalink/core/ui_utils.dart';
 
 class AdminDashboard extends ConsumerStatefulWidget {
   final User user;
@@ -80,7 +82,7 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> with SingleTick
                 labelColor: Colors.indigo,
                 unselectedLabelColor: Colors.grey,
                 indicatorColor: Colors.indigo,
-                tabs: const [Tab(text: 'DawaFast Orders'), Tab(text: 'Registered Entities'), Tab(text: 'Infrastructure')],
+                tabs: const [Tab(text: 'AfyaLink Orders'), Tab(text: 'Registered Entities'), Tab(text: 'Infrastructure')],
               ),
             ),
           ),
@@ -288,7 +290,16 @@ class _AdminDashboardState extends ConsumerState<AdminDashboard> with SingleTick
                 child: Text(order.status.toUpperCase(), style: TextStyle(color: statusColor, fontSize: 10, fontWeight: FontWeight.bold)),
               ),
               const SizedBox(height: 4),
-              Text('Tsh ${order.totalAmount.toStringAsFixed(0)}', style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
+              Consumer(
+                builder: (context, ref, child) {
+                  final currencyConf = ref.watch(currencySettingsProvider).value;
+                  final symbol = currencyConf?.symbol ?? 'Tsh';
+                  return Text(
+                    UIUtils.formatPrice(order.totalAmount, symbol),
+                    style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+                  );
+                },
+              ),
             ],
           ),
         ],

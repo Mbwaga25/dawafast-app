@@ -5,6 +5,7 @@ import 'package:afyalink/features/offers/data/models/product_model.dart';
 import 'package:afyalink/features/offers/data/repositories/marketplace_repository.dart';
 import 'package:afyalink/features/profile/data/repositories/settings_repository.dart';
 import 'package:afyalink/features/home/presentation/pages/product_detail_page.dart';
+import 'package:afyalink/core/ui_utils.dart';
 
 class CategoryPage extends ConsumerWidget {
   final Category category;
@@ -137,7 +138,7 @@ class CategoryPage extends ConsumerWidget {
                 children: [
                   Text(product.name, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold), maxLines: 1, overflow: TextOverflow.ellipsis),
                   const SizedBox(height: 4),
-                  Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 14, color: AppTheme.primaryTeal, fontWeight: FontWeight.bold)),
+                  Text(UIUtils.formatPrice(product.price, symbol), style: const TextStyle(fontSize: 14, color: AppTheme.primaryTeal, fontWeight: FontWeight.bold)),
                 ],
               ),
             ),

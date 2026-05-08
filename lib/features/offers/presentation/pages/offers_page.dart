@@ -6,6 +6,7 @@ import 'package:afyalink/features/offers/data/repositories/marketplace_repositor
 import 'package:afyalink/features/profile/data/repositories/settings_repository.dart';
 import 'package:afyalink/features/home/presentation/pages/product_detail_page.dart';
 import 'package:afyalink/features/offers/presentation/pages/category_page.dart';
+import 'package:afyalink/core/ui_utils.dart';
 
 class OffersPage extends ConsumerWidget {
   const OffersPage({super.key});
@@ -72,7 +73,16 @@ class OffersPage extends ConsumerWidget {
                             children: [
                               Text(p.name, maxLines: 2, overflow: TextOverflow.ellipsis, style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13)),
                               const SizedBox(height: 4),
-                              Text('Tsh ${p.price.toStringAsFixed(0)}', style: const TextStyle(color: AppTheme.primaryTeal, fontWeight: FontWeight.bold)),
+                              Consumer(
+                                builder: (context, ref, child) {
+                                  final currencyConf = ref.watch(currencySettingsProvider).value;
+                                  final symbol = currencyConf?.symbol ?? 'Tsh';
+                                  return Text(
+                                    UIUtils.formatPrice(p.price, symbol),
+                                    style: const TextStyle(color: AppTheme.primaryTeal, fontWeight: FontWeight.bold),
+                                  );
+                                },
+                              ),
                             ],
                           ),
                         ),

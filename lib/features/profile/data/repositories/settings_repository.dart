@@ -56,7 +56,7 @@ class SettingsRepository {
       fetchPolicy: FetchPolicy.networkOnly,
     );
 
-    final QueryResult result = await ApiClient.client.value.query(options);
+    final QueryResult result = await ApiClient.publicClient.value.query(options);
 
     if (result.hasException) {
       // It's possible the settings aren't configured yet, fallback to defaults

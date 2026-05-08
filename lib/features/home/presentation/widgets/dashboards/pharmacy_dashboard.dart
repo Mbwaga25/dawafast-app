@@ -10,6 +10,8 @@ import 'package:afyalink/features/auth/data/repositories/auth_repository.dart';
 import 'package:afyalink/features/auth/data/repositories/user_repository.dart';
 import 'package:afyalink/features/healthcare/data/repositories/pharmacy_repository.dart';
 import 'package:afyalink/features/orders/data/repositories/order_repository.dart';
+import 'package:afyalink/features/profile/data/repositories/settings_repository.dart';
+import 'package:afyalink/core/ui_utils.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:convert';
 import 'dart:io' as io;
@@ -99,7 +101,7 @@ class _OverviewTab extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final reportAsync = ref.watch(pharmacyReportProvider(user.id.toString()));
-    final currencyAsync = ref.watch(activeCurrencyProvider);
+    final currencySettings = ref.watch(currencySettingsProvider).value;
 
     return Scaffold(
       appBar: AppBar(
@@ -124,7 +126,7 @@ class _OverviewTab extends ConsumerWidget {
               _buildHeader(user),
               const SizedBox(height: 24),
               reportAsync.when(
-                data: (report) => _buildStatsGrid(context, report, currencyAsync.value?.symbol ?? '/='),
+                data: (report) => _buildStatsGrid(context, report, currencySettings?.symbol ?? 'Tsh'),
                 loading: () => const Center(child: CircularProgressIndicator()),
                 error: (e, s) => Center(child: Text('Error: $e')),
               ),
@@ -185,7 +187,7 @@ class _OverviewTab extends ConsumerWidget {
       children: [
         _buildStatCard('Pending', '${report.pendingCount}', Icons.hourglass_empty, Colors.orange),
         _buildStatCard('Delivered', '${report.accomplishedCount}', Icons.check_circle, Colors.green),
-        _buildStatCard('Revenue', '$currency${report.totalRevenue.toStringAsFixed(0)}', Icons.payments, AppTheme.primaryTeal),
+        _buildStatCard('Revenue', UIUtils.formatPrice(report.totalRevenue, currency), Icons.payments, AppTheme.primaryTeal),
         _buildStatCard('Missed', '${report.missedCount}', Icons.cancel, Colors.red),
       ],
     );

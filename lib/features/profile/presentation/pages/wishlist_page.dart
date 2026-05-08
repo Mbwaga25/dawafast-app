@@ -7,6 +7,7 @@ import 'package:afyalink/features/cart/presentation/providers/cart_provider.dart
 import 'package:afyalink/features/cart/data/models/cart_model.dart';
 import 'package:afyalink/features/offers/data/models/product_model.dart';
 import 'package:afyalink/features/profile/data/repositories/settings_repository.dart';
+import 'package:afyalink/core/ui_utils.dart';
 
 class WishlistPage extends ConsumerWidget {
   const WishlistPage({super.key});
@@ -80,7 +81,7 @@ class WishlistPage extends ConsumerWidget {
                   children: [
                     Text(product.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
                     const SizedBox(height: 4),
-                    Text('$symbol ${product.price.toStringAsFixed(0)}', style: const TextStyle(color: AppTheme.primaryTeal, fontWeight: FontWeight.bold)),
+                    Text(UIUtils.formatPrice(product.price, symbol), style: const TextStyle(color: AppTheme.primaryTeal, fontWeight: FontWeight.bold)),
                   ],
                 ),
               ),
@@ -101,9 +102,6 @@ class WishlistPage extends ConsumerWidget {
                               image: product.images.isNotEmpty ? product.images.first : null,
                             ),
                           );
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('${product.name} added to cart'), duration: const Duration(seconds: 1)),
-                      );
                     },
                   ),
                 ],

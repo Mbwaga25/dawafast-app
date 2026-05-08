@@ -12,6 +12,7 @@ import 'package:afyalink/features/cart/data/models/cart_model.dart';
 import 'package:afyalink/features/profile/presentation/providers/wishlist_provider.dart';
 import 'package:afyalink/features/offers/presentation/providers/compare_provider.dart';
 import 'package:afyalink/features/offers/presentation/pages/compare_page.dart';
+import 'package:afyalink/core/ui_utils.dart';
 
 class ProductDetailPage extends ConsumerWidget {
   final String idOrSlug;
@@ -161,7 +162,7 @@ class ProductDetailPage extends ConsumerWidget {
                 Row(
                   children: [
                     Text(
-                      '$symbol ${product.price.toStringAsFixed(0)}',
+                      UIUtils.formatPrice(product.price, symbol),
                       style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: AppTheme.primaryTeal),
                     ),
                     const SizedBox(width: 12),
@@ -239,15 +240,6 @@ class ProductDetailPage extends ConsumerWidget {
                   child: OutlinedButton(
                     onPressed: () {
                       ref.read(cartProvider.notifier).addItem(cartItem);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text('${product.name} added to cart'),
-                          action: SnackBarAction(
-                            label: 'VIEW CART',
-                            onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const CartPage())),
-                          ),
-                        ),
-                      );
                     },
                     style: OutlinedButton.styleFrom(
                       minimumSize: const Size(0, 56),
@@ -282,15 +274,15 @@ class ProductDetailPage extends ConsumerWidget {
 
   Widget _buildRelatedProducts(BuildContext context, WidgetRef ref, String categorySlug, String currentProductId) {
     final asyncProducts = ref.watch(relatedProductsProvider(categorySlug));
-    return _buildHorizontalList(context, 'Related Products', asyncProducts, currentProductId);
+    return _buildHorizontalList(context, 'Related Products', asyncProducts, currentProductId, ref);
   }
 
   Widget _buildSimilarBrands(BuildContext context, WidgetRef ref, String brandSlug, String currentProductId) {
     final asyncProducts = ref.watch(similarBrandsProvider(brandSlug));
-    return _buildHorizontalList(context, 'More from this Brand', asyncProducts, currentProductId);
+    return _buildHorizontalList(context, 'More from this Brand', asyncProducts, currentProductId, ref);
   }
 
-  Widget _buildHorizontalList(BuildContext context, String title, AsyncValue<List<Product>> asyncProducts, String currentProductId) {
+  Widget _buildHorizontalList(BuildContext context, String title, AsyncValue<List<Product>> asyncProducts, String currentProductId, WidgetRef ref) {
     return asyncProducts.when(
       data: (products) {
         final filtered = products.where((p) => p.id != currentProductId).toList();
@@ -308,7 +300,7 @@ class ProductDetailPage extends ConsumerWidget {
                 scrollDirection: Axis.horizontal,
                 itemCount: filtered.length,
                 itemBuilder: (context, index) {
-                  return _buildProductCard(context, filtered[index]);
+                  return _buildProductCard(context, filtered[index], ref);
                 },
               ),
             ),
@@ -320,7 +312,9 @@ class ProductDetailPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildProductCard(BuildContext context, Product product) {
+  Widget _buildProductCard(BuildContext context, Product product, WidgetRef ref) {
+    final currencyConf = ref.watch(currencySettingsProvider).value;
+    final symbol = currencyConf?.symbol ?? 'Tsh';
     return GestureDetector(
       onTap: () {
         Navigator.push(context, MaterialPageRoute(builder: (_) => ProductDetailPage(idOrSlug: product.slug)));
@@ -378,7 +372,7 @@ class ProductDetailPage extends ConsumerWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text('Tsh ${product.price.toStringAsFixed(0)}', style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppTheme.primaryTeal)),
+                    Text(UIUtils.formatPrice(product.price, symbol), style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700, color: AppTheme.primaryTeal)),
                   ],
                 ),
               ),

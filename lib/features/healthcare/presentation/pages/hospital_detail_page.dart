@@ -13,6 +13,8 @@ import 'package:geolocator/geolocator.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:afyalink/features/cart/presentation/providers/cart_provider.dart';
 import 'package:afyalink/features/cart/data/models/cart_model.dart';
+import 'package:afyalink/features/profile/data/repositories/settings_repository.dart';
+import 'package:afyalink/core/ui_utils.dart';
 
 class HospitalDetailPage extends ConsumerStatefulWidget {
   final String idOrSlug;
@@ -321,7 +323,16 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
                    crossAxisAlignment: CrossAxisAlignment.start,
                    children: [
                      Text(p.name, style: TextStyle(fontWeight: FontWeight.bold), maxLines: 1),
-                     Text('Tsh ${p.price}', style: TextStyle(color: AppTheme.primaryTeal)),
+                      Consumer(
+                        builder: (context, ref, child) {
+                          final currencyConf = ref.watch(currencySettingsProvider).value;
+                          final symbol = currencyConf?.symbol ?? 'Tsh';
+                          return Text(
+                            UIUtils.formatPrice(p.price, symbol),
+                            style: const TextStyle(color: AppTheme.primaryTeal),
+                          );
+                        },
+                      ),
                      IconButton(icon: Icon(Icons.add_shopping_cart, size: 18), onPressed: () {
                          ref.read(cartProvider.notifier).addItem(CartItem(productId: p.id, name: p.name, price: p.price, image: p.images.isNotEmpty ? p.images.first : null));
                      })
@@ -346,9 +357,18 @@ class _HospitalDetailPageState extends ConsumerState<HospitalDetailPage> with Ti
         final t = tests[index];
         return Card(
           child: ListTile(
-            title: Text(t.name, style: TextStyle(fontWeight: FontWeight.bold)),
+            title: Text(t.name, style: const TextStyle(fontWeight: FontWeight.bold)),
             subtitle: Text(t.sampleType ?? 'Sample required'),
-            trailing: Text('Tsh ${t.price}', style: TextStyle(color: AppTheme.primaryTeal, fontWeight: FontWeight.bold)),
+            trailing: Consumer(
+              builder: (context, ref, child) {
+                final currencyConf = ref.watch(currencySettingsProvider).value;
+                final symbol = currencyConf?.symbol ?? 'Tsh';
+                return Text(
+                  UIUtils.formatPrice(t.price, symbol),
+                  style: const TextStyle(color: AppTheme.primaryTeal, fontWeight: FontWeight.bold),
+                );
+              },
+            ),
           ),
         );
       },
