@@ -45,8 +45,7 @@
 		<string>YOUR_MAPBOX_TOKEN</string>
 		<key>NSCameraUsageDescription</key>
 		<string>AfyaLink needs camera access to allow you to take photos of medical prescriptions and profile pictures.H</string>
-		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-		<string>AfyaLink needs your location to show you healthcare services nearby even when the app is in background.</string>
+
 		<key>NSLocationWhenInUseUsageDescription</key>
 		<string>AfyaLink needs your location to find the nearest pharmacies, hospitals, and laboratories to you.</string>
 		<key>NSMicrophoneUsageDescription</key>
@@ -59,8 +58,6 @@
 		<array>
 			<string>fetch</string>
 			<string>remote-notification</string>
-			<string>location</string>
-			<string>audio</string>
 		</array>
 		<key>UILaunchStoryboardName</key>
 		<string>LaunchScreen</string>
